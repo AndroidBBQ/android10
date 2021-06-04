@@ -1,0 +1,1 @@
+/dev/socket/audioserver(/.*)?    u:object_r:audioserver_socket:s0

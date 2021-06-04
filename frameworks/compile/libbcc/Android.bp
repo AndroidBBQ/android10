@@ -1,0 +1,123 @@
+//
+// Copyright (C) 2014 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+cc_defaults {
+    name: "libbcc-defaults",
+    defaults: [
+        "llvm-defaults",
+        "rs-version",
+        "libbcc-targets",
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Wno-unused-parameter",
+        "-Werror",
+        "-D__DISABLE_ASSERTS",
+    ],
+
+    target: {
+        android: {
+            cflags: [
+                "-DTARGET_BUILD",
+            ],
+        },
+        host: {
+            compile_multilib: "first",
+            cflags: [
+                "-D__HOST__",
+            ],
+        },
+    },
+
+    product_variables: {
+        eng: {
+            cflags: ["-U__DISABLE_ASSERTS"],
+        },
+    },
+
+    include_dirs: [
+        "frameworks/compile/libbcc/include",
+        "frameworks/rs",
+    ],
+}
+
+//=====================================================================
+// Architecture Selection
+//=====================================================================
+// Note: We should only use -DFORCE_ARCH_CODEGEN on target build.
+// For the host build, we will include as many architecture as possible,
+// so that we can test the execution engine easily.
+
+cc_defaults {
+    name: "libbcc-targets",
+    arch: {
+        arm: {
+            cflags: [
+                "-DFORCE_ARM_CODEGEN",
+                "-DARCH_ARM_HAVE_VFP",
+            ],
+            neon: {
+                cflags: [
+                    "-DARCH_ARM_HAVE_VFP_D32",
+                    "-DARCH_ARM_HAVE_NEON",
+                ],
+            },
+        },
+        arm64: {
+            cflags: [
+                "-DFORCE_ARM64_CODEGEN",
+                "-DARCH_ARM_HAVE_NEON",
+                "-DARCH_ARM_HAVE_VFP",
+                "-DARCH_ARM_HAVE_VFP_D32",
+                "-DDISABLE_CLCORE_NEON",
+            ],
+        },
+        mips: {
+            cflags: ["-DFORCE_MIPS_CODEGEN"],
+        },
+        mips64: {
+            cflags: ["-DFORCE_MIPS64_CODEGEN"],
+        },
+    },
+    target: {
+        android_x86: {
+            cflags: ["-DFORCE_X86_CODEGEN"],
+        },
+        android_x86_64: {
+            cflags: ["-DFORCE_X86_64_CODEGEN"],
+        },
+        arm_on_x86: {
+            cflags: [
+                "-DPROVIDE_ARM_CODEGEN",
+                "-DFORCE_BUILD_ARM",
+            ],
+        },
+        arm_on_x86_64: {
+            cflags: [
+                "-DPROVIDE_ARM_CODEGEN",
+                "-DFORCE_BUILD_ARM",
+                "-DPROVIDE_ARM64_CODEGEN",
+            ],
+        },
+    },
+}
+
+subdirs = [
+    "bcinfo",
+    "lib",
+    "tools",
+]

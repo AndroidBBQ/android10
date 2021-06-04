@@ -1,0 +1,245 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.stats@1.0;
+
+/*
+ * Represents the detected speaker impedance value.
+ */
+struct SpeakerImpedance {
+
+    /*
+     * A vendor-specific value identifying a particular speaker on the device.
+     * This value is opaque to the server, it must not try to interpret any
+     * meaning to this location.
+     */
+    int32_t speakerLocation;
+
+    /* The detected impedance in milliOhms. */
+    int32_t milliOhms;
+};
+
+/*
+ * Represents a failed hardware report.
+ */
+struct HardwareFailed {
+
+    /* HardwareType for reportHardwareFailed */
+    enum HardwareType : int32_t {
+        UNKNOWN = 0,
+        MICROPHONE = 1,
+        CODEC = 2,
+        SPEAKER = 3,
+        FINGERPRINT = 4,
+    };
+    HardwareType hardwareType;
+
+    /**
+     * hardware_location allows vendors to differentiate between multiple
+     * instances of the same hardware_type. The specific locations are vendor
+     * defined integers, referring to board-specific numbering schemes.
+     */
+    int32_t hardwareLocation;
+
+    /**
+     * ErrorCodes for reportHardwareFailed.
+     * ErrorCode interpretation depends on the hardwareType parameter.
+     * Values prefixed by different hardwareTypes overlap.
+     * COMPLETE refers to a complete failure e.g. non-responsive microphone.
+     * For most components, unless a more specific failure exists, COMPLETE should be used.
+     * UNKNOWN refers to an unexpected or unknown error.
+     */
+    enum HardwareErrorCode : int32_t {
+        UNKNOWN,
+        COMPLETE,
+        SPEAKER_HIGH_Z,
+        SPEAKER_SHORT,
+        FINGERPRINT_SENSOR_BROKEN,
+        FINGERPRINT_TOO_MANY_DEAD_PIXELS,
+        DEGRADE,
+    };
+    HardwareErrorCode errorCode;
+};
+
+/*
+ * Represents a physical drop detected event.
+ */
+struct PhysicalDropDetected {
+
+    /* Confidence that the event was actually a drop, 0 -> 100 */
+    uint8_t confidencePctg;
+
+    /* Peak acceleration of the drop, in 1/1000s of a g. */
+    int32_t accelPeak;
+
+    /* Duration of freefall in ms. */
+    int32_t freefallDuration;
+};
+
+/**
+ * Represents bucketed battery charge cycles.
+ *
+ * Each list of buckets represents the number of times
+ * the battery has charged past equal-sized fractions of full capacity.
+ * For example, given the vector [12, 11, 10, 9, 8, 7, 6, 5], the battery
+ * has charged past 1/8th full 12 times, 2/8ths full 11 times, etc.
+ */
+struct ChargeCycles {
+
+    vec<int32_t> cycleBucket;
+};
+
+
+/** Represents parameters for reportBatteryHealthSnapshot. */
+struct BatteryHealthSnapshotArgs {
+
+    /* The instance of this snapshot. */
+    enum BatterySnapshotType : int32_t {
+        MIN_TEMP = 1,      // Snapshot at min batt temp over 24hrs.
+        MAX_TEMP,          // Snapshot at max batt temp over 24hrs.
+        MIN_RESISTANCE,    // Snapshot at min batt resistance over 24hrs.
+        MAX_RESISTANCE,    // Snapshot at max batt resistance over 24hrs.
+        MIN_VOLTAGE,       // Snapshot at min batt voltage over 24hrs.
+        MAX_VOLTAGE,       // Snapshot at max batt voltage over 24hrs.
+        MIN_CURRENT,       // Snapshot at min batt current over 24hrs.
+        MAX_CURRENT,       // Snapshot at max batt current over 24hrs.
+        MIN_BATT_LEVEL,    // Snapshot at min battery level (SoC) over 24hrs.
+        MAX_BATT_LEVEL,    // Snapshot at max battery level (SoC) over 24hrs.
+        AVG_RESISTANCE,    // Snapshot at average battery resistance over 24hrs.
+    };
+    BatterySnapshotType type;
+
+    /* Temperature Temperature, in 1/10ths of degree C. */
+    int32_t temperatureDeciC;
+
+    /* Voltage Battery Voltage, in microVolts. */
+    int32_t voltageMicroV;
+
+    /* Current Battery current, in microAmps. */
+    int32_t currentMicroA;
+
+    /* OpenCircuitVoltage Battery Open Circuit Voltage, in microVolts. */
+    int32_t openCircuitVoltageMicroV;
+
+    /* Resistance Battery Resistance, in microOhms. */
+    int32_t resistanceMicroOhm;
+
+    /* Level Battery Level, as % of full. */
+    int32_t levelPercent;
+};
+
+/** Represents slow I/O operations on the primary flash storage, aggregated. */
+struct SlowIo {
+
+    /* Classifications of IO Operations for reportSlowIo. */
+    enum IoOperation : int32_t  {
+        UNKNOWN,
+        READ,
+        WRITE,
+        UNMAP,
+        SYNC,
+    };
+    IoOperation operation;
+
+    /* The number of slow IO operations of this type over 24 hours. */
+    int32_t count;
+};
+
+/** Represents BatteryCausedShutdown with the last recorded voltage. */
+struct BatteryCausedShutdown {
+
+    /* The last recorded battery voltage prior to shutdown. */
+    int32_t voltageMicroV;
+};
+
+/** Represents USB port overheat event. */
+struct UsbPortOverheatEvent {
+
+    /* Temperature of USB port at USB plug event, in 1/10ths of degree C. */
+    int32_t plugTemperatureDeciC;
+
+    /* Maximum temperature of USB port during overheat event, in 1/10ths of degree C. */
+    int32_t maxTemperatureDeciC;
+
+    /* Time between USB plug event and overheat threshold trip, in seconds. */
+    int32_t timeToOverheat;
+
+    /* Time between overheat threshold trip and hysteresis, in seconds. */
+    int32_t timeToHysteresis;
+
+    /* Time between hysteresis and active mitigation ending, in seconds. */
+    int32_t timeToInactive;
+};
+
+/*
+ * Represents the speech DSP stat of total uptime, downtime, crash count and recover count.
+ */
+struct SpeechDspStat {
+
+    /* Speech DSP total up time in milliseconds. */
+    int32_t totalUptimeMillis;
+
+    /* Speech DSP total down time in milliseconds. */
+    int32_t totalDowntimeMillis;
+
+    /* Speech DSP total crash count. */
+    int32_t totalCrashCount;
+
+    /* Speech DSP recover mechanism trigger count. */
+    int32_t totalRecoverCount;
+
+};
+
+/*
+ * Generic vendor atom that allows dynamically allocated atoms to be uploaded
+ * through statsd.
+ *
+ * Here's an example that uses this struct:
+ *     VendorAtom atom = {
+ *         .atomId  = 100000,
+ *         .values  = {2, 70000, 5.2, 4, "a"}
+ *     };
+ *
+ * The resulting LogEvent must have the following fields:
+ *     Index    Value
+ *     0x1      2
+ *     0x2      70000
+ *     0x3      5.2
+ *     0x4      4
+ *     0x5      "a"
+ */
+struct VendorAtom {
+
+    /**
+     * Vendor or OEM reverse domain name. Must be less than 50 characters.
+     * Ex. "com.google.pixel"
+     */
+    string reverseDomainName;
+
+    /* Atom ID. Must be between 100,000 - 199,999 to indicate non-AOSP field. */
+    int32_t atomId;
+
+    /* Supported field types for this struct. */
+    safe_union Value {
+        int32_t intValue;
+        int64_t longValue;
+        float floatValue;
+        string stringValue;
+    };
+
+    /* Vector of fields in the order that the LogEvent should be filled. */
+    vec<Value> values;
+};

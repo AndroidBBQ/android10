@@ -1,0 +1,2 @@
+{"glDrawElementsInstancedBaseVertex", "(IIILjava/nio/Buffer;II)V", (void *) android_glDrawElementsInstancedBaseVertex__IIILjava_nio_Buffer_2II },
+{"glDrawElementsInstancedBaseVertex", "(IIIIII)V", (void *) android_glDrawElementsInstancedBaseVertex__IIIIII },

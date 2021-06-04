@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<audio_effects_conf version="2.0" xmlns="http://schemas.android.com/audio/audio_effects_conf/v2_0">
+    <!-- List of effect libraries to load.
+         Each library element must contain a "name" attribute and a "path" attribute giving the
+         name of a library .so file in /vendor/lib/soundfx on the target
+
+         If offloadable effects are present, the AOSP library libeffectproxy.so must be listed as
+         well as one library for the SW implementation and one library for the DSP implementation:
+         <library name="proxy" path="libeffectproxy.so"/>
+         <library name="some_fx_sw" path="lib_some_fx_sw.so"/>
+         <library name="some_fx_hw" path="lib_some_fx_hw.so"/>
+
+         If the audio HAL implements support for AOSP software audio pre-processing effects,
+         the following library must be added:
+         <library name="pre_processing" path="libaudiopreprocessing.so"/>
+    -->
+    <libraries>
+        <library name="bundle" path="libbundlewrapper.so"/>
+        <library name="reverb" path="libreverbwrapper.so"/>
+        <library name="visualizer" path="libvisualizer.so"/>
+        <library name="downmix" path="libdownmix.so"/>
+        <library name="loudness_enhancer" path="libldnhncr.so"/>
+        <library name="dynamics_processing" path="libdynproc.so"/>
+    </libraries>
+
+    <!-- list of effects to load.
+         Each "effect" element must contain a "name", "library" and a "uuid" attribute.
+         The value of the "library" element must correspond to the name of one library element in
+         the "libraries" element.
+         The "name" attribute is indicative, only the value of the "uuid" attribute designates
+         the effect.
+         The uuid is the implementation specific UUID as specified by the effect vendor. This is not
+         the generic effect type UUID.
+
+         Offloadable effects are described by an "effectProxy" element which contains one "libsw"
+         element containing the "uuid" and "library" for the SW implementation and one "libhw"
+         element containing the "uuid" and "library" for the DSP implementation.
+         The "uuid" value for the "effectProxy" element must be unique and will override the default
+         uuid in the AOSP proxy effect implementation.
+
+         If the audio HAL implements support for AOSP software audio pre-processing effects,
+         the following effects can be added:
+         <effect name="agc" library="pre_processing" uuid="aa8130e0-66fc-11e0-bad0-0002a5d5c51b"/>
+         <effect name="aec" library="pre_processing" uuid="bb392ec0-8d4d-11e0-a896-0002a5d5c51b"/>
+         <effect name="ns" library="pre_processing" uuid="c06c8400-8e06-11e0-9cb6-0002a5d5c51b"/>
+    -->
+
+    <effects>
+        <effect name="bassboost" library="bundle" uuid="8631f300-72e2-11df-b57e-0002a5d5c51b"/>
+        <effect name="virtualizer" library="bundle" uuid="1d4033c0-8557-11df-9f2d-0002a5d5c51b"/>
+        <effect name="equalizer" library="bundle" uuid="ce772f20-847d-11df-bb17-0002a5d5c51b"/>
+        <effect name="volume" library="bundle" uuid="119341a0-8469-11df-81f9-0002a5d5c51b"/>
+        <effect name="reverb_env_aux" library="reverb" uuid="4a387fc0-8ab3-11df-8bad-0002a5d5c51b"/>
+        <effect name="reverb_env_ins" library="reverb" uuid="c7a511a0-a3bb-11df-860e-0002a5d5c51b"/>
+        <effect name="reverb_pre_aux" library="reverb" uuid="f29a1400-a3bb-11df-8ddc-0002a5d5c51b"/>
+        <effect name="reverb_pre_ins" library="reverb" uuid="172cdf00-a3bc-11df-a72f-0002a5d5c51b"/>
+        <effect name="visualizer" library="visualizer" uuid="d069d9e0-8329-11df-9168-0002a5d5c51b"/>
+        <effect name="downmix" library="downmix" uuid="93f04452-e4fe-41cc-91f9-e475b6d1d69f"/>
+        <effect name="loudness_enhancer" library="loudness_enhancer" uuid="fa415329-2034-4bea-b5dc-5b381c8d1e2c"/>
+        <effect name="dynamics_processing" library="dynamics_processing" uuid="e0e6539b-1781-7261-676f-6d7573696340"/>
+    </effects>
+
+    <!-- Audio pre processor configurations.
+         The pre processor configuration is described in a "preprocess" element and consists in a
+         list of elements each describing pre processor settings for a given use case or "stream".
+         Each stream element has a "type" attribute corresponding to the input source used.
+         Valid types are:
+              "mic", "camcorder", "voice_recognition", "voice_communication"
+         Each "stream" element contains a list of "apply" elements indicating one effect to apply.
+         The effect to apply is designated by its name in the "effects" elements.
+
+        <preprocess>
+            <stream type="voice_communication">
+                <apply effect="aec"/>
+                <apply effect="ns"/>
+            </stream>
+        </preprocess>
+    -->
+
+    <!-- Audio post processor configurations.
+         The post processor configuration is described in a "postprocess" element and consists in a
+         list of elements each describing post processor settings for a given use case or "stream".
+         Each stream element has a "type" attribute corresponding to the stream type used.
+         Valid types are:
+              "music", "ring", "alarm", "notification", "voice_call"
+         Each "stream" element contains a list of "apply" elements indicating one effect to apply.
+         The effect to apply is designated by its name in the "effects" elements.
+
+        <postprocess>
+            <stream type="music">
+                <apply effect="music_post_proc"/>
+            </stream>
+            <stream type="voice_call">
+                <apply effect="voice_post_proc"/>
+            </stream>
+            <stream type="notification">
+                <apply effect="notification_post_proc"/>
+            </stream>
+        </postprocess>
+    -->
+
+</audio_effects_conf>

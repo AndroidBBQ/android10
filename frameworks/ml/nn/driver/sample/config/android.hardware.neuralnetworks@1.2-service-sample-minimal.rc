@@ -1,0 +1,4 @@
+service neuralnetworks_hal_service_sample_minimal /vendor/bin/hw/android.hardware.neuralnetworks@1.2-service-sample-minimal
+    class hal
+    user system
+    group system

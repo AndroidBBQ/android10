@@ -1,0 +1,188 @@
+cc_defaults {
+    name: "rs_support_defaults",
+    product_variables: {
+        unbundled_build: {
+            // Unbundled builds use prebuilts in prebuilts/sdk/renderscript instead
+            enabled: false,
+        },
+    },
+}
+
+// Generate custom headers
+gensrcs {
+    name: "rs_generated_headers_support",
+    tools: ["rsg-generator"],
+    tool_files: [
+        "rs.spec",
+        "rs_compat.spec",
+    ],
+    cmd: "cat $(location rs.spec) $(location rs_compat.spec) | $(location rsg-generator) $(in) $(out)",
+    output_extension: "h",
+    srcs: [
+        "rsgApiStructs.h_rsg",
+        "rsgApiFuncDecl.h_rsg",
+    ],
+    export_include_dirs: ["."],
+}
+
+gensrcs {
+    name: "rs_generated_sources_support",
+    tools: ["rsg-generator"],
+    tool_files: [
+        "rs.spec",
+        "rs_compat.spec",
+    ],
+    cmd: "cat $(location rs.spec) $(location rs_compat.spec) | $(location rsg-generator) $(in) $(out)",
+    output_extension: "cpp",
+    srcs: [
+        "rsgApi.cpp_rsg",
+        "rsgApiReplay.cpp_rsg",
+    ],
+}
+
+cc_library_shared {
+    name: "libRSSupport",
+    defaults: ["rs_support_defaults"],
+    sdk_version: "9",
+
+    srcs: [
+        "rsAllocation.cpp",
+        "rsApiAllocation.cpp",
+        "rsApiContext.cpp",
+        "rsApiDevice.cpp",
+        "rsApiElement.cpp",
+        "rsApiType.cpp",
+        "rsClosure.cpp",
+        "rsComponent.cpp",
+        "rsContext.cpp",
+        "rsCppUtils.cpp",
+        "rsDevice.cpp",
+        "rsDriverLoader.cpp",
+        "rsElement.cpp",
+        "rsFifoSocket.cpp",
+        "rsObjectBase.cpp",
+        "rsMatrix2x2.cpp",
+        "rsMatrix3x3.cpp",
+        "rsMatrix4x4.cpp",
+        "rsMutex.cpp",
+        "rsSampler.cpp",
+        "rsScript.cpp",
+        "rsScriptC.cpp",
+        "rsScriptC_Lib.cpp",
+        "rsScriptGroup.cpp",
+        "rsScriptGroup2.cpp",
+        "rsScriptIntrinsic.cpp",
+        "rsSignal.cpp",
+        "rsStream.cpp",
+        "rsThreadIO.cpp",
+        "rsType.cpp",
+        "driver/rsdAllocation.cpp",
+        "driver/rsdBcc.cpp",
+        "driver/rsdCore.cpp",
+        "driver/rsdElement.cpp",
+        "driver/rsdRuntimeStubs.cpp",
+        "driver/rsdSampler.cpp",
+        "driver/rsdScriptGroup.cpp",
+        "driver/rsdType.cpp",
+        "cpu_ref/rsCpuCore.cpp",
+        "cpu_ref/rsCpuExecutable.cpp",
+        "cpu_ref/rsCpuScript.cpp",
+        "cpu_ref/rsCpuRuntimeMath.cpp",
+        "cpu_ref/rsCpuScriptGroup.cpp",
+        "cpu_ref/rsCpuScriptGroup2.cpp",
+        "cpu_ref/rsCpuIntrinsic.cpp",
+        "cpu_ref/rsCpuIntrinsic3DLUT.cpp",
+        "cpu_ref/rsCpuIntrinsicBlend.cpp",
+        "cpu_ref/rsCpuIntrinsicBlur.cpp",
+        "cpu_ref/rsCpuIntrinsicBLAS.cpp",
+        "cpu_ref/rsCpuIntrinsicColorMatrix.cpp",
+        "cpu_ref/rsCpuIntrinsicConvolve3x3.cpp",
+        "cpu_ref/rsCpuIntrinsicConvolve5x5.cpp",
+        "cpu_ref/rsCpuIntrinsicHistogram.cpp",
+        "cpu_ref/rsCpuIntrinsicLUT.cpp",
+        "cpu_ref/rsCpuIntrinsicResize.cpp",
+        "cpu_ref/rsCpuIntrinsicYuvToRGB.cpp",
+    ],
+
+    generated_sources: ["rs_generated_sources_support"],
+    generated_headers: ["rs_generated_headers_support"],
+
+    arch: {
+        arm: {
+            cflags: [
+                "-DARCH_ARM_HAVE_VFP",
+                "-DARCH_ARM_USE_INTRINSICS",
+            ],
+            asflags: ["-mfpu=neon"],
+            srcs: [
+                "cpu_ref/rsCpuIntrinsics_neon_3DLUT.S",
+                "cpu_ref/rsCpuIntrinsics_neon_Blend.S",
+                "cpu_ref/rsCpuIntrinsics_neon_Blur.S",
+                "cpu_ref/rsCpuIntrinsics_neon_ColorMatrix.S",
+                "cpu_ref/rsCpuIntrinsics_neon_Convolve.S",
+                "cpu_ref/rsCpuIntrinsics_neon_Resize.S",
+                "cpu_ref/rsCpuIntrinsics_neon_YuvToRGB.S",
+            ],
+
+            neon: {
+                cflags: ["-DARCH_ARM_HAVE_NEON"]
+            },
+        },
+
+        arm64: {
+            cflags: [
+                "-DARCH_ARM_USE_INTRINSICS",
+                "-DARCH_ARM64_USE_INTRINSICS",
+                "-DARCH_ARM64_HAVE_NEON",
+            ],
+            srcs: [
+                "cpu_ref/rsCpuIntrinsics_advsimd_3DLUT.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_Blend.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_Blur.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_ColorMatrix.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_Convolve.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_Resize.S",
+                "cpu_ref/rsCpuIntrinsics_advsimd_YuvToRGB.S",
+            ],
+        },
+
+        x86: {
+            cflags: ["-DARCH_X86_HAVE_SSSE3"],
+            srcs: ["cpu_ref/rsCpuIntrinsics_x86.cpp"],
+        },
+
+        x86_64: {
+            cflags: ["-DARCH_X86_HAVE_SSSE3"],
+            srcs: ["cpu_ref/rsCpuIntrinsics_x86.cpp"],
+        },
+    },
+
+    required: ["libblasV8"],
+    static_libs: ["libbnnmlowpV8"],
+    shared_libs: [
+        "liblog",
+        "libdl",
+    ],
+    ldflags: [
+        "-Wl,--exclude-libs,libc++_static.a",
+        "-Wl,--hash-style=sysv",
+    ],
+    stl: "c++_static",
+
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+        "-Wno-overloaded-virtual",
+        "-DRS_COMPATIBILITY_LIB",
+
+        "-DGEMMLOWP_USE_STLPORT",
+        // TODO: why isn't this picked up from the host GLOBAL_CFLAGS?
+        "-D__STDC_FORMAT_MACROS",
+
+        // Allow implicit fallthrough in rsContext.cpp:414 until it is fixed.
+        "-Wno-error=implicit-fallthrough",
+    ],
+}

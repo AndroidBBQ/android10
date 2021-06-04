@@ -1,0 +1,7 @@
+*~
+*.bak
+*.class
+bin/
+gen/
+.classpath
+.project

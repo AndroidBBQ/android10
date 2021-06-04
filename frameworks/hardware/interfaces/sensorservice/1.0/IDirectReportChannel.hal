@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.sensorservice@1.0;
+
+import android.hardware.sensors@1.0::RateLevel;
+
+/**
+ * The interface represents a direct channel created by
+ * ISensorManager.createSharedMemoryDirectChannel() and
+ * ISensorMangaer.createHardwareBufferDirectChannel().
+ */
+interface IDirectReportChannel {
+
+    /**
+     * Configure direct report on channel
+     *
+     * Configure sensor direct report on a direct channel: set rate to value
+     * other than STOP so that sensor event can be directly written into the
+     * shared memory region used for creating the channel; set rate to STOP will
+     * stop the sensor direct report.
+     *
+     * To stop all active sensor direct report configured to a channel, set
+     * sensorHandle to -1 and rate to STOP.
+     *
+     * @param  sensorHandle handle of the sensor to operate on. If it is -1
+     *                      and rate is STOP, the call must stop of all active
+     *                      sensor direct report.
+     * @param  rate         rate level value to set on the specified sensor.
+     *
+     * @return result      OK on success;
+     *                     BAD_VALUE if parameter is invalid (for example,
+     *                     rate level is not supported by sensor, etc);
+     *                     INVALID_OPERATION if functionality is not supported.
+     * @return token       the token used to distinguish sensor events from
+     *                     multiple different sensors of the same type in a
+     *                     single direct channel, or 0 if: (1) no such token
+     *                     may be returned or (2) error (in which case result
+     *                     must be value other than OK).
+     */
+    configure(int32_t sensorHandle, RateLevel rate)
+            generates (int32_t token, Result result);
+};

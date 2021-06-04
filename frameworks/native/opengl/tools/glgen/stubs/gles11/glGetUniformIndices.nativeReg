@@ -1,0 +1,2 @@
+{"glGetUniformIndices", "(I[Ljava/lang/String;[II)V", (void *) android_glGetUniformIndices_array },
+{"glGetUniformIndices", "(I[Ljava/lang/String;Ljava/nio/IntBuffer;)V", (void *) android_glGetUniformIndices_buffer },

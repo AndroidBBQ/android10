@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<!-- This file is used to define the mappings between lower-level system
+     user and group IDs and the higher-level permission names managed
+     by the platform.
+
+     Be VERY careful when editing this file!  Mistakes made here can open
+     big security holes.
+-->
+<permissions>
+
+    <!-- ================================================================== -->
+    <!-- ================================================================== -->
+    <!-- ================================================================== -->
+
+    <!-- The following tags are associating low-level group IDs with
+         permission names.  By specifying such a mapping, you are saying
+         that any application process granted the given permission will
+         also be running with the given group ID attached to its process,
+         so it can perform any filesystem (read, write, execute) operations
+         allowed for that group. -->
+
+    <permission name="android.permission.BLUETOOTH_ADMIN" >
+        <group gid="net_bt_admin" />
+    </permission>
+
+    <permission name="android.permission.BLUETOOTH" >
+        <group gid="net_bt" />
+    </permission>
+
+    <permission name="android.permission.BLUETOOTH_STACK" >
+        <group gid="bluetooth" />
+        <group gid="wakelock" />
+        <group gid="uhid" />
+    </permission>
+
+    <permission name="android.permission.NET_TUNNELING" >
+        <group gid="vpn" />
+    </permission>
+
+    <permission name="android.permission.INTERNET" >
+        <group gid="inet" />
+    </permission>
+
+    <permission name="android.permission.READ_LOGS" >
+        <group gid="log" />
+    </permission>
+
+    <permission name="android.permission.WRITE_MEDIA_STORAGE" >
+        <group gid="media_rw" />
+    </permission>
+
+    <permission name="android.permission.ACCESS_MTP" >
+        <group gid="mtp" />
+    </permission>
+
+    <permission name="android.permission.NET_ADMIN" >
+        <group gid="net_admin" />
+    </permission>
+
+    <!-- The group that /cache belongs to, linked to the permission
+         set on the applications that can access /cache -->
+    <permission name="android.permission.ACCESS_CACHE_FILESYSTEM" >
+        <group gid="cache" />
+    </permission>
+
+    <!-- RW permissions to any system resources owned by group 'diag'.
+         This is for carrier and manufacture diagnostics tools that must be
+         installable from the framework. Be careful. -->
+    <permission name="android.permission.DIAGNOSTIC" >
+        <group gid="input" />
+        <group gid="diag" />
+    </permission>
+
+    <!-- Group that can read detailed network usage statistics -->
+    <permission name="android.permission.READ_NETWORK_USAGE_HISTORY">
+        <group gid="net_bw_stats" />
+    </permission>
+
+    <!-- Group that can modify how network statistics are accounted -->
+    <permission name="android.permission.UPDATE_DEVICE_STATS">
+        <group gid="net_bw_acct" />
+    </permission>
+
+    <permission name="android.permission.LOOP_RADIO" >
+        <group gid="loop_radio" />
+    </permission>
+
+    <!-- Hotword training apps sometimes need a GID to talk with low-level
+         hardware; give them audio for now until full HAL support is added. -->
+    <permission name="android.permission.MANAGE_VOICE_KEYPHRASES">
+        <group gid="audio" />
+    </permission>
+
+    <permission name="android.permission.ACCESS_BROADCAST_RADIO" >
+        <!-- /dev/fm is gid media, not audio -->
+        <group gid="media" />
+    </permission>
+
+    <permission name="android.permission.USE_RESERVED_DISK">
+        <group gid="reserved_disk" />
+    </permission>
+
+    <!-- These are permissions that were mapped to gids but we need
+         to keep them here until an upgrade from L to the current
+         version is to be supported. These permissions are built-in
+         and in L were not stored in packages.xml as a result if they
+         are not defined here while parsing packages.xml we would
+         ignore these permissions being granted to apps and not
+         propagate the granted state. From N we are storing the
+         built-in permissions in packages.xml as the saved storage
+         is negligible (one tag with the permission) compared to
+         the fragility as one can remove a built-in permission which
+         no longer needs to be mapped to gids and break grant propagation. -->
+    <permission name="android.permission.READ_EXTERNAL_STORAGE" />
+    <permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- ================================================================== -->
+    <!-- ================================================================== -->
+    <!-- ================================================================== -->
+
+    <!-- The following tags are assigning high-level permissions to specific
+         user IDs.  These are used to allow specific core system users to
+         perform the given operations with the higher-level framework.  For
+         example, we give a wide variety of permissions to the shell user
+         since that is the user the adb shell runs under and developers and
+         others should have a fairly open environment in which to
+         interact with the system. -->
+
+    <assign-permission name="android.permission.MODIFY_AUDIO_SETTINGS" uid="media" />
+    <assign-permission name="android.permission.ACCESS_SURFACE_FLINGER" uid="media" />
+    <assign-permission name="android.permission.WAKE_LOCK" uid="media" />
+    <assign-permission name="android.permission.UPDATE_DEVICE_STATS" uid="media" />
+    <assign-permission name="android.permission.UPDATE_APP_OPS_STATS" uid="media" />
+    <assign-permission name="android.permission.GET_PROCESS_STATE_AND_OOM_SCORE" uid="media" />
+    <assign-permission name="android.permission.INTERNET" uid="media" />
+
+    <assign-permission name="android.permission.INTERNET" uid="shell" />
+
+    <assign-permission name="android.permission.MODIFY_AUDIO_SETTINGS" uid="audioserver" />
+    <assign-permission name="android.permission.ACCESS_SURFACE_FLINGER" uid="audioserver" />
+    <assign-permission name="android.permission.WAKE_LOCK" uid="audioserver" />
+    <assign-permission name="android.permission.UPDATE_DEVICE_STATS" uid="audioserver" />
+    <assign-permission name="android.permission.UPDATE_APP_OPS_STATS" uid="audioserver" />
+    <assign-permission name="android.permission.PACKAGE_USAGE_STATS" uid="audioserver" />
+
+    <assign-permission name="android.permission.MODIFY_AUDIO_SETTINGS" uid="cameraserver" />
+    <assign-permission name="android.permission.ACCESS_SURFACE_FLINGER" uid="cameraserver" />
+    <assign-permission name="android.permission.WAKE_LOCK" uid="cameraserver" />
+    <assign-permission name="android.permission.UPDATE_DEVICE_STATS" uid="cameraserver" />
+    <assign-permission name="android.permission.UPDATE_APP_OPS_STATS" uid="cameraserver" />
+    <assign-permission name="android.permission.GET_PROCESS_STATE_AND_OOM_SCORE" uid="cameraserver" />
+    <assign-permission name="android.permission.PACKAGE_USAGE_STATS" uid="cameraserver" />
+    <assign-permission name="android.permission.WATCH_APPOPS" uid="cameraserver" />
+
+    <assign-permission name="android.permission.ACCESS_SURFACE_FLINGER" uid="graphics" />
+
+    <assign-permission name="android.permission.DUMP" uid="incidentd" />
+    <assign-permission name="android.permission.PACKAGE_USAGE_STATS" uid="incidentd" />
+    <assign-permission name="android.permission.INTERACT_ACROSS_USERS" uid="incidentd" />
+    <assign-permission name="android.permission.REQUEST_INCIDENT_REPORT_APPROVAL" uid="incidentd" />
+
+    <assign-permission name="android.permission.ACCESS_LOWPAN_STATE" uid="lowpan" />
+    <assign-permission name="android.permission.MANAGE_LOWPAN_INTERFACES" uid="lowpan" />
+
+    <assign-permission name="android.permission.BATTERY_STATS" uid="statsd" />
+    <assign-permission name="android.permission.DUMP" uid="statsd" />
+    <assign-permission name="android.permission.PACKAGE_USAGE_STATS" uid="statsd" />
+    <assign-permission name="android.permission.STATSCOMPANION" uid="statsd" />
+    <assign-permission name="android.permission.UPDATE_APP_OPS_STATS" uid="statsd" />
+
+    <split-permission name="android.permission.ACCESS_FINE_LOCATION">
+        <new-permission name="android.permission.ACCESS_COARSE_LOCATION" />
+    </split-permission>
+    <split-permission name="android.permission.WRITE_EXTERNAL_STORAGE">
+        <new-permission name="android.permission.READ_EXTERNAL_STORAGE" />
+    </split-permission>
+    <split-permission name="android.permission.READ_CONTACTS"
+                      targetSdk="16">
+        <new-permission name="android.permission.READ_CALL_LOG" />
+    </split-permission>
+    <split-permission name="android.permission.WRITE_CONTACTS"
+                      targetSdk="16">
+        <new-permission name="android.permission.WRITE_CALL_LOG" />
+    </split-permission>
+    <split-permission name="android.permission.ACCESS_FINE_LOCATION"
+                      targetSdk="29">
+        <new-permission name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    </split-permission>
+    <split-permission name="android.permission.ACCESS_COARSE_LOCATION"
+                      targetSdk="29">
+        <new-permission name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    </split-permission>
+    <split-permission name="android.permission.READ_EXTERNAL_STORAGE"
+                      targetSdk="29">
+        <new-permission name="android.permission.ACCESS_MEDIA_LOCATION" />
+    </split-permission>
+
+    <!-- This is a list of all the libraries available for application
+         code to link against. -->
+
+    <library name="android.test.base"
+            file="/system/framework/android.test.base.jar" />
+    <library name="android.test.mock"
+            file="/system/framework/android.test.mock.jar"
+            dependency="android.test.base" />
+    <library name="android.test.runner"
+            file="/system/framework/android.test.runner.jar"
+            dependency="android.test.base:android.test.mock" />
+
+    <!-- In BOOT_JARS historically, and now added to legacy applications. -->
+    <library name="android.hidl.base-V1.0-java"
+            file="/system/framework/android.hidl.base-V1.0-java.jar" />
+    <library name="android.hidl.manager-V1.0-java"
+            file="/system/framework/android.hidl.manager-V1.0-java.jar"
+            dependency="android.hidl.base-V1.0-java" />
+
+    <!-- These are the standard packages that are white-listed to always have internet
+         access while in power save mode, even if they aren't in the foreground. -->
+    <allow-in-power-save package="com.android.providers.downloads" />
+
+    <!-- These are the standard packages that are white-listed to always have internet
+         access while in data mode, even if they aren't in the foreground. -->
+    <allow-in-data-usage-save package="com.android.providers.downloads" />
+
+    <!-- This is a core platform component that needs to freely run in the background -->
+    <allow-in-power-save package="com.android.cellbroadcastreceiver" />
+    <allow-in-power-save package="com.android.shell" />
+
+    <!-- Whitelist system providers -->
+    <allow-in-power-save-except-idle package="com.android.providers.calendar" />
+    <allow-in-power-save-except-idle package="com.android.providers.contacts" />
+
+    <!-- The PAC proxy process must have network access, otherwise no app will
+         be able to connect to the internet when such a proxy is in use, since
+         all outgoing connections originate from this app. -->
+    <allow-in-power-save-except-idle package="com.android.proxyhandler" />
+
+    <!-- These are the packages that are white-listed to be able to run as system user -->
+    <system-user-whitelisted-app package="com.android.settings" />
+
+    <!-- These are the packages that shouldn't run as system user -->
+    <system-user-blacklisted-app package="com.android.wallpaper.livepicker" />
+</permissions>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (C) 2015 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<resources>
+
+    <!-- Theme attributes -->
+    <attr name="suwLayoutTheme" format="reference" />
+    <attr name="suwMarginSides" format="dimension|reference" />
+    <attr name="suwEditTextBackgroundColor" format="color" />
+    <attr name="suwButtonHighlightAlpha" format="float" />
+
+    <!-- Subset of values in "gravity" in frameworks/base/core/res/res/values/attrs.xml. Only
+         horizontal values are listed here as the header does not support vertical gravity. -->
+    <attr name="suwGlifHeaderGravity">
+        <!-- Push object to the left of its container, not changing its size. -->
+        <flag name="left" value="0x03" />
+        <!-- Push object to the right of its container, not changing its size. -->
+        <flag name="right" value="0x05" />
+        <!-- Place object in the horizontal center of its container, not changing its size. -->
+        <flag name="center_horizontal" value="0x01" />
+        <!-- Grow the horizontal size of the object if needed so it completely fills its container. -->
+        <flag name="fill_horizontal" value="0x07" />
+        <!-- Push object to the beginning of its container, not changing its size. -->
+        <flag name="start" value="0x00800003" />
+        <!-- Push object to the end of its container, not changing its size. -->
+        <flag name="end" value="0x00800005" />
+    </attr>
+    <attr name="suwGlifIconStyle" format="reference" />
+
+    <attr name="suwButtonAllCaps" format="boolean" />
+    <attr name="suwButtonCornerRadius" format="dimension" />
+    <attr name="suwButtonFontFamily" format="string|reference" />
+    <attr name="suwCardBackground" format="color|reference" />
+    <attr name="suwDividerCondition">
+        <enum name="either" value="0" />
+        <enum name="both" value="1" />
+    </attr>
+    <attr name="suwFillContentLayoutStyle" format="reference" />
+    <attr name="suwListItemIconColor" format="color" />
+    <attr name="suwNavBarBackgroundColor" format="color" />
+    <attr name="suwNavBarButtonBackground" format="color|reference" />
+    <attr name="suwNavBarTextColor" format="color" />
+    <attr name="suwNavBarTheme" format="reference" />
+
+    <!-- Values copied from frameworks/base/core/res/res/values/attrs.xml -->
+    <attr name="suwScrollIndicators">
+        <!-- No scroll indicators are displayed. -->
+        <flag name="none" value="0x00" />
+        <!-- Displays top scroll indicator when view can be scrolled up. -->
+        <flag name="top" value="0x01" />
+        <!-- Displays bottom scroll indicator when vew can be scrolled down. -->
+        <flag name="bottom" value="0x02" />
+        <!-- Displays left scroll indicator when vew can be scrolled left. -->
+        <flag name="left" value="0x04" />
+        <!-- Displays right scroll indicator when vew can be scrolled right. -->
+        <flag name="right" value="0x08" />
+        <!-- Displays right scroll indicator when vew can be scrolled in the
+             start direction. -->
+        <flag name="start" value="0x10" />
+        <!-- Displays right scroll indicator when vew can be scrolled in the
+             end direction. -->
+        <flag name="end" value="0x20" />
+    </attr>
+
+    <!-- Custom view attributes -->
+    <attr name="suwColorPrimary" format="color" />
+    <attr name="suwHeader" format="reference" />
+    <!-- Deprecated. Use suwDividerInsetStart and suwDividerInsetEnd instead -->
+    <attr name="suwDividerInset" format="dimension|reference" />
+    <attr name="suwDividerInsetEnd" format="dimension|reference" />
+    <attr name="suwDividerInsetStart" format="dimension|reference" />
+    <attr name="suwDividerInsetStartNoIcon" format="dimension|reference" />
+    <attr name="suwItemDescriptionStyle" format="reference" />
+    <attr name="suwItemDescriptionTitleStyle" format="reference" />
+
+    <declare-styleable name="SuwIllustration">
+        <attr name="suwAspectRatio" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwStickyHeaderListView">
+        <attr name="suwHeader" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwHeaderRecyclerView">
+        <attr name="suwHeader" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwIllustrationVideoView">
+        <attr name="suwVideo" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwGlifLayout">
+        <attr name="suwBackgroundPatterned" format="boolean" />
+        <attr name="suwBackgroundBaseColor" format="color" />
+        <attr name="suwColorPrimary" />
+        <attr name="suwFooter" format="reference" />
+        <attr name="suwLayoutFullscreen" format="boolean" />
+        <attr name="suwStickyHeader" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwStatusBarBackgroundLayout">
+        <attr name="suwStatusBarBackground" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwIntrinsicSizeFrameLayout">
+        <attr name="android:height" />
+        <attr name="android:width" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwFillContentLayout">
+        <attr name="android:maxHeight" />
+        <attr name="android:maxWidth" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwSetupWizardLayout">
+        <attr name="suwBackground" format="color|reference" />
+        <attr name="suwBackgroundTile" format="color|reference" />
+        <attr name="suwDecorPaddingTop" format="dimension|reference" />
+        <attr name="suwIllustration" format="color|reference" />
+        <attr name="suwIllustrationAspectRatio" format="float|reference" />
+        <attr name="suwIllustrationHorizontalTile" format="color|reference" />
+        <attr name="suwIllustrationImage" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwTemplateLayout">
+        <attr name="android:layout" />
+        <attr name="suwContainer" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwAbstractItem">
+        <attr name="android:id" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwItem">
+        <attr name="android:enabled" />
+        <attr name="android:icon" />
+        <attr name="android:layout" />
+        <attr name="android:summary" />
+        <attr name="android:title" />
+        <attr name="android:visible" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwDividerItemDecoration">
+        <attr name="android:listDivider" />
+        <attr name="android:dividerHeight" />
+        <attr name="suwDividerCondition" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwButtonItem">
+        <attr name="android:buttonStyle" />
+        <attr name="android:enabled" />
+        <attr name="android:text" />
+        <attr name="android:theme" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwHeaderMixin">
+        <attr name="suwHeaderText" format="string" localization="suggested" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwColoredHeaderMixin">
+        <attr name="suwHeaderColor" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwIconMixin">
+        <attr name="android:icon" />
+    </declare-styleable>
+
+    <declare-styleable name="SuwListMixin">
+        <attr name="android:entries" />
+        <attr name="suwDividerInset" />
+        <attr name="suwDividerInsetEnd" />
+        <attr name="suwDividerInsetStart" />
+    </declare-styleable>
+
+</resources>

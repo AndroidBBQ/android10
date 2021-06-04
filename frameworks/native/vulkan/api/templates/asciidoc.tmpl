@@ -1,0 +1,151 @@
+{{Include "vulkan_common.tmpl"}}
+{{if not (Global "AsciiDocPath")}}{{Global "AsciiDocPath" "../../doc/specs/vulkan/"}}{{end}}
+{{$ | Macro "AsciiDoc.Main"}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  AsciiDoc generation main entry point.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Main"}}
+  {{$docPath := Global "AsciiDocPath"}}
+
+  {{/* Generate AsciiDoc files for API enums and bitfields (flags). */}}
+  {{range $e := $.Enums}}
+    {{if not $e.IsBitfield}}
+      {{$filename := print $docPath "enums/" (Macro "EnumName" $e) ".txt"}}
+      {{Macro "AsciiDoc.Write" "Code" (Macro "AsciiDoc.Enum" $e) "File" $filename}}
+    {{else}}
+      {{$filename := print $docPath "flags/" (Macro "EnumName" $e) ".txt"}}
+      {{Macro "AsciiDoc.Write" "Code" (Macro "AsciiDoc.Flag" $e) "File" $filename}}
+    {{end}}
+  {{end}}
+
+  {{/* Generate AsciiDoc files for API commands (protos). */}}
+  {{range $f := (AllCommands $)}}
+    {{if not (GetAnnotation $f "pfn")}}
+      {{$filename := print $docPath "protos/" $f.Name ".txt"}}
+      {{Macro "AsciiDoc.Write" "Code" (Macro "AsciiDoc.Proto" $f) "File" $filename}}
+    {{end}}
+  {{end}}
+
+  {{/* Generate AsciiDoc files for API structs. */}}
+  {{range $c := $.Classes}}
+    {{if not (GetAnnotation $c "internal")}}
+      {{$filename := print $docPath "structs/" $c.Name ".txt"}}
+      {{Macro "AsciiDoc.Write" "Code" (Macro "AsciiDoc.Struct" $c) "File" $filename}}
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the AsciiDoc contents for the specified API enum.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Enum"}}
+  {{AssertType $ "Enum"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef enum {
+    {{range $i, $e := $.Entries}}
+      {{Macro "EnumEntry" $e}} = {{AsSigned $e.Value}}, {{Macro "Docs" $e.Docs}}
+    {{end}}
+  ¶
+    {{$name := Macro "EnumName" $ | TrimRight "ABCDEFGHIJKLMNOQRSTUVWXYZ" | SplitPascalCase | Upper | JoinWith "_"}}
+    {{$first := Macro "EnumFirstEntry" $}}
+    {{$last  := Macro "EnumLastEntry" $}}
+    {{$name}}_BEGIN_RANGE = {{$first}},
+    {{$name}}_END_RANGE = {{$last}},
+    {{$name}}_NUM = ({{$last}} - {{$first}} + 1),
+    {{$name}}_MAX_ENUM = 0x7FFFFFFF
+  } {{Macro "EnumName" $}};
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the AsciiDoc contents for the specified API bitfield.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Flag"}}
+  {{AssertType $ "Enum"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef VkFlags {{Macro "EnumName" $}};
+  {{if $.Entries}}
+  typedef enum {
+  {{range $e := $.Entries}}
+    {{Macro "BitfieldEntryName" $e}} = {{printf "%#.8x" $e.Value}}, {{Macro "Docs" $e.Docs}}
+  {{end}}
+  } {{Macro "EnumName" $ | TrimRight "s"}}Bits;
+  {{end}}
+{{end}}
+
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the AsciiDoc contents for the specified API class.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Struct"}}
+  {{AssertType $ "Class"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef {{if GetAnnotation $ "union"}}union{{else}}struct{{end}} {
+    {{range $f := $.Fields}}
+      {{Node "Type" $f}} {{$f.Name}}{{Macro "ArrayPostfix" (TypeOf $f)}}; {{Macro "Docs" $f.Docs}}
+    {{end}}
+  } {{Macro "StructName" $}};
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the AsciiDoc contents for the specified API function.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Proto"}}
+  {{AssertType $ "Function"}}
+
+  {{Macro "Docs" $.Docs}}
+  {{Node "Type" $.Return}} VKAPI {{Macro "FunctionName" $}}({{Macro "Parameters" $}});
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Wraps the specified Code in AsciiDoc source tags then writes to the specified File.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Write"}}
+  {{AssertType $.Code "string"}}
+  {{AssertType $.File "string"}}
+
+  {{$code := $.Code | Format (Global "clang-format")}}
+  {{JoinWith "\n" (Macro "AsciiDoc.Header") $code (Macro "AsciiDoc.Footer") ""| Write $.File}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits an AsciiDoc source header.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Header"}}
+[source,{basebackend@docbook:c++:cpp}]
+------------------------------------------------------------------------------
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits an AsciiDoc source footer.
+-------------------------------------------------------------------------------
+*/}}
+{{define "AsciiDoc.Footer"}}
+------------------------------------------------------------------------------
+{{end}}

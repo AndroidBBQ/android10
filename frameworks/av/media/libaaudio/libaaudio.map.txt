@@ -1,0 +1,61 @@
+LIBAAUDIO {
+  global:
+    AAudio_convertResultToText;
+    AAudio_convertStreamStateToText;
+    AAudio_createStreamBuilder;
+    AAudio_getMMapPolicy;
+    AAudio_setMMapPolicy;
+    AAudioStreamBuilder_setPerformanceMode;
+    AAudioStreamBuilder_setDeviceId;
+    AAudioStreamBuilder_setDataCallback;
+    AAudioStreamBuilder_setErrorCallback;
+    AAudioStreamBuilder_setFramesPerDataCallback;
+    AAudioStreamBuilder_setSampleRate;
+    AAudioStreamBuilder_setSamplesPerFrame;
+    AAudioStreamBuilder_setChannelCount;
+    AAudioStreamBuilder_setFormat;
+    AAudioStreamBuilder_setSharingMode;
+    AAudioStreamBuilder_setDirection;
+    AAudioStreamBuilder_setBufferCapacityInFrames;
+    AAudioStreamBuilder_setUsage;       # introduced=28
+    AAudioStreamBuilder_setContentType; # introduced=28
+    AAudioStreamBuilder_setInputPreset; # introduced=28
+    AAudioStreamBuilder_setAllowedCapturePolicy; # introduced=29
+    AAudioStreamBuilder_setSessionId;   # introduced=28
+    AAudioStreamBuilder_openStream;
+    AAudioStreamBuilder_delete;
+    AAudioStream_close;
+    AAudioStream_requestStart;
+    AAudioStream_requestPause;
+    AAudioStream_requestFlush;
+    AAudioStream_requestStop;
+    AAudioStream_getState;
+    AAudioStream_waitForStateChange;
+    AAudioStream_read;
+    AAudioStream_write;
+    AAudioStream_setBufferSizeInFrames;
+    AAudioStream_getBufferSizeInFrames;
+    AAudioStream_getFramesPerDataCallback;
+    AAudioStream_getFramesPerBurst;
+    AAudioStream_getBufferCapacityInFrames;
+    AAudioStream_getXRunCount;
+    AAudioStream_getSampleRate;
+    AAudioStream_getSamplesPerFrame;
+    AAudioStream_getChannelCount;
+    AAudioStream_getPerformanceMode;
+    AAudioStream_getDeviceId;
+    AAudioStream_getFormat;
+    AAudioStream_getSharingMode;
+    AAudioStream_getDirection;
+    AAudioStream_getUsage;       # introduced=28
+    AAudioStream_getContentType; # introduced=28
+    AAudioStream_getInputPreset; # introduced=28
+    AAudioStream_getAllowedCapturePolicy; # introduced=29
+    AAudioStream_getFramesWritten;
+    AAudioStream_getFramesRead;
+    AAudioStream_getSessionId;   # introduced=28
+    AAudioStream_getTimestamp;
+    AAudioStream_isMMapUsed;
+  local:
+    *;
+};

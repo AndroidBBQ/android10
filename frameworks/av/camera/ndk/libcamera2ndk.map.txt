@@ -1,0 +1,69 @@
+LIBCAMERA2NDK {
+  global:
+    ACameraCaptureSession_abortCaptures;
+    ACameraCaptureSession_capture;
+    ACameraCaptureSession_logicalCamera_capture; # introduced=29
+    ACameraCaptureSession_close;
+    ACameraCaptureSession_getDevice;
+    ACameraCaptureSession_setRepeatingRequest;
+    ACameraCaptureSession_logicalCamera_setRepeatingRequest; # introduced=29
+    ACameraCaptureSession_stopRepeating;
+    ACameraCaptureSession_updateSharedOutput; # introduced=28
+    ACameraDevice_close;
+    ACameraDevice_createCaptureRequest;
+    ACameraDevice_createCaptureRequest_withPhysicalIds; # introduced=29
+    ACameraDevice_createCaptureSession;
+    ACameraDevice_createCaptureSessionWithSessionParameters; # introduced=28
+    ACameraDevice_isSessionConfigurationSupported; # introduced=29
+    ACameraDevice_getId;
+    ACameraManager_create;
+    ACameraManager_delete;
+    ACameraManager_deleteCameraIdList;
+    ACameraManager_getCameraCharacteristics;
+    ACameraManager_getCameraIdList;
+    ACameraManager_openCamera;
+    ACameraManager_registerAvailabilityCallback;
+    ACameraManager_unregisterAvailabilityCallback;
+    ACameraManager_registerExtendedAvailabilityCallback; # introduced=29
+    ACameraManager_unregisterExtendedAvailabilityCallback; # introduced=29
+    ACameraMetadata_copy;
+    ACameraMetadata_free;
+    ACameraMetadata_getAllTags;
+    ACameraMetadata_getConstEntry;
+    ACameraMetadata_isLogicalMultiCamera; # introduced=29
+    ACameraOutputTarget_create;
+    ACameraOutputTarget_free;
+    ACaptureRequest_addTarget;
+    ACaptureRequest_copy; # introduced=28
+    ACaptureRequest_free;
+    ACaptureRequest_getAllTags;
+    ACaptureRequest_getConstEntry;
+    ACaptureRequest_getConstEntry_physicalCamera; # introduced=29
+    ACaptureRequest_getUserContext; # introduced=28
+    ACaptureRequest_removeTarget;
+    ACaptureRequest_setEntry_double;
+    ACaptureRequest_setEntry_physicalCamera_double; # introduced=29
+    ACaptureRequest_setEntry_float;
+    ACaptureRequest_setEntry_physicalCamera_float; # introduced=29
+    ACaptureRequest_setEntry_i32;
+    ACaptureRequest_setEntry_physicalCamera_i32; # introduced=29
+    ACaptureRequest_setEntry_i64;
+    ACaptureRequest_setEntry_physicalCamera_i64; # introduced=29
+    ACaptureRequest_setEntry_rational;
+    ACaptureRequest_setEntry_physicalCamera_rational; # introduced=29
+    ACaptureRequest_setEntry_u8;
+    ACaptureRequest_setEntry_physicalCamera_u8; # introduced=29
+    ACaptureRequest_setUserContext; # introduced=28
+    ACaptureSessionOutputContainer_add;
+    ACaptureSessionOutputContainer_create;
+    ACaptureSessionOutputContainer_free;
+    ACaptureSessionOutputContainer_remove;
+    ACaptureSessionOutput_create;
+    ACaptureSessionSharedOutput_create; # introduced=28
+    ACaptureSessionSharedOutput_add; # introduced=28
+    ACaptureSessionSharedOutput_remove; # introduced=28
+    ACaptureSessionPhysicalOutput_create; # introduced=29
+    ACaptureSessionOutput_free;
+  local:
+    *;
+};

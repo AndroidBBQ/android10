@@ -1,0 +1,6 @@
+cc_library_static {
+    name: "libmcldARMInfo",
+    defaults: ["mcld-defaults"],
+    host_supported: true,
+    srcs: ["ARMTargetInfo.cpp"],
+}

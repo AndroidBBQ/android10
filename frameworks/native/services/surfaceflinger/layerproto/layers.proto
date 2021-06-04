@@ -1,0 +1,180 @@
+// Definitions for SurfaceFlinger layers.
+
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+package android.surfaceflinger;
+
+// Contains a list of all layers.
+message LayersProto {
+  repeated LayerProto layers = 1;
+  SizeProto resolution = 2;
+  string color_mode = 3;
+  string color_transform = 4;
+  int32 global_transform = 5;
+}
+
+// Information about each layer.
+message LayerProto {
+  // unique id per layer.
+  int32 id = 1;
+  // unique name per layer.
+  string name = 2;
+  // list of children this layer may have. May be empty.
+  repeated int32 children = 3;
+  // list of layers that are z order relative to this layer.
+  repeated int32 relatives = 4;
+  // The type of layer, ex Color, Layer
+  string type = 5;
+  RegionProto transparent_region = 6;
+  RegionProto visible_region = 7;
+  RegionProto damage_region = 8;
+  uint32 layer_stack = 9;
+  // The layer's z order. Can be z order in layer stack, relative to parent,
+  // or relative to another layer specified in zOrderRelative.
+  int32 z = 10;
+  // The layer's position on the display.
+  PositionProto position = 11;
+  // The layer's requested position.
+  PositionProto requested_position = 12;
+  // The layer's size.
+  SizeProto size = 13;
+  // The layer's crop in it's own bounds.
+  RectProto crop = 14;
+  // The layer's crop in it's parent's bounds.
+  RectProto final_crop = 15 [deprecated=true];
+  bool is_opaque = 16;
+  bool invalidate = 17;
+  string dataspace = 18;
+  string pixel_format = 19;
+  // The layer's actual color.
+  ColorProto color = 20;
+  // The layer's requested color.
+  ColorProto requested_color = 21;
+  // Can be any combination of
+  //    hidden = 0x01
+  //    opaque = 0x02,
+  //    secure = 0x80,
+  uint32 flags = 22;
+  // The layer's actual transform
+  TransformProto transform = 23;
+  // The layer's requested transform.
+  TransformProto requested_transform = 24;
+  // The parent layer. This value can be null if there is no parent.
+  int32 parent = 25;
+  // The layer that this layer has a z order relative to. This value can be null.
+  int32 z_order_relative_of = 26;
+  // This value can be null if there's nothing to draw.
+  ActiveBufferProto active_buffer = 27;
+  // The number of frames available.
+  int32 queued_frames = 28;
+  bool refresh_pending = 29;
+  // The layer's composer backend destination frame
+  RectProto hwc_frame = 30;
+  // The layer's composer backend source crop
+  FloatRectProto hwc_crop = 31;
+  // The layer's composer backend transform
+  int32 hwc_transform = 32;
+  int32 window_type = 33 [deprecated=true];
+  int32 app_id = 34 [deprecated=true];
+  // The layer's composition type
+  int32 hwc_composition_type = 35;
+  // If it's a buffer layer, indicate if the content is protected
+  bool is_protected = 36;
+  // Current frame number being rendered.
+  uint64 curr_frame = 37;
+  // A list of barriers that the layer is waiting to update state.
+  repeated BarrierLayerProto barrier_layer = 38;
+  // If active_buffer is not null, record its transform.
+  TransformProto buffer_transform = 39;
+  int32 effective_scaling_mode = 40;
+  // Layer's corner radius.
+  float corner_radius = 41;
+  // Metadata map. May be empty.
+  map<int32, bytes> metadata = 42;
+
+  TransformProto effective_transform = 43;
+  FloatRectProto source_bounds = 44;
+  FloatRectProto bounds = 45;
+  FloatRectProto screen_bounds = 46;
+
+  InputWindowInfoProto input_window_info = 47;
+}
+
+message PositionProto {
+  float x = 1;
+  float y = 2;
+}
+
+message SizeProto {
+  int32 w = 1;
+  int32 h = 2;
+}
+
+message TransformProto {
+  float dsdx = 1;
+  float dtdx = 2;
+  float dsdy = 3;
+  float dtdy = 4;
+  int32 type = 5;
+}
+
+message RegionProto {
+  reserved 1;  // Previously: uint64 id
+  repeated RectProto rect = 2;
+}
+
+message RectProto {
+  int32 left   = 1;
+  int32 top    = 2;
+  int32 right  = 3;
+  int32 bottom = 4;
+}
+
+message FloatRectProto {
+  float left = 1;
+  float top = 2;
+  float right = 3;
+  float bottom = 4;
+}
+
+message ActiveBufferProto {
+  uint32 width = 1;
+  uint32 height = 2;
+  uint32 stride = 3;
+  int32 format = 4;
+}
+
+message ColorProto {
+  float r = 1;
+  float g = 2;
+  float b = 3;
+  float a = 4;
+}
+
+message BarrierLayerProto {
+  // layer id the barrier is waiting on.
+  int32 id = 1;
+  // frame number the barrier is waiting on.
+  uint64 frame_number = 2;
+}
+
+message InputWindowInfoProto {
+    uint32 layout_params_flags = 1;
+    uint32 layout_params_type = 2;
+    RectProto frame = 3;
+    RegionProto touchable_region = 4;
+
+    uint32 surface_inset = 5;
+    bool visible = 6;
+    bool can_receive_keys = 7;
+    bool has_focus = 8;
+    bool has_wallpaper = 9;
+
+    float global_scale_factor = 10;
+    float window_x_scale = 11;
+    float window_y_scale = 12;
+
+    uint32 crop_layer_id = 13;
+    bool replace_touchable_region_with_crop = 14;
+    RectProto touchable_region_crop = 15;
+}

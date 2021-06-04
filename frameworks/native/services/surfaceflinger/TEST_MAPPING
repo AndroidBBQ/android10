@@ -1,0 +1,10 @@
+{
+  "presubmit": [
+    {
+      "name": "libsurfaceflinger_unittest"
+    },
+    {
+      "name": "libcompositionengine_test"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+<!--
+     Copyright (C) 2019 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="22"
+    android:viewportHeight="17"
+    android:width="19.41dp"
+    android:height="15dp">
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M 6.72 3.52 L 6.54 4.69 L 3.34 4.69 L 2.63 7.41 C 3.011 7.143 3.465 7 3.93 7 C 4.5 6.986 5.041 7.251 5.38 7.71 C 5.756 8.249 5.952 8.893 5.94 9.55 C 5.98 10.276 5.864 11.002 5.6 11.68 C 5.385 12.267 5.007 12.78 4.51 13.16 C 4.043 13.499 3.476 13.671 2.9 13.65 C 2.271 13.653 1.675 13.369 1.28 12.88 C 0.854 12.302 0.636 11.597 0.66 10.88 L 1.76 10.88 C 1.81 12 2.21 12.57 3 12.58 C 3.592 12.589 4.132 12.243 4.37 11.7 C 4.708 11.044 4.85 10.305 4.78 9.57 C 4.767 9.209 4.645 8.86 4.43 8.57 C 4.239 8.309 3.934 8.156 3.61 8.16 C 3.404 8.138 3.196 8.162 3 8.23 C 2.748 8.358 2.518 8.527 2.32 8.73 L 1.31 8.46 L 2.51 3.52 L 6.72 3.52 Z M 11.7 3.39 C 12.459 3.353 13.195 3.662 13.7 4.23 C 14.185 4.864 14.42 5.654 14.36 6.45 L 13.1 6.45 C 13.131 5.938 12.998 5.43 12.72 5 C 12.455 4.679 12.056 4.498 11.64 4.51 C 11.025 4.456 10.42 4.688 10 5.14 C 9.491 5.811 9.179 6.611 9.1 7.45 L 8.75 9.54 L 8.75 10.57 C 8.82 11.86 9.36 12.52 10.36 12.57 C 10.701 12.593 11.043 12.538 11.36 12.41 C 11.661 12.281 11.943 12.113 12.2 11.91 L 12.62 9.62 L 10.77 9.62 L 11 8.52 L 14 8.52 L 13.36 12.23 C 13.176 12.483 12.953 12.706 12.7 12.89 C 11.995 13.398 11.138 13.652 10.27 13.61 C 9.507 13.634 8.773 13.315 8.27 12.74 C 7.748 12.085 7.475 11.267 7.5 10.43 C 7.47 10.097 7.47 9.763 7.5 9.43 L 7.8 7.43 C 7.927 6.332 8.36 5.293 9.05 4.43 C 9.725 3.692 10.703 3.308 11.7 3.39 Z M 20.81 7.21 L 20.62 8.29 L 18.32 8.29 L 18.06 9.8 L 20.06 9.8 L 19.83 10.84 L 17.88 10.84 L 17.59 12.54 L 19.9 12.54 L 19.71 13.61 L 16.14 13.61 L 17.25 7.21 L 20.81 7.21 Z" />
+  <path android:pathData="M 0 0 H 14 V 17 H 0 V 0 Z"/>
+</vector>

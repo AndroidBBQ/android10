@@ -1,0 +1,237 @@
+Contract between NNAPI systrace code and parser
+===============================================
+
+This text files documents how tracing in the NNAPI manifests in systrace output
+and how that output is interpreted by the systrace parser.
+
+Please view in a 160 character window.
+
+Special cases
+-------------
+
+- Execution is exposed as an asynchronous event from the runtime. Time taken
+  by the runtime is calculated as the time between start of
+  ANeuralNetworksExecution_startCompute and end of
+  ANeuralNetworksEvent_wait. This special case is not reflected in the cases
+  presented below.
+
+Notation
+--------
+- ...: elided code
+- t_m_w: tracing_mark_write
+- tX: timestamps
+- T1, T2: thread ids
+
+
+Cases for the parser
+====================
+
+Source code                                    Systrace                                                   Interpretation for timing statistics - all
+                                                                                                          times are wallclock
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Baseline case*
+
+... funcP(...) {                               t0: t_m_w:B|T1|[NN_LR_PP]funcP                             Add (t1-t0) to total time spent in Layer
+  NNTRACE_RT(NNTRACE_PHASE_PREPARATION,        t1: t_m_w:E|T1                                             Runtime, Phase Preparation
+             "funcP);
+  ...
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Local call to other layer*
+
+... funcA1(...) {                              t0:   t_m_w:B|T1|[NN_LA_PP]funcE1                          Add (t3-t0) to total time spent in Layer
+  NNTRACE_APP(NNTRACE_PHASE_PREPARATION,       t1:   t_m_w:B|T1|[NN_LR_PP]funcC1                          Application, Phase Preparation
+              "funcA1);                        t2:   t_m_w:E|T1
+  ... funcR1(...);                             t3:   t_m_w:E|T1                                           Add (t2-t1) to total time spent in Layer
+  ...                                                                                                     Runtime, Phase Preparation
+}
+... funcR1(...) {                                                                                         Note: Self-time of Layer Application,
+  NNTRACE_RT(NNTRACE_PHASE_PREPARATION,                                                                   Phase Preparation will be calculated as
+             "funcR1"); ...                                                                               total time in Layer Application - total time
+}                                                                                                         in Layer Runtime
+
+                                                                                                          Note: These can be nested as per rows
+                                                                                                          below ("Switch phase ...", "Subphases ...",
+                                                                                                          "Additional detail...")
+
+                                                                                                          Note: If the called function specifies a
+                                                                                                          phase that is not supposed to be nested,
+                                                                                                          the parser will emit a diagnostic.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Switch phase during function*
+
+... funcC1(...) {                              t0:   t_m_w:B|T1|[NN_LC_PTR]funcC1                         Add (t1-t0) to total time spent in Layer
+  NNTRACE_TRANS("funcC1");                     t1:   t_m_w:B|T1|[SW][NN_LC_PCO]funcC1                     CPU, Phase Transformation
+  ...                                          t2:   t_m_w:E|T1
+  NNTRACE_COMP_SWITCH("funcC1");               t3:   t_m_w:E|T1                                           Add (t2-t1) to total time spent in Layer
+  ...                                                                                                     CPU, Phase Computation
+}
+                                                                                                          (t3-t2 treated as negligible - only the
+                                                                                                          destructors of objects created between
+                                                                                                          the tracepoints)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Subphases of execution*
+
+... funcR2(...) {                              t0:   t_m_w:B|T1|[NN_LR_PE]funcR2                          Add (t2-t1) to total time spent in Layer
+  NNTRACE_RT(NNTRACE_PHASE_EXECUTION,          t1:   t_m_w:B|T1|[NN_LC_PCO]funcC2                         CPU, (sub)Phase Computation and to
+             "funcR2);                         t2:   t_m_w:E|T1                                           total time in Phase Execution
+  ... funcC2(...);                             t3:   t_m_w:E|T1
+  ...                                                                                                     Add (t3-t0) to total time spent in Layer
+}                                                                                                         Runtime, Phase Execution
+... funcC2(...) {
+  NNTRACE_COMP("funcC2");
+  ...
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Additional detail in the same layer*
+
+... funcR3(...) {                              t0:   t_m_w:B|T1|[NN_LR_PE]funcR3                          Add (t3-t0) to total time spent in Layer
+  NNTRACE_RT(NNTRACE_PHASE_EXECUTION,          t1:   t_m_w:B|T1|[NN_LR_PE]funcR4                          Runtime, Phase Execution
+             "funcR3);                         t2:   t_m_w:E|T1
+  ... funcR4(...);                             t3:   t_m_w:E|T1                                           Note: funcR4 will be visible in the systrace
+  ...                                                                                                     visualization
+}
+... funcR4(...) {
+  NNTRACE_RT(NNTRACE_PHASE_EXECUTION,
+             "funcR4");
+  ...
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Synchronous IPC call*
+
+... funcR5(...) {                              t0:   t_m_w:B|T1|[NN_LR_PC]funcR5                          Add (t5-t0) - (t4-r1) to total time spent in
+  NNTRACE_RT(NNTRACE_PHASE_COMPILATION,        t1:   t_m_w:B|T1|[NN_LI_PI]getCapabilities                 Layer Runtime, Phase Compilation; see
+             "funcR5");                        t2:   t_m_w:B|T1|HIDL::IDevice::getCapabilities::client    "Onetime initialization code".
+  ... device->getCapabilities()                t3:   t_m_w:E|T1
+  ...                                          t4:   t_m_w:E|T1                                           Add (t4-t1) to total time spent in Layer
+}                                              t5:   t_m_w:E|T1                                           IPC, Phase Initialization
+... VersionedIDevice::getCapabilities(...) {
+   NTRACE_FULL(NNTRACE_LAYER_IPC,                                                                         Note: Self-time of Layer Runtime, Phase
+               NNTRACE_PHASE_COMPILATION,                                                                 Compilation will be calculated as total
+              "getCapabilities");                                                                         time in Layer Runtime - total time in Layer
+                                                                                                          IPC
+}
+                                                                                                          Note: Tracepoints are needed for the
+                                                                                                          client IPC calls. The HIDL tracing isn't
+                                                                                                          guaranteed to wait for the server - it just
+                                                                                                          sends the transaction even if the call is
+                                                                                                          synchronous.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Asynchronous IPC call that is synchronously waited for by the runtime*
+
+// Runtime code                                t0: t_m_w:B|T1|[NN_LI_PC]prepareModel                      Add (t10-t0) to total time spent in Layer
+... funcRC(...) {                              t1: t_m_w:B|T1|HIDL::IDevice::prepareModel_1_1::client     IPC, Phase Compilation
+   ...                                         t2: t_m_w:B|T2|HIDL::IDevice::prepareModel_1_1::server
+   NTRACE_FULL(NNTRACE_LAYER_IPC,              t3: t_m_w:B|T2|[NN_LD_PC]SampleDriver::prepareModel        Add (t6-t2) to total time spent in Layer
+               NNTRACE_PHASE_COMPILATION,      t4: t_m_w:B|T2|HIDL::IPreparedModelCallback::notify::clie  Driver, Phase Compilation. This includes
+              "prapareModel");                 t5: t_m_w:E|T2                                             the generated HIDL stub code, which is
+   ...                                         t6: t_m_w:E|T2                                             <0.05ms.
+   device->prepareModel(...);                  t7: t_m_w:E|T2
+   ...                                         t8: t_m_w:B|T1|HIDL::IPreparedModelCallback::notify::serv  Note: the HIDL trace rows are added by
+   cb->wait();                                 t9: t_m_w:E|T1                                             the automatically generated proxy and
+   ...                                         t10: t_m_w:E|T1                                            stub code. For the driver side, the
+}                                              t11: t_m_w:E|T1                                            mapping of the HIDL functions to layers
+                                                                                                          and phases is done in the systrace
+// Driver code                                                                                            parser.
+... SampleDriver::prepareModel(...) {
+  NNTRACE_FULL(NNTRACE_LAYER_DRIVER,                                                                      Note: the SampleDriver::prepareModel is
+               NNTRACE_PHASE_COMPILATION,                                                                 treated as additional detail for Layer
+               "SampleDriver::prepareModel");                                                             Driver, Phase Compilation.
+}
+                                                                                                          Note: the "t_m_w" output of
+                                                                                                          systrace uses thread ids, so that the call
+                                                                                                          stack can be reconstructed. The systrace
+                                                                                                          rows are also annotated with process ids.
+                                                                                                          The parser uses the process ids to
+                                                                                                          distinguish between the application
+                                                                                                          process from the driver process (used for
+                                                                                                          diagnostics and for distinguishing CPU
+                                                                                                          fallback from sample driver).
+
+                                                                                                          Note: the next row in this table gives more
+                                                                                                          detail for prepareModel specifically
+
+                                                                                                          Note: the driver-side HIDL traces get us
+                                                                                                          the time spent in sample and hvx drivers.
+                                                                                                          With a different driver threading model
+                                                                                                          this may not be the case - future drivers
+                                                                                                          should add manual tracing.
+
+                                                                                                          TODO: attribute driver process IPC call
+                                                                                                          (callback) overhead to IPC layer.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Subtracting time when nesting is violated*
+
+// Runtime code                                t0:   t_m_w:B|T1|[NN_LI_PC]prepareModel                    Add (t3 - t0) - (t2 - t1) to total time spent
+... funcRC(...) {                              t1:   t_m_w:B|T1|[SUB][NN_LR_PC]VersionedIDevice::prepareM in Layer IPC, Phase compilation
+   ...                                         t2:   t_m_w:E|T1
+   NTRACE_FULL(NNTRACE_LAYER_IPC,              t3:   t_m_w:E|T1                                           Add (t2-t1) to total time spent in Layer
+               NNTRACE_PHASE_COMPILATION,                                                                 Runtime, Phase compilation
+              "prapareModel");
+   ...
+   device->prepareModel(...);
+   ...
+   cb->wait();
+   ...
+}
+
+... VersionedIDevice::prepareModel(...) {
+    // IPC work
+    {
+        NNTRACE_FULL_SUBTRACT(
+            NNTRACE_LAYER_RUNTIME,
+            NNTRACE_PHASE_COMPILATION,
+            "VersionedIDevice::prepareModel");
+        // Runtime work
+    }
+    // IPC work
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Onetime initialization code*
+
+... funcR5(...) {                              t0:   t_m_w:B|T1|[NN_LR_PP]funcR5                          Add (t2-t1) to total time spent in Layer
+  NNTRACE_RT(NNTRACE_PHASE_PREPARATION,        t1:   t_m_w:B|T1|[NN_LR_PI]funcI                           Runtime, Phase Initialization
+             "runcR5);                         t2:   t_m_w:E|T1
+  ... funcI(...);                              t3:   t_m_w:E|T1                                           Add (t3 - t0) - (t2 - t1) to total time spent
+  ...                                                                                                     in Layer Runtime, Phase Preparation.
+}
+... funcI(...) {
+  NNTRACE_RT(NNTRACE_PHASE_INITIALIZATION,
+             "funcI")
+  ...
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Utility code*
+
+... funcR6(...) {                              t0:   t_m_w:B|T1|[NN_LR_PP]funcR6                          Add (t3-t0) to total time spent in Layer
+  NNTRACE_RT(NNTRACE_PHASE_PREPARATION,        t1:   t_m_w:B|T1|[NN_LU_PU]funcU                           Runtime, Phase Preparation
+             "funcR6");                        t2:   t_m_w:E|T1
+  ... funcU(...);                              t3:   t_m_w:E|T1                                           Note: the funcU is treated as additional
+  ...                                                                                                     detail.
+}
+... funcU(...) {
+  NNTRACE_FULL(NNTRACE_LAYER_UTILITY,
+               NNTRACE_PHASE_UNSPECIFIED,
+               "funcU")
+  ...
+}

@@ -1,0 +1,423 @@
+LIBGLESV3 {
+  global:
+    glActiveShaderProgram; # introduced=21
+    glActiveTexture;
+    glAttachShader;
+    glBeginQuery;
+    glBeginTransformFeedback;
+    glBindAttribLocation;
+    glBindBuffer;
+    glBindBufferBase;
+    glBindBufferRange;
+    glBindFramebuffer;
+    glBindImageTexture; # introduced=21
+    glBindProgramPipeline; # introduced=21
+    glBindRenderbuffer;
+    glBindSampler;
+    glBindTexture;
+    glBindTransformFeedback;
+    glBindVertexArray;
+    glBindVertexArrayOES;
+    glBindVertexBuffer; # introduced=21
+    glBlendBarrier; # introduced=24
+    glBlendBarrierKHR; # introduced=21
+    glBlendColor;
+    glBlendEquation;
+    glBlendEquationSeparate;
+    glBlendEquationSeparatei; # introduced=24
+    glBlendEquationSeparateiEXT; # introduced=21
+    glBlendEquationi; # introduced=24
+    glBlendEquationiEXT; # introduced=21
+    glBlendFunc;
+    glBlendFuncSeparate;
+    glBlendFuncSeparatei; # introduced=24
+    glBlendFuncSeparateiEXT; # introduced=21
+    glBlendFunci; # introduced=24
+    glBlendFunciEXT; # introduced=21
+    glBlitFramebuffer;
+    glBufferData;
+    glBufferStorageEXT; # introduced=28
+    glBufferStorageExternalEXT; # introduced=28
+    glBufferSubData;
+    glCheckFramebufferStatus;
+    glClear;
+    glClearBufferfi;
+    glClearBufferfv;
+    glClearBufferiv;
+    glClearBufferuiv;
+    glClearColor;
+    glClearDepthf;
+    glClearStencil;
+    glClientWaitSync;
+    glColorMask;
+    glColorMaski; # introduced=24
+    glColorMaskiEXT; # introduced=21
+    glCompileShader;
+    glCompressedTexImage2D;
+    glCompressedTexImage3D;
+    glCompressedTexImage3DOES;
+    glCompressedTexSubImage2D;
+    glCompressedTexSubImage3D;
+    glCompressedTexSubImage3DOES;
+    glCopyBufferSubData;
+    glCopyImageSubData; # introduced=24
+    glCopyImageSubDataEXT; # introduced=21
+    glCopyTexImage2D;
+    glCopyTexSubImage2D;
+    glCopyTexSubImage3D;
+    glCopyTexSubImage3DOES;
+    glCreateProgram;
+    glCreateShader;
+    glCreateShaderProgramv; # introduced=21
+    glCullFace;
+    glDebugMessageCallback; # introduced=24
+    glDebugMessageCallbackKHR; # introduced=21
+    glDebugMessageControl; # introduced=24
+    glDebugMessageControlKHR; # introduced=21
+    glDebugMessageInsert; # introduced=24
+    glDebugMessageInsertKHR; # introduced=21
+    glDeleteBuffers;
+    glDeleteFramebuffers;
+    glDeleteProgram;
+    glDeleteProgramPipelines; # introduced=21
+    glDeleteQueries;
+    glDeleteRenderbuffers;
+    glDeleteSamplers;
+    glDeleteShader;
+    glDeleteSync;
+    glDeleteTextures;
+    glDeleteTransformFeedbacks;
+    glDeleteVertexArrays;
+    glDeleteVertexArraysOES;
+    glDepthFunc;
+    glDepthMask;
+    glDepthRangef;
+    glDetachShader;
+    glDisable;
+    glDisableVertexAttribArray;
+    glDisablei; # introduced=24
+    glDisableiEXT; # introduced=21
+    glDispatchCompute; # introduced=21
+    glDispatchComputeIndirect; # introduced=21
+    glDrawArrays;
+    glDrawArraysIndirect; # introduced=21
+    glDrawArraysInstanced;
+    glDrawBuffers;
+    glDrawElements;
+    glDrawElementsBaseVertex; # introduced=24
+    glDrawElementsIndirect; # introduced=21
+    glDrawElementsInstanced;
+    glDrawElementsInstancedBaseVertex; # introduced=24
+    glDrawRangeElements;
+    glDrawRangeElementsBaseVertex; # introduced=24
+    glEGLImageTargetRenderbufferStorageOES;
+    glEGLImageTargetTexture2DOES;
+    glEGLImageTargetTexStorageEXT; # introduced=28
+    glEnable;
+    glEnableVertexAttribArray;
+    glEnablei; # introduced=24
+    glEnableiEXT; # introduced=21
+    glEndQuery;
+    glEndTransformFeedback;
+    glFenceSync;
+    glFinish;
+    glFlush;
+    glFlushMappedBufferRange;
+    glFramebufferParameteri; # introduced=21
+    glFramebufferRenderbuffer;
+    glFramebufferTexture; # introduced=24
+    glFramebufferTexture2D;
+    glFramebufferTexture2DMultisampleEXT; # introduced=28
+    glFramebufferTexture3DOES;
+    glFramebufferTextureEXT; # introduced=21
+    glFramebufferTextureLayer;
+    glFramebufferTextureMultisampleMultiviewOVR; # introduced=28
+    glFramebufferTextureMultiviewOVR; # introduced=28
+    glFrontFace;
+    glGenBuffers;
+    glGenFramebuffers;
+    glGenProgramPipelines; # introduced=21
+    glGenQueries;
+    glGenRenderbuffers;
+    glGenSamplers;
+    glGenTextures;
+    glGenTransformFeedbacks;
+    glGenVertexArrays;
+    glGenVertexArraysOES;
+    glGenerateMipmap;
+    glGetActiveAttrib;
+    glGetActiveUniform;
+    glGetActiveUniformBlockName;
+    glGetActiveUniformBlockiv;
+    glGetActiveUniformsiv;
+    glGetAttachedShaders;
+    glGetAttribLocation;
+    glGetBooleani_v; # introduced=21
+    glGetBooleanv;
+    glGetBufferParameteri64v;
+    glGetBufferParameteriv;
+    glGetBufferPointerv;
+    glGetBufferPointervOES;
+    glGetDebugMessageLog; # introduced=24
+    glGetDebugMessageLogKHR; # introduced=21
+    glGetError;
+    glGetFloatv;
+    glGetFragDataLocation;
+    glGetFramebufferAttachmentParameteriv;
+    glGetFramebufferParameteriv; # introduced=21
+    glGetGraphicsResetStatus; # introduced=24
+    glGetInteger64i_v;
+    glGetInteger64v;
+    glGetIntegeri_v;
+    glGetIntegerv;
+    glGetInternalformativ;
+    glGetMultisamplefv; # introduced=21
+    glGetObjectLabel; # introduced=24
+    glGetObjectLabelKHR; # introduced=21
+    glGetObjectPtrLabel; # introduced=24
+    glGetObjectPtrLabelKHR; # introduced=21
+    glGetPointerv; # introduced=24
+    glGetPointervKHR; # introduced=21
+    glGetProgramBinary;
+    glGetProgramBinaryOES;
+    glGetProgramInfoLog;
+    glGetProgramInterfaceiv; # introduced=21
+    glGetProgramPipelineInfoLog; # introduced=21
+    glGetProgramPipelineiv; # introduced=21
+    glGetProgramResourceIndex; # introduced=21
+    glGetProgramResourceLocation; # introduced=21
+    glGetProgramResourceName; # introduced=21
+    glGetProgramResourceiv; # introduced=21
+    glGetProgramiv;
+    glGetQueryObjectuiv;
+    glGetQueryiv;
+    glGetRenderbufferParameteriv;
+    glGetSamplerParameterIiv; # introduced=24
+    glGetSamplerParameterIivEXT; # introduced=21
+    glGetSamplerParameterIuiv; # introduced=24
+    glGetSamplerParameterIuivEXT; # introduced=21
+    glGetSamplerParameterfv;
+    glGetSamplerParameteriv;
+    glGetShaderInfoLog;
+    glGetShaderPrecisionFormat;
+    glGetShaderSource;
+    glGetShaderiv;
+    glGetString;
+    glGetStringi;
+    glGetSynciv;
+    glGetTexLevelParameterfv; # introduced=21
+    glGetTexLevelParameteriv; # introduced=21
+    glGetTexParameterIiv; # introduced=24
+    glGetTexParameterIivEXT; # introduced=21
+    glGetTexParameterIuiv; # introduced=24
+    glGetTexParameterIuivEXT; # introduced=21
+    glGetTexParameterfv;
+    glGetTexParameteriv;
+    glGetTransformFeedbackVarying;
+    glGetUniformBlockIndex;
+    glGetUniformIndices;
+    glGetUniformLocation;
+    glGetUniformfv;
+    glGetUniformiv;
+    glGetUniformuiv;
+    glGetVertexAttribIiv;
+    glGetVertexAttribIuiv;
+    glGetVertexAttribPointerv;
+    glGetVertexAttribfv;
+    glGetVertexAttribiv;
+    glGetnUniformfv; # introduced=24
+    glGetnUniformiv; # introduced=24
+    glGetnUniformuiv; # introduced=24
+    glHint;
+    glInvalidateFramebuffer;
+    glInvalidateSubFramebuffer;
+    glIsBuffer;
+    glIsEnabled;
+    glIsEnabledi; # introduced=24
+    glIsEnablediEXT; # introduced=21
+    glIsFramebuffer;
+    glIsProgram;
+    glIsProgramPipeline; # introduced=21
+    glIsQuery;
+    glIsRenderbuffer;
+    glIsSampler;
+    glIsShader;
+    glIsSync;
+    glIsTexture;
+    glIsTransformFeedback;
+    glIsVertexArray;
+    glIsVertexArrayOES;
+    glLineWidth;
+    glLinkProgram;
+    glMapBufferOES;
+    glMapBufferRange;
+    glMemoryBarrier; # introduced=21
+    glMemoryBarrierByRegion; # introduced=21
+    glMinSampleShading; # introduced=24
+    glMinSampleShadingOES; # introduced=21
+    glObjectLabel; # introduced=24
+    glObjectLabelKHR; # introduced=21
+    glObjectPtrLabel; # introduced=24
+    glObjectPtrLabelKHR; # introduced=21
+    glPatchParameteri; # introduced=24
+    glPatchParameteriEXT; # introduced=21
+    glPauseTransformFeedback;
+    glPixelStorei;
+    glPolygonOffset;
+    glPopDebugGroup; # introduced=24
+    glPopDebugGroupKHR; # introduced=21
+    glPrimitiveBoundingBox; # introduced=24
+    glPrimitiveBoundingBoxEXT; # introduced=21
+    glProgramBinary;
+    glProgramBinaryOES;
+    glProgramParameteri;
+    glProgramUniform1f; # introduced=21
+    glProgramUniform1fv; # introduced=21
+    glProgramUniform1i; # introduced=21
+    glProgramUniform1iv; # introduced=21
+    glProgramUniform1ui; # introduced=21
+    glProgramUniform1uiv; # introduced=21
+    glProgramUniform2f; # introduced=21
+    glProgramUniform2fv; # introduced=21
+    glProgramUniform2i; # introduced=21
+    glProgramUniform2iv; # introduced=21
+    glProgramUniform2ui; # introduced=21
+    glProgramUniform2uiv; # introduced=21
+    glProgramUniform3f; # introduced=21
+    glProgramUniform3fv; # introduced=21
+    glProgramUniform3i; # introduced=21
+    glProgramUniform3iv; # introduced=21
+    glProgramUniform3ui; # introduced=21
+    glProgramUniform3uiv; # introduced=21
+    glProgramUniform4f; # introduced=21
+    glProgramUniform4fv; # introduced=21
+    glProgramUniform4i; # introduced=21
+    glProgramUniform4iv; # introduced=21
+    glProgramUniform4ui; # introduced=21
+    glProgramUniform4uiv; # introduced=21
+    glProgramUniformMatrix2fv; # introduced=21
+    glProgramUniformMatrix2x3fv; # introduced=21
+    glProgramUniformMatrix2x4fv; # introduced=21
+    glProgramUniformMatrix3fv; # introduced=21
+    glProgramUniformMatrix3x2fv; # introduced=21
+    glProgramUniformMatrix3x4fv; # introduced=21
+    glProgramUniformMatrix4fv; # introduced=21
+    glProgramUniformMatrix4x2fv; # introduced=21
+    glProgramUniformMatrix4x3fv; # introduced=21
+    glPushDebugGroup; # introduced=24
+    glPushDebugGroupKHR; # introduced=21
+    glReadBuffer;
+    glReadPixels;
+    glReadnPixels; # introduced=24
+    glReleaseShaderCompiler;
+    glRenderbufferStorage;
+    glRenderbufferStorageMultisample;
+    glRenderbufferStorageMultisampleEXT; # introduced=28
+    glResumeTransformFeedback;
+    glSampleCoverage;
+    glSampleMaski; # introduced=21
+    glSamplerParameterIiv; # introduced=24
+    glSamplerParameterIivEXT; # introduced=21
+    glSamplerParameterIuiv; # introduced=24
+    glSamplerParameterIuivEXT; # introduced=21
+    glSamplerParameterf;
+    glSamplerParameterfv;
+    glSamplerParameteri;
+    glSamplerParameteriv;
+    glScissor;
+    glShaderBinary;
+    glShaderSource;
+    glStencilFunc;
+    glStencilFuncSeparate;
+    glStencilMask;
+    glStencilMaskSeparate;
+    glStencilOp;
+    glStencilOpSeparate;
+    glTexBuffer; # introduced=24
+    glTexBufferEXT; # introduced=21
+    glTexBufferRange; # introduced=24
+    glTexBufferRangeEXT; # introduced=21
+    glTexImage2D;
+    glTexImage3D;
+    glTexImage3DOES;
+    glTexParameterIiv; # introduced=24
+    glTexParameterIivEXT; # introduced=21
+    glTexParameterIuiv; # introduced=24
+    glTexParameterIuivEXT; # introduced=21
+    glTexParameterf;
+    glTexParameterfv;
+    glTexParameteri;
+    glTexParameteriv;
+    glTexStorage2D;
+    glTexStorage2DMultisample; # introduced=21
+    glTexStorage3D;
+    glTexStorage3DMultisample; # introduced=24
+    glTexStorage3DMultisampleOES; # introduced=21
+    glTexSubImage2D;
+    glTexSubImage3D;
+    glTexSubImage3DOES;
+    glTransformFeedbackVaryings;
+    glUniform1f;
+    glUniform1fv;
+    glUniform1i;
+    glUniform1iv;
+    glUniform1ui;
+    glUniform1uiv;
+    glUniform2f;
+    glUniform2fv;
+    glUniform2i;
+    glUniform2iv;
+    glUniform2ui;
+    glUniform2uiv;
+    glUniform3f;
+    glUniform3fv;
+    glUniform3i;
+    glUniform3iv;
+    glUniform3ui;
+    glUniform3uiv;
+    glUniform4f;
+    glUniform4fv;
+    glUniform4i;
+    glUniform4iv;
+    glUniform4ui;
+    glUniform4uiv;
+    glUniformBlockBinding;
+    glUniformMatrix2fv;
+    glUniformMatrix2x3fv;
+    glUniformMatrix2x4fv;
+    glUniformMatrix3fv;
+    glUniformMatrix3x2fv;
+    glUniformMatrix3x4fv;
+    glUniformMatrix4fv;
+    glUniformMatrix4x2fv;
+    glUniformMatrix4x3fv;
+    glUnmapBuffer;
+    glUnmapBufferOES;
+    glUseProgram;
+    glUseProgramStages; # introduced=21
+    glValidateProgram;
+    glValidateProgramPipeline; # introduced=21
+    glVertexAttrib1f;
+    glVertexAttrib1fv;
+    glVertexAttrib2f;
+    glVertexAttrib2fv;
+    glVertexAttrib3f;
+    glVertexAttrib3fv;
+    glVertexAttrib4f;
+    glVertexAttrib4fv;
+    glVertexAttribBinding; # introduced=21
+    glVertexAttribDivisor;
+    glVertexAttribFormat; # introduced=21
+    glVertexAttribI4i;
+    glVertexAttribI4iv;
+    glVertexAttribI4ui;
+    glVertexAttribI4uiv;
+    glVertexAttribIFormat; # introduced=21
+    glVertexAttribIPointer;
+    glVertexAttribPointer;
+    glVertexBindingDivisor; # introduced=21
+    glViewport;
+    glWaitSync;
+  local:
+    *;
+};

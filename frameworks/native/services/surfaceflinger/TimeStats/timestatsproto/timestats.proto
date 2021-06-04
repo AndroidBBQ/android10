@@ -1,0 +1,99 @@
+/*
+ * Copyright 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package android.surfaceflinger;
+
+option optimize_for = LITE_RUNTIME;
+
+// //depot/google3/wireless/android/graphics/surfaceflingerstats/proto/
+// timestats.proto is based on this proto. Please only make valid protobuf
+// changes to these messages, and keep google3 side proto messages in sync if
+// the end to end pipeline needs to be updated.
+
+// Next tag: 10
+message SFTimeStatsGlobalProto {
+  // The stats start time in UTC as seconds since January 1, 1970
+  optional int64 stats_start = 1;
+  // The stats end time in UTC as seconds since January 1, 1970
+  optional int64 stats_end = 2;
+  // Total number of frames presented during tracing period.
+  optional int32 total_frames = 3;
+  // Total missed frames of SurfaceFlinger.
+  optional int32 missed_frames = 4;
+  // Total frames fallback to client composition.
+  optional int32 client_composition_frames = 5;
+  // Primary display on time in milliseconds.
+  optional int64 display_on_time = 7;
+  // Stats per display configuration.
+  repeated SFTimeStatsDisplayConfigBucketProto display_config_stats = 9;
+  // Present to present histogram.
+  repeated SFTimeStatsHistogramBucketProto present_to_present = 8;
+  // Stats per layer. Apps could have multiple layers.
+  repeated SFTimeStatsLayerProto stats = 6;
+}
+
+// Next tag: 8
+message SFTimeStatsLayerProto {
+  // The name of the visible view layer.
+  optional string layer_name = 1;
+  // The package name of the application owning this layer.
+  optional string package_name = 2;
+  // The stats start time in UTC as seconds since January 1, 1970
+  optional int64 stats_start = 3;
+  // The stats end time in UTC as seconds since January 1, 1970
+  optional int64 stats_end = 4;
+  // Total number of frames presented during tracing period.
+  optional int32 total_frames = 5;
+  // Total number of frames dropped by SurfaceFlinger.
+  optional int32 dropped_frames = 7;
+  // There are multiple timestamps tracked in SurfaceFlinger, and these are the
+  // histograms of deltas between different combinations of those timestamps.
+  repeated SFTimeStatsDeltaProto deltas = 6;
+}
+
+// Next tag: 3
+message SFTimeStatsDeltaProto {
+  // Name of the time interval
+  optional string delta_name = 1;
+  // Histogram of the delta time. There should be at most 85 buckets ranging
+  // from [0ms, 1ms) to [1000ms, infinity)
+  repeated SFTimeStatsHistogramBucketProto histograms = 2;
+}
+
+// Next tag: 3
+message SFTimeStatsHistogramBucketProto {
+  // Lower bound of time interval in milliseconds.
+  optional int32 time_millis = 1;
+  // Number of frames in the bucket.
+  optional int32 frame_count = 2;
+}
+
+// Next tag: 3
+message SFTimeStatsDisplayConfigBucketProto {
+    // Metadata desribing a display config.
+    optional SFTimeStatsDisplayConfigProto config = 1;
+    // Duration in milliseconds for how long the display was in this
+    // configuration.
+    optional int64 duration_millis = 2;
+}
+
+// Next tag: 2
+message SFTimeStatsDisplayConfigProto {
+    // Frames per second, rounded to the nearest integer.
+    optional int32 fps = 1;
+}

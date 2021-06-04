@@ -1,0 +1,25 @@
+cc_library_shared {
+    name: "libstagefright_soft_aacdec",
+    defaults: ["libstagefright_softomx-defaults"],
+
+    srcs: [
+        "SoftAAC2.cpp",
+        "DrcPresModeWrap.cpp",
+    ],
+
+    version_script: "exports.lds",
+
+    sanitize: {
+        misc_undefined: [
+            "signed-integer-overflow",
+            "unsigned-integer-overflow",
+        ],
+        cfi: true,
+    },
+
+    static_libs: ["libFraunhoferAAC"],
+
+    shared_libs: [
+        "libcutils",
+    ],
+}

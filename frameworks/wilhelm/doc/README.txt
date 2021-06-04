@@ -1,0 +1,2 @@
+When building applications using the OpenSL-ES API you should compile and link the OpenSLES_IID.c file into your project. This file contains unique interface IDs for all OpenSL-ES API interfaces. These IDs have 
+have been automatically generated. Application developers should not edit these interface IDs.

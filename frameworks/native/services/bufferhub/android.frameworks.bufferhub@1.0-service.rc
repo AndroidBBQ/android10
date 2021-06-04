@@ -1,0 +1,6 @@
+service system_bufferhub /system/bin/hw/android.frameworks.bufferhub@1.0-service
+  class hal animation
+  user system
+  group system graphics
+  onrestart restart surfaceflinger
+  writepid /dev/cpuset/system-background/tasks

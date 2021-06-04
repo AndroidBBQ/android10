@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/bridge/bridge.iml" filepath="$PROJECT_DIR$/bridge/bridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/create/create.iml" filepath="$PROJECT_DIR$/create/create.iml" />
+      <module fileurl="file://$PROJECT_DIR$/legacy/legacy.iml" filepath="$PROJECT_DIR$/legacy/legacy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/remote/client/remote client.iml" filepath="$PROJECT_DIR$/remote/client/remote client.iml" group="remote" />
+      <module fileurl="file://$PROJECT_DIR$/remote/common/remote common.iml" filepath="$PROJECT_DIR$/remote/common/remote common.iml" group="remote" />
+      <module fileurl="file://$PROJECT_DIR$/remote/server/remote server.iml" filepath="$PROJECT_DIR$/remote/server/remote server.iml" group="remote" />
+      <module fileurl="file://$PROJECT_DIR$/remote/tests/remote tests.iml" filepath="$PROJECT_DIR$/remote/tests/remote tests.iml" group="remote" />
+      <module fileurl="file://$PROJECT_DIR$/studio-custom-widgets/studio-android-widgets.iml" filepath="$PROJECT_DIR$/studio-custom-widgets/studio-android-widgets.iml" />
+    </modules>
+  </component>
+</project>

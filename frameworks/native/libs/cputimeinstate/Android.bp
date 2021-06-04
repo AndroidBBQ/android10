@@ -1,0 +1,30 @@
+cc_library {
+    name: "libtimeinstate",
+    srcs: ["cputimeinstate.cpp"],
+    shared_libs: [
+        "libbase",
+        "libbpf",
+        "libbpf_android",
+        "liblog",
+        "libnetdutils"
+    ],
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+    ],
+}
+
+cc_test {
+    name: "libtimeinstate_test",
+    srcs: ["testtimeinstate.cpp"],
+    shared_libs: [
+        "libtimeinstate",
+    ],
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+    ],
+}
+

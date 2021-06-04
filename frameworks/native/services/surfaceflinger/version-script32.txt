@@ -1,0 +1,12 @@
+{
+global:
+  EnsureFrontOfChain;
+  AddSpecialSignalHandlerFn;
+  RemoveSpecialSignalHandlerFn;
+  bsd_signal;
+  sigaction;
+  signal;
+  sigprocmask;
+local:
+  *;
+};

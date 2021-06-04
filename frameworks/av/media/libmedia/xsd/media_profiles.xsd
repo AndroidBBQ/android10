@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2019 The Android Open Source Project
+
+         Licensed under the Apache License, Version 2.0 (the "License");
+         you may not use this file except in compliance with the License.
+         You may obtain a copy of the License at
+
+                    http://www.apache.org/licenses/LICENSE-2.0
+
+         Unless required by applicable law or agreed to in writing, software
+         distributed under the License is distributed on an "AS IS" BASIS,
+         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         See the License for the specific language governing permissions and
+         limitations under the License.
+-->
+<!-- TODO: define a targetNamespace. Note that it will break retrocompatibility -->
+<xs:schema version="2.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="MediaSettings">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CamcorderProfiles" type="CamcorderProfiles" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="EncoderOutputFileFormat" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="VideoEncoderCap" type="VideoEncoderCap" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="AudioEncoderCap" type="AudioEncoderCap" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="VideoDecoderCap" type="VideoDecoderCap" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="AudioDecoderCap" type="AudioDecoderCap" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="CamcorderProfiles">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="EncoderProfile" type="EncoderProfile"/>
+            <xs:element name="ImageEncoding">
+                <xs:complexType>
+                    <xs:attribute name="quality" type="xs:int"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ImageDecoding">
+                <xs:complexType>
+                    <xs:attribute name="memCap" type="xs:int"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="cameraId" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="EncoderProfile">
+        <xs:sequence>
+            <xs:element name="Video" type="Video" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Audio" type="Audio" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="quality" type="xs:string"/>
+        <xs:attribute name="fileFormat" type="xs:string"/>
+        <xs:attribute name="duration" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="Video">
+        <xs:attribute name="codec" type="xs:string"/>
+        <xs:attribute name="bitRate" type="xs:int"/>
+        <xs:attribute name="width" type="xs:int"/>
+        <xs:attribute name="height" type="xs:int"/>
+        <xs:attribute name="frameRate" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="Audio">
+        <xs:attribute name="codec" type="xs:string"/>
+        <xs:attribute name="bitRate" type="xs:int"/>
+        <xs:attribute name="sampleRate" type="xs:int"/>
+        <xs:attribute name="channels" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="VideoEncoderCap">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+        <xs:attribute name="minBitRate" type="xs:int"/>
+        <xs:attribute name="maxBitRate" type="xs:int"/>
+        <xs:attribute name="minFrameWidth" type="xs:int"/>
+        <xs:attribute name="maxFrameWidth" type="xs:int"/>
+        <xs:attribute name="minFrameHeight" type="xs:int"/>
+        <xs:attribute name="maxFrameHeight" type="xs:int"/>
+        <xs:attribute name="minFrameRate" type="xs:int"/>
+        <xs:attribute name="maxFrameRate" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="AudioEncoderCap">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+        <xs:attribute name="minBitRate" type="xs:int"/>
+        <xs:attribute name="maxBitRate" type="xs:int"/>
+        <xs:attribute name="minSampleRate" type="xs:int"/>
+        <xs:attribute name="maxSampleRate" type="xs:int"/>
+        <xs:attribute name="minChannels" type="xs:int"/>
+        <xs:attribute name="maxChannels" type="xs:int"/>
+    </xs:complexType>
+    <xs:complexType name="VideoDecoderCap">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+    </xs:complexType>
+    <xs:complexType name="AudioDecoderCap">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+    </xs:complexType>
+</xs:schema>

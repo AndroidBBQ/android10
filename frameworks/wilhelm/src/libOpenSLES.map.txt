@@ -1,0 +1,61 @@
+LIBOPENSLES {
+  global:
+    SL_IID_3DCOMMIT; # var
+    SL_IID_3DDOPPLER; # var
+    SL_IID_3DGROUPING; # var
+    SL_IID_3DLOCATION; # var
+    SL_IID_3DMACROSCOPIC; # var
+    SL_IID_3DSOURCE; # var
+    SL_IID_ANDROIDACOUSTICECHOCANCELLATION; # var introduced=21
+    SL_IID_ANDROIDAUTOMATICGAINCONTROL; # var introduced=21
+    SL_IID_ANDROIDBUFFERQUEUESOURCE; # var introduced-arm=14 introduced-arm64=21 introduced-mips=14 introduced-mips64=21 introduced-x86=14 introduced-x86_64=21
+    SL_IID_ANDROIDCONFIGURATION; # var
+    SL_IID_ANDROIDEFFECT; # var
+    SL_IID_ANDROIDEFFECTCAPABILITIES; # var
+    SL_IID_ANDROIDEFFECTSEND; # var
+    SL_IID_ANDROIDSIMPLEBUFFERQUEUE; # var
+    SL_IID_ANDROIDNOISESUPPRESSION; # var introduced=21
+    SL_IID_AUDIODECODERCAPABILITIES; # var
+    SL_IID_AUDIOENCODER; # var
+    SL_IID_AUDIOENCODERCAPABILITIES; # var
+    SL_IID_AUDIOIODEVICECAPABILITIES; # var
+    SL_IID_BASSBOOST; # var
+    SL_IID_BUFFERQUEUE; # var
+    SL_IID_DEVICEVOLUME; # var
+    SL_IID_DYNAMICINTERFACEMANAGEMENT; # var
+    SL_IID_DYNAMICSOURCE; # var
+    SL_IID_EFFECTSEND; # var
+    SL_IID_ENGINE; # var
+    SL_IID_ENGINECAPABILITIES; # var
+    SL_IID_ENVIRONMENTALREVERB; # var
+    SL_IID_EQUALIZER; # var
+    SL_IID_LED; # var
+    SL_IID_METADATAEXTRACTION; # var
+    SL_IID_METADATATRAVERSAL; # var
+    SL_IID_MIDIMESSAGE; # var
+    SL_IID_MIDIMUTESOLO; # var
+    SL_IID_MIDITEMPO; # var
+    SL_IID_MIDITIME; # var
+    SL_IID_MUTESOLO; # var
+    SL_IID_NULL; # var
+    SL_IID_OBJECT; # var
+    SL_IID_OUTPUTMIX; # var
+    SL_IID_PITCH; # var
+    SL_IID_PLAY; # var
+    SL_IID_PLAYBACKRATE; # var
+    SL_IID_PREFETCHSTATUS; # var
+    SL_IID_PRESETREVERB; # var
+    SL_IID_RATEPITCH; # var
+    SL_IID_RECORD; # var
+    SL_IID_SEEK; # var
+    SL_IID_THREADSYNC; # var
+    SL_IID_VIBRA; # var
+    SL_IID_VIRTUALIZER; # var
+    SL_IID_VISUALIZATION; # var
+    SL_IID_VOLUME; # var
+    slCreateEngine;
+    slQueryNumSupportedEngineInterfaces;
+    slQuerySupportedEngineInterfaces;
+  local:
+    *;
+};

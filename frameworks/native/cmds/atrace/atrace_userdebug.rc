@@ -1,0 +1,25 @@
+## Permissions to allow additional system-wide tracing to the kernel trace buffer.
+## The default list of permissions is set in frameworks/native/cmds/atrace/atrace.rc
+
+# Grant unix world read/write permissions to enable kernel tracepoints.
+# Access control to these files is now entirely in selinux policy.
+
+on post-fs
+    # On userdebug allow to enable any event via the generic
+    # set_event interface:
+    # echo sched/foo > set_event == echo 1 > events/sched/foo/enable.
+    chmod 0666 /sys/kernel/tracing/set_event
+    chmod 0666 /sys/kernel/debug/tracing/set_event
+
+    chmod 0666 /sys/kernel/tracing/events/workqueue/enable
+    chmod 0666 /sys/kernel/debug/tracing/events/workqueue/enable
+    chmod 0666 /sys/kernel/tracing/events/regulator/enable
+    chmod 0666 /sys/kernel/debug/tracing/events/regulator/enable
+    chmod 0666 /sys/kernel/tracing/events/filemap/enable
+    chmod 0666 /sys/kernel/debug/tracing/events/filemap/enable
+
+    # irq
+    chmod 0666 /sys/kernel/tracing/events/irq/enable
+    chmod 0666 /sys/kernel/debug/tracing/events/irq/enable
+    chmod 0666 /sys/kernel/tracing/events/ipi/enable
+    chmod 0666 /sys/kernel/debug/tracing/events/ipi/enable

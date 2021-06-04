@@ -1,0 +1,33 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.photoviewersample"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:targetSdkVersion="21" android:minSdkVersion="14"/>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.android.ex.photo.PhotoViewActivity"
+            android:label="@string/app_name"
+            android:theme="@style/PhotoViewTheme" >
+        </activity>
+        <provider
+            android:name=".SampleProvider"
+            android:exported="false"
+            android:authorities="com.example.photoviewersample.SampleProvider">
+        </provider>
+    </application>
+
+</manifest>

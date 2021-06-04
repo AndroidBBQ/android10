@@ -1,0 +1,2 @@
+aggregation_strategy: {method: TIME_BASED, intervalms_or_count: 10000, max_instrumentation_keys: 5, annotation_enum_size: [4,4]}
+histograms: [{instrument_key: 0, bucket_min: 12, bucket_max: 40, n_buckets: 100}, {instrument_key: 1, bucket_min: 12, bucket_max: 40, n_buckets: 100}, {instrument_key: 2, bucket_min: 0, bucket_max: 10, n_buckets: 100}, {instrument_key: 3, bucket_min: 0, bucket_max: 10, n_buckets: 100}, {instrument_key: 4, bucket_min: 12, bucket_max: 40, n_buckets: 100}]

@@ -1,0 +1,29 @@
+LIBMEDIAMETRICS_1 {
+  global:
+    mediametrics_addDouble; # apex
+    mediametrics_addInt32; # apex
+    mediametrics_addInt64; # apex
+    mediametrics_addRate; # apex
+    mediametrics_count; # apex
+    mediametrics_create; # apex
+    mediametrics_delete; # apex
+    mediametrics_freeCString; # apex
+    mediametrics_getAttributes; # apex
+    mediametrics_getCString; # apex
+    mediametrics_getDouble; # apex
+    mediametrics_getInt32; # apex
+    mediametrics_getInt64; # apex
+    mediametrics_getKey; # apex
+    mediametrics_getRate; # apex
+    mediametrics_isEnabled; # apex
+    mediametrics_readable; # apex
+    mediametrics_selfRecord; # apex
+    mediametrics_setCString; # apex
+    mediametrics_setDouble; # apex
+    mediametrics_setInt32; # apex
+    mediametrics_setInt64; # apex
+    mediametrics_setRate; # apex
+    mediametrics_setUid; # apex
+  local:
+    *;
+};

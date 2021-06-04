@@ -1,0 +1,299 @@
+cc_library_static {
+    name: "libOpenSLESUT",
+
+    srcs: [
+        "assert.cpp",
+        "ut/OpenSLESUT.c",
+        "ut/slesutResult.c",
+    ],
+
+    header_libs: ["libOpenSLES_headers"],
+    export_header_lib_headers: ["libOpenSLES_headers"],
+    export_include_dirs: ["ut"],
+
+    cflags: [
+        "-fvisibility=hidden",
+        "-UNDEBUG",
+
+        "-Wall",
+        "-Werror",
+    ],
+}
+
+cc_library_static {
+    name: "libopensles_helper",
+
+    header_libs: ["libOpenSLES_headers"],
+    export_header_lib_headers: ["libOpenSLES_headers"],
+
+    cflags: [
+        "-Wno-initializer-overrides",
+        //"-Wno-missing-field-initializers",
+        // optional, see comments in MPH_to.c:
+        //"-DUSE_DESIGNATED_INITIALIZERS",
+        //"-S",
+        // and also see ../tools/mphgen/Makefile
+        "-DUSE_DESIGNATED_INITIALIZERS",
+        "-UNDEBUG",
+
+        "-Wall",
+        "-Werror",
+    ],
+
+    srcs: [
+        "assert.cpp",
+        "MPH_to.c",
+        "handlers.c",
+    ],
+}
+
+
+cc_library_shared {
+    name: "libwilhelm",
+
+    cflags: [
+        // do not claim support for any OpenSL ES or OpenMAX AL profiles
+        "-DUSE_PROFILES=0",
+
+        // enable API logging; details are set separately by SL_TRACE_DEFAULT below
+        // or -UUSE_TRACE to disable API logging
+        "-DUSE_TRACE",
+
+        // see Configuration.h for USE_DEBUG
+
+        // enable assert() to do runtime checking
+        // or -DNDEBUG for no runtime checking
+        "-UNDEBUG",
+
+        // select the level of log messages
+        // or -DUSE_LOG=SLAndroidLogLevel_Verbose for verbose logging
+        "-DUSE_LOG=SLAndroidLogLevel_Info",
+
+        // log all API entries and exits (also requires Debug or Verbose log level)
+        // (otherwise a warning log on error results only)
+        //"-DSL_TRACE_DEFAULT=SL_TRACE_ALL",
+
+        // Reduce size of .so and hide internal global symbols
+        "-fvisibility=hidden",
+        "-DLI_API=__attribute__((visibility(\"default\")))",
+
+        "-Wno-multichar",
+        "-Wno-invalid-offsetof",
+
+        "-Wall",
+        "-Wextra",
+        "-Wno-unused-parameter",
+        "-Werror",
+    ],
+
+    ldflags: [
+        "-Wl,--exclude-libs,ALL",
+    ],
+
+    product_variables: {
+        platform_sdk_version: {
+            // API level
+            cflags: ["-DPLATFORM_SDK_VERSION=%d"],
+        },
+    },
+
+    srcs: [
+        "OpenSLES_IID.cpp",
+        "assert.cpp",
+        "classes.cpp",
+        "data.cpp",
+        "devices.cpp",
+        "entry.cpp",
+        "handler_bodies.cpp",
+        "trace.cpp",
+        "locks.cpp",
+        "sles.cpp",
+        "sl_iid.cpp",
+        "sllog.cpp",
+        "ThreadPool.cpp",
+        "android/AudioPlayer_to_android.cpp",
+        "android/AudioRecorder_to_android.cpp",
+        "android/MediaPlayer_to_android.cpp",
+        "android/OutputMix_to_android.cpp",
+        "android/VideoCodec_to_android.cpp",
+        "android/BufferQueueSource.cpp",
+        "android/CallbackProtector.cpp",
+        "android/AacBqToPcmCbRenderer.cpp",
+        "android/android_AudioSfDecoder.cpp",
+        "android/android_AudioToCbRenderer.cpp",
+        "android/android_GenericMediaPlayer.cpp",
+        "android/android_GenericPlayer.cpp",
+        "android/android_LocAVPlayer.cpp",
+        "android/android_StreamPlayer.cpp",
+        "android/android_Effect.cpp",
+        "android/util/AacAdtsExtractor.cpp",
+        "android/channels.cpp",
+        "autogen/IID_to_MPH.cpp",
+        "objects/C3DGroup.cpp",
+        "objects/CAudioPlayer.cpp",
+        "objects/CAudioRecorder.cpp",
+        "objects/CEngine.cpp",
+        "objects/COutputMix.cpp",
+        "objects/CMediaPlayer.cpp",
+        "itf/IAndroidBufferQueue.cpp",
+        "itf/IAndroidConfiguration.cpp",
+        "itf/IAndroidEffect.cpp",
+        "itf/IAndroidEffectCapabilities.cpp",
+        "itf/IAndroidEffectSend.cpp",
+        "itf/IAcousticEchoCancellation.cpp",
+        "itf/IAutomaticGainControl.cpp",
+        "itf/IBassBoost.cpp",
+        "itf/IBufferQueue.cpp",
+        "itf/IDynamicInterfaceManagement.cpp",
+        "itf/IEffectSend.cpp",
+        "itf/IEngine.cpp",
+        "itf/IEngineCapabilities.cpp",
+        "itf/IEnvironmentalReverb.cpp",
+        "itf/IEqualizer.cpp",
+        "itf/IMetadataExtraction.cpp",
+        "itf/INoiseSuppression.cpp",
+        "itf/IMuteSolo.cpp",
+        "itf/IObject.cpp",
+        "itf/IOutputMix.cpp",
+        "itf/IPlay.cpp",
+        "itf/IPlaybackRate.cpp",
+        "itf/IPrefetchStatus.cpp",
+        "itf/IPresetReverb.cpp",
+        "itf/IRecord.cpp",
+        "itf/ISeek.cpp",
+        "itf/IStreamInformation.cpp",
+        "itf/IVideoDecoderCapabilities.cpp",
+        "itf/IVirtualizer.cpp",
+        "itf/IVolume.cpp",
+
+        /* unused source files:
+        "sync.cpp",
+        "itf/I3DCommit.cpp",
+        "itf/I3DDoppler.cpp",
+        "itf/I3DGrouping.cpp",
+        "itf/I3DLocation.cpp",
+        "itf/I3DMacroscopic.cpp",
+        "itf/I3DSource.cpp",
+        "itf/IAudioDecoderCapabilities.cpp",
+        "itf/IAudioEncoder.cpp",
+        "itf/IAudioEncoderCapabilities.cpp",
+        "itf/IAudioIODeviceCapabilities.cpp",
+        "itf/IDeviceVolume.cpp",
+        "itf/IDynamicSource.cpp",
+        "itf/ILEDArray.cpp",
+        "itf/IMIDIMessage.cpp",
+        "itf/IMIDIMuteSolo.cpp",
+        "itf/IMIDITempo.cpp",
+        "itf/IMIDITime.cpp",
+        "itf/IMetadataTraversal.cpp",
+        "itf/IPitch.cpp",
+        "itf/IRatePitch.cpp",
+        "itf/IThreadSync.cpp",
+        "itf/IVibra.cpp",
+        "itf/IVisualization.cpp",
+        */
+    ],
+
+    header_libs: [
+        "libOpenSLES_headers",
+        "media_plugin_headers",
+    ],
+
+    export_header_lib_headers: [
+        "libOpenSLES_headers",
+        "media_plugin_headers",
+    ],
+
+    static_libs: [
+        "libopensles_helper",
+        "libOpenSLESUT",
+        "libstagefright_metadatautils",
+    ],
+
+    shared_libs: [
+        "liblog",
+        "libutils",
+        "libmedia",
+        "libmedia_omx",
+        "libaudioclient",
+        "libaudiomanager",
+        "libbinder",
+        "libstagefright",
+        "libstagefright_foundation",
+        "libgui",
+        "libdl",
+        "libandroid_runtime",
+
+        "libstagefright_http_support",
+    ],
+
+    include_dirs: [
+        "frameworks/av/media/libstagefright/mpeg2ts",
+    ],
+
+    export_shared_lib_headers: [
+        "libmedia",
+        "libstagefright",
+        "libaudioclient",
+    ],
+}
+
+cc_library_shared {
+    name: "libOpenSLES",
+
+    srcs: [
+        "sl_entry.cpp",
+        "sl_iid.cpp",
+        "assert.cpp",
+    ],
+    include_dirs: [
+        "frameworks/native/include/media/openmax",
+    ],
+
+    export_shared_lib_headers: ["libwilhelm"],
+    cflags: [
+        "-DLI_API=",
+        "-fvisibility=hidden",
+        "-UNDEBUG",
+        "-DSL_API=__attribute__((visibility(\"default\")))",
+
+        "-Wall",
+        "-Werror",
+    ],
+    shared_libs: [
+        "libwilhelm",
+        "liblog",
+        "libnativewindow",
+    ],
+    version_script: "libOpenSLES.map.txt",
+}
+
+cc_library_shared {
+    name: "libOpenMAXAL",
+
+    srcs: [
+        "xa_entry.cpp",
+        "xa_iid.cpp",
+        "assert.cpp",
+    ],
+    include_dirs: [
+        "frameworks/native/include/media/openmax",
+    ],
+
+    export_shared_lib_headers: ["libwilhelm"],
+    cflags: [
+        "-DLI_API=",
+        "-fvisibility=hidden",
+        "-UNDEBUG",
+        "-DXA_API=__attribute__((visibility(\"default\")))",
+
+        "-Wall",
+        "-Werror",
+    ],
+    shared_libs: [
+        "libwilhelm",
+        "liblog",
+        "libnativewindow",
+    ],
+    version_script: "libOpenMAXAL.map.txt",
+}

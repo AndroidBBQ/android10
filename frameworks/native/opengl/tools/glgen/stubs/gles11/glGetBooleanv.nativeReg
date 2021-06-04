@@ -1,0 +1,2 @@
+{"glGetBooleanv", "(I[ZI)V", (void *) android_glGetBooleanv__I_3ZI },
+{"glGetBooleanv", "(ILjava/nio/IntBuffer;)V", (void *) android_glGetBooleanv__ILjava_nio_IntBuffer_2 },

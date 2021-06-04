@@ -1,0 +1,2 @@
+{"eglCreatePbufferFromClientBuffer", "(Landroid/opengl/EGLDisplay;IILandroid/opengl/EGLConfig;[II)Landroid/opengl/EGLSurface;", (void *) android_eglCreatePbufferFromClientBufferInt },
+{"eglCreatePbufferFromClientBuffer", "(Landroid/opengl/EGLDisplay;IJLandroid/opengl/EGLConfig;[II)Landroid/opengl/EGLSurface;", (void *) android_eglCreatePbufferFromClientBuffer },

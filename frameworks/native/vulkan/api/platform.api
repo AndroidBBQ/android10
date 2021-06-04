@@ -1,0 +1,61 @@
+// Copyright (c) 2015 The Khronos Group Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and/or associated documentation files (the
+// "Materials"), to deal in the Materials without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Materials, and to
+// permit persons to whom the Materials are furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Materials.
+//
+// THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+// CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+// MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+
+// Platform types, as defined or included in vk_platform.h
+
+type u64 size_t
+
+// VK_USE_PLATFORM_XLIB_KHR
+@internal class Display {}
+@internal class Window {}
+@internal type u64 VisualID
+
+// VK_USE_PLATFORM_XCB_KHR
+@internal class xcb_connection_t {}
+@internal type u32 xcb_window_t
+@internal type u32 xcb_visualid_t
+
+// VK_USE_PLATFORM_WAYLAND_KHR
+@internal class wl_display {}
+@internal class wl_surface {}
+
+// VK_USE_PLATFORM_MIR_KHR
+@internal class MirConnection {}
+@internal class MirSurface {}
+
+// VK_USE_PLATFORM_ANDROID_KHR
+@internal class ANativeWindow {}
+@internal class AHardwareBuffer {}
+@internal type void* buffer_handle_t
+
+// VK_USE_PLATFORM_WIN32_KHR
+@internal type void* HINSTANCE
+@internal type void* HWND
+@internal type void* HANDLE
+@internal type u32   DWORD
+@internal type u16*  LPCWSTR
+@internal class SECURITY_ATTRIBUTES {}
+
+// VK_USE_PLATFORM_XLIB_XRANDR_EXT
+@internal type u64 RROutput
+
+// VK_USE_PLATFORM_FUCHSIA
+@internal type u32 zx_handle_t

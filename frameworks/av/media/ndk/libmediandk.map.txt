@@ -1,0 +1,282 @@
+LIBMEDIANDK {
+  global:
+    AImageReader_acquireLatestImage; # introduced=24
+    AImageReader_acquireLatestImageAsync; # introduced=26
+    AImageReader_acquireNextImage; # introduced=24
+    AImageReader_acquireNextImageAsync; # introduced=26
+    AImageReader_getWindowNativeHandle; #vndk
+    AImageReader_delete; # introduced=24
+    AImageReader_getFormat; # introduced=24
+    AImageReader_getHeight; # introduced=24
+    AImageReader_getMaxImages; # introduced=24
+    AImageReader_getWidth; # introduced=24
+    AImageReader_getWindow; # introduced=24
+    AImageReader_new; # introduced=24
+    AImageReader_newWithUsage; # introduced=26
+    AImageReader_setBufferRemovedListener; # introduced=26
+    AImageReader_setImageListener; # introduced=24
+    AImage_delete; # introduced=24
+    AImage_deleteAsync; # introduced=26
+    AImage_getCropRect; # introduced=24
+    AImage_getFormat; # introduced=24
+    AImage_getHardwareBuffer; # introduced=26
+    AImage_getHeight; # introduced=24
+    AImage_getNumberOfPlanes; # introduced=24
+    AImage_getPlaneData; # introduced=24
+    AImage_getPlanePixelStride; # introduced=24
+    AImage_getPlaneRowStride; # introduced=24
+    AImage_getTimestamp; # introduced=24
+    AImage_getWidth; # introduced=24
+    AMEDIAFORMAT_KEY_AAC_DRC_ATTENUATION_FACTOR; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_DRC_BOOST_FACTOR; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_DRC_HEAVY_COMPRESSION; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_DRC_TARGET_REFERENCE_LEVEL; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_ENCODED_TARGET_LEVEL; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_MAX_OUTPUT_CHANNEL_COUNT; # var introduced=28
+    AMEDIAFORMAT_KEY_AAC_PROFILE; # var introduced=21
+    AMEDIAFORMAT_KEY_AAC_SBR_MODE; # var introduced=28
+    AMEDIAFORMAT_KEY_ALBUM; # var introduced=29
+    AMEDIAFORMAT_KEY_ALBUMART; # var introduced=29
+    AMEDIAFORMAT_KEY_ALBUMARTIST; # var introduced=29
+    AMEDIAFORMAT_KEY_ARTIST; # var introduced=29
+    AMEDIAFORMAT_KEY_AUDIO_PRESENTATION_INFO; # var introduced=29
+    AMEDIAFORMAT_KEY_AUDIO_SESSION_ID; # var introduced=28
+    AMEDIAFORMAT_KEY_AUTHOR; # var introduced=29
+    AMEDIAFORMAT_KEY_BITRATE_MODE; # var introduced=28
+    AMEDIAFORMAT_KEY_BIT_RATE; # var introduced=21
+    AMEDIAFORMAT_KEY_BITS_PER_SAMPLE; # var introduced=29
+    AMEDIAFORMAT_KEY_CAPTURE_RATE; # var introduced=28
+    AMEDIAFORMAT_KEY_CDTRACKNUMBER; # var introduced=29
+    AMEDIAFORMAT_KEY_CHANNEL_COUNT; # var introduced=21
+    AMEDIAFORMAT_KEY_CHANNEL_MASK; # var introduced=21
+    AMEDIAFORMAT_KEY_COLOR_FORMAT; # var introduced=21
+    AMEDIAFORMAT_KEY_COLOR_RANGE; # var introduced=28
+    AMEDIAFORMAT_KEY_COLOR_STANDARD; # var introduced=28
+    AMEDIAFORMAT_KEY_COLOR_TRANSFER; # var introduced=28
+    AMEDIAFORMAT_KEY_COMPILATION; # var introduced=29
+    AMEDIAFORMAT_KEY_COMPLEXITY; # var introduced=28
+    AMEDIAFORMAT_KEY_COMPOSER; # var introduced=29
+    AMEDIAFORMAT_KEY_CREATE_INPUT_SURFACE_SUSPENDED; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_DEFAULT_IV_SIZE; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_ENCRYPTED_BYTE_BLOCK; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_ENCRYPTED_SIZES; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_IV; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_KEY; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_MODE; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_PLAIN_SIZES; # var introduced=29
+    AMEDIAFORMAT_KEY_CRYPTO_SKIP_BYTE_BLOCK; # var introduced=29
+    AMEDIAFORMAT_KEY_CSD; # var introduced=28
+    AMEDIAFORMAT_KEY_CSD_0; # var introduced=28
+    AMEDIAFORMAT_KEY_CSD_1; # var introduced=28
+    AMEDIAFORMAT_KEY_CSD_2; # var introduced=28
+    AMEDIAFORMAT_KEY_CSD_AVC; # var introduced=29
+    AMEDIAFORMAT_KEY_CSD_HEVC; # var introduced=29
+    AMEDIAFORMAT_KEY_D263; # var introduced=29
+    AMEDIAFORMAT_KEY_DATE; # var introduced=29
+    AMEDIAFORMAT_KEY_DISCNUMBER; # var introduced=29
+    AMEDIAFORMAT_KEY_DISPLAY_CROP; # var introduced=28
+    AMEDIAFORMAT_KEY_DISPLAY_HEIGHT; # var introduced=28
+    AMEDIAFORMAT_KEY_DISPLAY_WIDTH; # var introduced=28
+    AMEDIAFORMAT_KEY_DURATION; # var introduced=21
+    AMEDIAFORMAT_KEY_ENCODER_DELAY; # var introduced=29
+    AMEDIAFORMAT_KEY_ENCODER_PADDING; # var introduced=29
+    AMEDIAFORMAT_KEY_ESDS; # var introduced=29
+    AMEDIAFORMAT_KEY_EXIF_OFFSET; # var introduced=29
+    AMEDIAFORMAT_KEY_EXIF_SIZE; # var introduced=29
+    AMEDIAFORMAT_KEY_FRAME_COUNT; # var introduced=29
+    AMEDIAFORMAT_KEY_FLAC_COMPRESSION_LEVEL; # var introduced=21
+    AMEDIAFORMAT_KEY_FRAME_RATE; # var introduced=21
+    AMEDIAFORMAT_KEY_GENRE; # var introduced=29
+    AMEDIAFORMAT_KEY_GRID_COLUMNS; # var introduced=28
+    AMEDIAFORMAT_KEY_GRID_ROWS; # var introduced=28
+    AMEDIAFORMAT_KEY_HAPTIC_CHANNEL_COUNT; # var introduced=29
+    AMEDIAFORMAT_KEY_HDR_STATIC_INFO; # var introduced=28
+    AMEDIAFORMAT_KEY_HEIGHT; # var introduced=21
+    AMEDIAFORMAT_KEY_ICC_PROFILE; # var introduced=29
+    AMEDIAFORMAT_KEY_INTRA_REFRESH_PERIOD; # var introduced=28
+    AMEDIAFORMAT_KEY_IS_ADTS; # var introduced=21
+    AMEDIAFORMAT_KEY_IS_AUTOSELECT; # var introduced=21
+    AMEDIAFORMAT_KEY_IS_DEFAULT; # var introduced=21
+    AMEDIAFORMAT_KEY_IS_FORCED_SUBTITLE; # var introduced=21
+    AMEDIAFORMAT_KEY_IS_SYNC_FRAME; # var introduced=29
+    AMEDIAFORMAT_KEY_I_FRAME_INTERVAL; # var introduced=21
+    AMEDIAFORMAT_KEY_LANGUAGE; # var introduced=21
+    AMEDIAFORMAT_KEY_LATENCY; # var introduced=28
+    AMEDIAFORMAT_KEY_LEVEL; # var introduced=28
+    AMEDIAFORMAT_KEY_LOCATION; # var introduced=29
+    AMEDIAFORMAT_KEY_LOOP; # var introduced=29
+    AMEDIAFORMAT_KEY_LYRICIST; # var introduced=29
+    AMEDIAFORMAT_KEY_MANUFACTURER; # var introduced=29
+    AMEDIAFORMAT_KEY_MAX_BIT_RATE; # var introduced=29
+    AMEDIAFORMAT_KEY_MAX_FPS_TO_ENCODER; # var introduced=29
+    AMEDIAFORMAT_KEY_MAX_HEIGHT; # var introduced=21
+    AMEDIAFORMAT_KEY_MAX_INPUT_SIZE; # var introduced=21
+    AMEDIAFORMAT_KEY_MAX_PTS_GAP_TO_ENCODER; # var introduced=29
+    AMEDIAFORMAT_KEY_MAX_WIDTH; # var introduced=21
+    AMEDIAFORMAT_KEY_MIME; # var introduced=21
+    AMEDIAFORMAT_KEY_MPEG_USER_DATA; # var introduced=28
+    AMEDIAFORMAT_KEY_MPEG2_STREAM_HEADER; # var introduced=29
+    AMEDIAFORMAT_KEY_OPERATING_RATE; # var introduced=28
+    AMEDIAFORMAT_KEY_PCM_BIG_ENDIAN; # var introduced=29
+    AMEDIAFORMAT_KEY_PCM_ENCODING; # var introduced=28
+    AMEDIAFORMAT_KEY_PRIORITY; # var introduced=28
+    AMEDIAFORMAT_KEY_PROFILE; # var introduced=28
+    AMEDIAFORMAT_KEY_PSSH; # var introduced=29
+    AMEDIAFORMAT_KEY_PUSH_BLANK_BUFFERS_ON_STOP; # var introduced=21
+    AMEDIAFORMAT_KEY_REPEAT_PREVIOUS_FRAME_AFTER; # var introduced=21
+    AMEDIAFORMAT_KEY_ROTATION; # var introduced=28
+    AMEDIAFORMAT_KEY_SAMPLE_RATE; # var introduced=21
+    AMEDIAFORMAT_KEY_SAR_HEIGHT; # var introduced=29
+    AMEDIAFORMAT_KEY_SAR_WIDTH; # var introduced=29
+    AMEDIAFORMAT_KEY_SEI; # var introduced=28
+    AMEDIAFORMAT_KEY_SLICE_HEIGHT; # var introduced=28
+    AMEDIAFORMAT_KEY_STRIDE; # var introduced=21
+    AMEDIAFORMAT_KEY_TARGET_TIME; # var introduced=29
+    AMEDIAFORMAT_KEY_TEMPORAL_LAYER_COUNT; # var introduced=29
+    AMEDIAFORMAT_KEY_TEMPORAL_LAYER_ID; # var introduced=28
+    AMEDIAFORMAT_KEY_TEMPORAL_LAYERING; # var introduced=28
+    AMEDIAFORMAT_KEY_TEXT_FORMAT_DATA; # var introduced=29
+    AMEDIAFORMAT_KEY_THUMBNAIL_CSD_HEVC; # var introduced=29
+    AMEDIAFORMAT_KEY_THUMBNAIL_HEIGHT; # var introduced=29
+    AMEDIAFORMAT_KEY_THUMBNAIL_TIME; # var introduced=29
+    AMEDIAFORMAT_KEY_THUMBNAIL_WIDTH; # var introduced=29
+    AMEDIAFORMAT_KEY_TITLE; # var introduced=28
+    AMEDIAFORMAT_KEY_TILE_HEIGHT; # var introduced=28
+    AMEDIAFORMAT_KEY_TILE_WIDTH; # var introduced=28
+    AMEDIAFORMAT_KEY_TIME_US; # var introduced=28
+    AMEDIAFORMAT_KEY_TRACK_INDEX; # var introduced=28
+    AMEDIAFORMAT_KEY_TRACK_ID; # var introduced=28
+    AMEDIAFORMAT_KEY_VALID_SAMPLES; # var introduced=29
+    AMEDIAFORMAT_KEY_WIDTH; # var introduced=21
+    AMEDIAFORMAT_KEY_YEAR; # var introduced=29
+    AMediaCodecActionCode_isRecoverable; # introduced=28
+    AMediaCodecActionCode_isTransient; # introduced=28
+    AMediaCodecCryptoInfo_delete;
+    AMediaCodecCryptoInfo_getClearBytes;
+    AMediaCodecCryptoInfo_getEncryptedBytes;
+    AMediaCodecCryptoInfo_getIV;
+    AMediaCodecCryptoInfo_getKey;
+    AMediaCodecCryptoInfo_getMode;
+    AMediaCodecCryptoInfo_getNumSubSamples;
+    AMediaCodecCryptoInfo_new;
+    AMediaCodecCryptoInfo_setPattern; # introduced=24
+    AMediaCodec_configure;
+    AMediaCodec_createCodecByName;
+    AMediaCodec_createDecoderByType;
+    AMediaCodec_createEncoderByType;
+    AMediaCodec_delete;
+    AMediaCodec_dequeueInputBuffer;
+    AMediaCodec_dequeueOutputBuffer;
+    AMediaCodec_flush;
+    AMediaCodec_getBufferFormat; # introduced=28
+    AMediaCodec_getInputBuffer;
+    AMediaCodec_getInputFormat; # introduced=28
+    AMediaCodec_getName; # introduced=28
+    AMediaCodec_getOutputBuffer;
+    AMediaCodec_getOutputFormat;
+    AMediaCodec_queueInputBuffer;
+    AMediaCodec_queueSecureInputBuffer;
+    AMediaCodec_releaseCrypto; # introduced=28
+    AMediaCodec_releaseName; # introduced=28
+    AMediaCodec_releaseOutputBuffer;
+    AMediaCodec_releaseOutputBufferAtTime;
+    AMediaCodec_setAsyncNotifyCallback; # introduced=28
+    AMediaCodec_setOutputSurface; # introduced=24
+    AMediaCodec_setParameters; # introduced=26
+    AMediaCodec_setInputSurface; # introduced=26
+    AMediaCodec_createInputSurface; # introduced=26
+    AMediaCodec_signalEndOfInputStream; # introduced=26
+    AMediaCodec_createPersistentInputSurface; # introduced=26
+    AMediaCodec_start;
+    AMediaCodec_stop;
+    AMediaCrypto_delete;
+    AMediaCrypto_isCryptoSchemeSupported;
+    AMediaCrypto_new;
+    AMediaCrypto_requiresSecureDecoderComponent;
+    AMediaDataSource_delete;      # introduced=28
+    AMediaDataSource_new;         # introduced=28
+    AMediaDataSource_setClose;    # introduced=28
+    AMediaDataSource_setGetSize;  # introduced=28
+    AMediaDataSource_setReadAt;   # introduced=28
+    AMediaDataSource_setUserdata; # introduced=28
+    AMediaDataSource_newUri;      # introduced=29
+    AMediaDataSource_close;       # introduced=29
+    AMediaDataSource_setGetAvailableSize; # introduced=29
+    AMediaDrm_closeSession;
+    AMediaDrm_createByUUID;
+    AMediaDrm_decrypt;
+    AMediaDrm_encrypt;
+    AMediaDrm_getKeyRequest;
+    AMediaDrm_getPropertyByteArray;
+    AMediaDrm_getPropertyString;
+    AMediaDrm_getProvisionRequest;
+    AMediaDrm_getSecureStops;
+    AMediaDrm_isCryptoSchemeSupported;
+    AMediaDrm_openSession;
+    AMediaDrm_provideKeyResponse;
+    AMediaDrm_provideProvisionResponse;
+    AMediaDrm_queryKeyStatus;
+    AMediaDrm_release;
+    AMediaDrm_releaseSecureStops;
+    AMediaDrm_removeKeys;
+    AMediaDrm_restoreKeys;
+    AMediaDrm_setOnEventListener;
+    AMediaDrm_setPropertyByteArray;
+    AMediaDrm_setPropertyString;
+    AMediaDrm_setOnExpirationUpdateListener; # introduced=29
+    AMediaDrm_setOnKeysChangeListener; # introduced=29
+    AMediaDrm_sign;
+    AMediaDrm_verify;
+    AMediaExtractor_advance;
+    AMediaExtractor_delete;
+    AMediaExtractor_getCachedDuration; # introduced=28
+    AMediaExtractor_getFileFormat;     # introduced=28
+    AMediaExtractor_getPsshInfo;
+    AMediaExtractor_getSampleCryptoInfo;
+    AMediaExtractor_getSampleFlags;
+    AMediaExtractor_getSampleFormat;   # introduced=28
+    AMediaExtractor_getSampleSize;     # introduced=28
+    AMediaExtractor_getSampleTime;
+    AMediaExtractor_getSampleTrackIndex;
+    AMediaExtractor_getTrackCount;
+    AMediaExtractor_getTrackFormat;
+    AMediaExtractor_new;
+    AMediaExtractor_readSampleData;
+    AMediaExtractor_seekTo;
+    AMediaExtractor_selectTrack;
+    AMediaExtractor_setDataSource;
+    AMediaExtractor_setDataSourceCustom; # introduced=28
+    AMediaExtractor_setDataSourceFd;
+    AMediaExtractor_unselectTrack;
+    AMediaFormat_clear; # introduced=29
+    AMediaFormat_copy; # introduced=29
+    AMediaFormat_delete;
+    AMediaFormat_getBuffer;
+    AMediaFormat_getDouble; # introduced=28
+    AMediaFormat_getFloat;
+    AMediaFormat_getInt32;
+    AMediaFormat_getInt64;
+    AMediaFormat_getRect; # introduced=28
+    AMediaFormat_getSize;
+    AMediaFormat_getString;
+    AMediaFormat_new;
+    AMediaFormat_setBuffer;
+    AMediaFormat_setDouble; # introduced=28
+    AMediaFormat_setFloat;
+    AMediaFormat_setInt32;
+    AMediaFormat_setInt64;
+    AMediaFormat_setRect; # introduced=28
+    AMediaFormat_setSize; # introduced=28
+    AMediaFormat_setString;
+    AMediaFormat_toString;
+    AMediaMuxer_addTrack;
+    AMediaMuxer_delete;
+    AMediaMuxer_new;
+    AMediaMuxer_setLocation;
+    AMediaMuxer_setOrientationHint;
+    AMediaMuxer_start;
+    AMediaMuxer_stop;
+    AMediaMuxer_writeSampleData;
+  local:
+    *;
+};

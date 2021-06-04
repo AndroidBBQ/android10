@@ -1,0 +1,30 @@
+cc_library_shared {
+    name: "libcodec2_soft_aacdec",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: [
+        "C2SoftAacDec.cpp",
+        "DrcPresModeWrap.cpp",
+    ],
+
+    static_libs: [
+        "libFraunhoferAAC",
+    ],
+}
+
+cc_library_shared {
+    name: "libcodec2_soft_aacenc",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: ["C2SoftAacEnc.cpp"],
+
+    static_libs: [
+        "libFraunhoferAAC",
+    ],
+}

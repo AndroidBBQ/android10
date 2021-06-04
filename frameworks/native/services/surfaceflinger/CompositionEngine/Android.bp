@@ -1,0 +1,123 @@
+cc_defaults {
+    name: "libcompositionengine_defaults",
+    defaults: ["surfaceflinger_defaults"],
+    cflags: [
+        "-DLOG_TAG=\"CompositionEngine\"",
+    ],
+    shared_libs: [
+        "android.frameworks.vr.composer@1.0",
+        "android.hardware.graphics.allocator@2.0",
+        "android.hardware.graphics.composer@2.1",
+        "android.hardware.graphics.composer@2.2",
+        "android.hardware.graphics.composer@2.3",
+        "android.hardware.power@1.0",
+        "android.hardware.power@1.3",
+        "libbase",
+        "libcutils",
+        "libgui",
+        "liblayers_proto",
+        "liblog",
+        "libnativewindow",
+        "libsync",
+        "libtimestats_proto",
+        "libui",
+        "libutils",
+    ],
+    static_libs: [
+        "libmath",
+        "librenderengine",
+        "libtrace_proto",
+    ],
+    header_libs: [
+        "android.hardware.graphics.composer@2.1-command-buffer",
+        "android.hardware.graphics.composer@2.2-command-buffer",
+        "android.hardware.graphics.composer@2.3-command-buffer",
+        "libsurfaceflinger_headers",
+    ],
+}
+
+cc_library {
+    name: "libcompositionengine",
+    defaults: ["libcompositionengine_defaults"],
+    srcs: [
+        "src/CompositionEngine.cpp",
+        "src/Display.cpp",
+        "src/DisplayColorProfile.cpp",
+        "src/DisplaySurface.cpp",
+        "src/DumpHelpers.cpp",
+        "src/HwcBufferCache.cpp",
+        "src/Layer.cpp",
+        "src/LayerCompositionState.cpp",
+        "src/Output.cpp",
+        "src/OutputCompositionState.cpp",
+        "src/OutputLayer.cpp",
+        "src/OutputLayerCompositionState.cpp",
+        "src/RenderSurface.cpp",
+    ],
+    local_include_dirs: ["include"],
+    export_include_dirs: ["include"],
+}
+
+cc_library {
+    name: "libcompositionengine_mocks",
+    defaults: ["libcompositionengine_defaults"],
+    srcs: [
+        "mock/CompositionEngine.cpp",
+        "mock/Display.cpp",
+        "mock/DisplayColorProfile.cpp",
+        "mock/DisplaySurface.cpp",
+        "mock/Layer.cpp",
+        "mock/LayerFE.cpp",
+        "mock/NativeWindow.cpp",
+        "mock/Output.cpp",
+        "mock/OutputLayer.cpp",
+        "mock/RenderSurface.cpp",
+    ],
+    static_libs: [
+        "libgtest",
+        "libgmock",
+        "libcompositionengine",
+    ],
+    local_include_dirs: ["include"],
+    export_include_dirs: ["include"],
+}
+
+cc_test {
+    name: "libcompositionengine_test",
+    test_suites: ["device-tests"],
+    defaults: ["libcompositionengine_defaults"],
+    srcs: [
+        "tests/CompositionEngineTest.cpp",
+        "tests/DisplayColorProfileTest.cpp",
+        "tests/DisplayTest.cpp",
+        "tests/HwcBufferCacheTest.cpp",
+        "tests/LayerTest.cpp",
+        "tests/MockHWC2.cpp",
+        "tests/MockHWComposer.cpp",
+        "tests/OutputTest.cpp",
+        "tests/OutputLayerTest.cpp",
+        "tests/RenderSurfaceTest.cpp",
+    ],
+    static_libs: [
+        "libcompositionengine",
+        "libcompositionengine_mocks",
+        "librenderengine_mocks",
+        "libgmock",
+        "libgtest",
+    ],
+    sanitize: {
+        // By using the address sanitizer, we not only uncover any issues
+        // with the test, but also any issues with the code under test.
+        //
+        // Note: If you get an runtime link error like:
+        //
+        //   CANNOT LINK EXECUTABLE "/data/local/tmp/libcompositionengine_test": library "libclang_rt.asan-aarch64-android.so" not found
+        //
+        // it is because the address sanitizer shared objects are not installed
+        // by default in the system image.
+        //
+        // You can either "make dist tests" before flashing, or set this
+        // option to false temporarily.
+        address: true,
+    },
+}

@@ -1,0 +1,87 @@
+// Copyright (C) 2016 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+ndk_headers {
+    name: "libEGL_headers",
+    from: "include",
+    to: "",
+    srcs: ["include/EGL/**/*.h"],
+    license: "include/EGL/NOTICE",
+}
+
+ndk_headers {
+    name: "libGLESv1_CM_headers",
+    from: "include",
+    to: "",
+    srcs: ["include/GLES/**/*.h"],
+    license: "include/GLES/NOTICE",
+}
+
+ndk_headers {
+    name: "libGLESv2_headers",
+    from: "include",
+    to: "",
+    srcs: ["include/GLES2/**/*.h"],
+    license: "include/GLES2/NOTICE",
+}
+
+ndk_headers {
+    name: "libGLESv3_headers",
+    from: "include",
+    to: "",
+    srcs: ["include/GLES3/**/*.h"],
+    license: "include/GLES3/NOTICE",
+}
+
+ndk_headers {
+    name: "khr_headers",
+    from: "include",
+    to: "",
+    srcs: ["include/KHR/**/*.h"],
+    license: "include/KHR/NOTICE",
+}
+
+llndk_library {
+    name: "libEGL",
+    symbol_file: "libs/libEGL.map.txt",
+    export_include_dirs: ["include"],
+}
+
+llndk_library {
+    name: "libGLESv1_CM",
+    symbol_file: "libs/libGLESv1_CM.map.txt",
+    export_include_dirs: ["include"],
+}
+
+llndk_library {
+    name: "libGLESv2",
+    symbol_file: "libs/libGLESv2.map.txt",
+    export_include_dirs: ["include"],
+}
+
+llndk_library {
+    name: "libGLESv3",
+    symbol_file: "libs/libGLESv3.map.txt",
+    export_include_dirs: ["include"],
+}
+
+cc_library_headers {
+    name: "gl_headers",
+    vendor_available: true,
+    export_include_dirs: ["include"],
+}
+
+subdirs = [
+    "*",
+]

@@ -1,0 +1,43 @@
+/*
+ * Copyright 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// cc_defaults adapted in part from frameworks/native/opengl/libs/Android.bp
+
+cc_defaults {
+    name: "ml_nn_cache_libs_defaults",
+    defaults: ["neuralnetworks_defaults"],
+    vendor_available: true,
+    cflags: [
+        "-DLOG_TAG=\"Cache\"",
+        "-fvisibility=hidden",
+    ],
+    shared_libs: [
+        // ***** DO NOT ADD NEW DEPENDENCIES HERE *****
+        // In particular, DO NOT add libutils or anything "above" libcutils
+        "libcutils",
+        "liblog",
+    ],
+}
+
+cc_defaults {
+    name: "ml_nn_cache_libs_defaults_android_host",
+    defaults: ["ml_nn_cache_libs_defaults"],
+    target: {
+        host: {
+            cflags: [ "-O0", "-g" ],
+        },
+    },
+}

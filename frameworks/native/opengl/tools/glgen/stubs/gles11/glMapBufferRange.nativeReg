@@ -1,0 +1,1 @@
+{"glMapBufferRange", "(IIII)Ljava/nio/Buffer;", (void *) android_glMapBufferRange__IIII },

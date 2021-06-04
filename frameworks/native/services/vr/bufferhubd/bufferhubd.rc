@@ -1,0 +1,5 @@
+service bufferhubd /system/bin/bufferhubd
+  class core
+  user system
+  group system
+  socket pdx/system/buffer_hub/client stream 0660 system system u:object_r:pdx_bufferhub_client_endpoint_socket:s0

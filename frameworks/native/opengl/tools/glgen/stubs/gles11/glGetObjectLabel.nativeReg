@@ -1,0 +1,1 @@
+{"glGetObjectLabel", "(II)Ljava/lang/String;", (void *) android_glGetObjectLabel },

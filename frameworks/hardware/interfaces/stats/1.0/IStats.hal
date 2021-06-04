@@ -1,0 +1,111 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.stats@1.0;
+
+/**
+ * IStats is an interface that allows clients to report specific hardware
+ * reliabilty events, which are translated into calls for the client to accept.
+ */
+interface IStats {
+
+    /**
+     * Report the detected speaker impedance value.
+     *
+     * @param speakerImpedance A SpeakerImpedance struct that holds speaker
+     *     location and a detected milli ohms.
+     */
+    oneway reportSpeakerImpedance(SpeakerImpedance speakerImpedance);
+
+    /**
+     * Report the detected failure of a hardware component.
+     *
+     * @param hardwareFailed A HardwareFailed struct indicating hardware type
+     *     that failed, location, and error code.
+     */
+    oneway reportHardwareFailed(HardwareFailed hardwareFailed);
+
+    /**
+     * Report the detection of a physical drop event, as detected by
+     * accelerometers.
+     *
+     * @param physicalDropDetected A PhysicalDropDetected struct with percentage
+     *     confidence that a drop occured, peak detected acceleration, and the
+     *     duration of freefall.
+     */
+    oneway reportPhysicalDropDetected(PhysicalDropDetected physicalDropDetected);
+
+    /**
+     * Report bucketed battery charge cycles.
+     *
+     * @param chargeCycles A struct with battery charge cycle buckets.
+     */
+    oneway reportChargeCycles(ChargeCycles chargeCycles);
+
+    /**
+     * Report battery health snapshot, aggregated.
+     * Resistance, Voltage, Open Circuit Voltage, Temperature, and Charge Level
+     * are snapshotted periodically over 24hrs.
+     *
+     * @param args A BatteryHealthSnapshotArgs struct that contains the above
+     *     listed metrics.
+     */
+    oneway reportBatteryHealthSnapshot(BatteryHealthSnapshotArgs args);
+
+    /**
+     * Report slow I/O operations, aggregated.
+     *
+     * @param slowIo A SlowIo struct holding the type of slow IO operation and
+     *     the number of slow IO operations of this type over 24hrs.
+     */
+    oneway reportSlowIo(SlowIo slowIo);
+
+    /**
+     * Report a shutdown event caused by low battery.
+     *
+     * @param batteryCausedShutdown A BatteryCausedShutdown struct containing
+     *     the last recorded battery voltage prior to shutdown.
+     */
+    oneway reportBatteryCausedShutdown(BatteryCausedShutdown batteryCausedShutdown);
+
+    /**
+     * Report a USB port overheat event.
+     *
+     * @param UsbPortOverheatEvent A UsbPortOverheatEvent struct with port
+     *        temperature at USB plug event, max port temperature seen during
+     *        overheat, and time between the plug event, trip event and
+     *        mitigation cleared event.
+     */
+    oneway reportUsbPortOverheatEvent(UsbPortOverheatEvent usbPortOverheatEvent);
+
+    /**
+     * Report the Speech DSP state value.
+     *
+     * @param speechDspStat A SpeechDspStat struct that provide
+     *     Speech DSP state
+     */
+    oneway reportSpeechDspStat(SpeechDspStat speechDspStat);
+
+    /**
+     * Report a custom vendor atom.
+     *
+     * @param VendorAtom A VendorAtom struct that specifies the atom ID, field
+     *        types, and data from the client that must be logged in statsd.
+     *        Whether or not the atom is uploaded must be determined by the
+     *        atom ID and server-side configs.
+     */
+    oneway reportVendorAtom(VendorAtom vendorAtom);
+};

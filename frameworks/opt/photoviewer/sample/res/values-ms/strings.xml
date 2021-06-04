@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name" msgid="6534472978887454478">"PhotoViewerSample"</string>
+    <string name="menu_settings" msgid="4422995668159108064">"Tetapan"</string>
+    <string name="title_activity_main" msgid="7854395873771803232">"Aktiviti Utama"</string>
+    <string name="launch" msgid="6848049715183303298">"Lancarkan Photo Viewer"</string>
+</resources>

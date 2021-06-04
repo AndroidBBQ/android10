@@ -1,0 +1,2 @@
+include ':app'
+project(':app').projectDir = new File('../../third_party/cube/app')

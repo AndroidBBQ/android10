@@ -1,0 +1,112 @@
+// Copyright (C) 2016 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// The headers module is in frameworks/native/Android.bp.
+ndk_library {
+    name: "libandroid",
+    symbol_file: "libandroid.map.txt",
+    first_version: "9",
+    unversioned_until: "current",
+}
+
+cc_defaults {
+    name: "libandroid_defaults",
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wunused",
+        "-Wunreachable-code",
+    ],
+}
+
+cc_library_shared {
+    name: "libandroid",
+    defaults: ["libandroid_defaults"],
+
+    srcs: [
+        "asset_manager.cpp",
+        "choreographer.cpp",
+        "configuration.cpp",
+        "hardware_buffer_jni.cpp",
+        "input.cpp",
+        "looper.cpp",
+        "native_activity.cpp",
+        "native_window_jni.cpp",
+        "net.c",
+        "obb.cpp",
+        "sensor.cpp",
+        "sharedmem.cpp",
+        "storage_manager.cpp",
+        "surface_texture.cpp",
+        "surface_control.cpp",
+        "system_fonts.cpp",
+        "trace.cpp",
+    ],
+
+    shared_libs: [
+        "liblog",
+        "libhidlbase",
+        "libcutils",
+        "libandroidfw",
+        "libinput",
+        "libutils",
+        "libbinder",
+        "libui",
+        "libgui",
+        "libharfbuzz_ng",  // Only for including hb.h via minikin
+        "libsensor",
+        "libandroid_runtime",
+        "libminikin",
+        "libnetd_client",
+        "libhwui",
+        "libxml2",
+        "android.hardware.configstore@1.0",
+        "android.hardware.configstore-utils",
+    ],
+
+    static_libs: [
+        "libstorage",
+        "libarect",
+    ],
+
+    whole_static_libs: ["libnativewindow"],
+
+    export_static_lib_headers: ["libarect"],
+
+    include_dirs: ["bionic/libc/dns/include"],
+
+    version_script: "libandroid.map.txt",
+    stubs: {
+        symbol_file: "libandroid.map.txt",
+        versions: ["29"],
+    },
+}
+
+// Network library.
+cc_library_shared {
+    name: "libandroid_net",
+    defaults: ["libandroid_defaults"],
+    srcs: ["net.c"],
+
+    shared_libs: ["libnetd_client"],
+
+    include_dirs: ["bionic/libc/dns/include"],
+}
+
+llndk_library {
+    name: "libandroid_net",
+    export_include_dirs: ["include"],
+    symbol_file: "libandroid_net.map.txt",
+    unversioned: true,
+}

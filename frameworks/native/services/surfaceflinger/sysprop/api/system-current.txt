@@ -1,0 +1,46 @@
+// Signature format: 2.0
+package android.sysprop {
+
+  public final class SurfaceFlingerProperties {
+    method public static java.util.Optional<java.lang.Long> color_space_agnostic_dataspace();
+    method public static java.util.Optional<java.lang.Long> default_composition_dataspace();
+    method public static java.util.Optional<java.lang.Integer> default_composition_pixel_format();
+    method public static java.util.List<java.lang.Double> display_primary_blue();
+    method public static java.util.List<java.lang.Double> display_primary_green();
+    method public static java.util.List<java.lang.Double> display_primary_red();
+    method public static java.util.List<java.lang.Double> display_primary_white();
+    method public static java.util.Optional<java.lang.Boolean> enable_protected_contents();
+    method public static java.util.Optional<java.lang.Boolean> force_hwc_copy_for_virtual_displays();
+    method public static java.util.Optional<java.lang.Boolean> has_HDR_display();
+    method public static java.util.Optional<java.lang.Boolean> has_wide_color_display();
+    method public static java.util.Optional<java.lang.Long> max_frame_buffer_acquired_buffers();
+    method public static java.util.Optional<java.lang.Long> max_virtual_display_dimension();
+    method public static java.util.Optional<java.lang.Long> present_time_offset_from_vsync_ns();
+    method public static java.util.Optional<android.sysprop.SurfaceFlingerProperties.primary_display_orientation_values> primary_display_orientation();
+    method public static java.util.Optional<java.lang.Boolean> refresh_rate_switching();
+    method public static java.util.Optional<java.lang.Boolean> running_without_sync_framework();
+    method public static java.util.Optional<java.lang.Integer> set_display_power_timer_ms();
+    method public static java.util.Optional<java.lang.Integer> set_idle_timer_ms();
+    method public static java.util.Optional<java.lang.Integer> set_touch_timer_ms();
+    method public static java.util.Optional<java.lang.Boolean> start_graphics_allocator_service();
+    method public static java.util.Optional<java.lang.Boolean> support_kernel_idle_timer();
+    method public static java.util.Optional<java.lang.Boolean> use_color_management();
+    method public static java.util.Optional<java.lang.Boolean> use_context_priority();
+    method public static java.util.Optional<java.lang.Boolean> use_smart_90_for_video();
+    method public static java.util.Optional<java.lang.Boolean> use_vr_flinger();
+    method public static java.util.Optional<java.lang.Long> vsync_event_phase_offset_ns();
+    method public static java.util.Optional<java.lang.Long> vsync_sf_event_phase_offset_ns();
+    method public static java.util.Optional<java.lang.Long> wcg_composition_dataspace();
+    method public static java.util.Optional<java.lang.Integer> wcg_composition_pixel_format();
+  }
+
+  public enum SurfaceFlingerProperties.primary_display_orientation_values {
+    method public String getPropValue();
+    enum_constant public static final android.sysprop.SurfaceFlingerProperties.primary_display_orientation_values ORIENTATION_0;
+    enum_constant public static final android.sysprop.SurfaceFlingerProperties.primary_display_orientation_values ORIENTATION_180;
+    enum_constant public static final android.sysprop.SurfaceFlingerProperties.primary_display_orientation_values ORIENTATION_270;
+    enum_constant public static final android.sysprop.SurfaceFlingerProperties.primary_display_orientation_values ORIENTATION_90;
+  }
+
+}
+

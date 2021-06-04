@@ -1,0 +1,47 @@
+/**
+ * A helper gradle file to generate documentation using doclava.
+ * Include this file using `apply from` in the gradle build file. This will generate new tasks
+ * "javadoc<Variant>" which will generate javadocs for that target.
+ */
+
+import com.android.internal.doclava.DoclavaJavadocOptionFileOption
+
+def DOCSDIR = "$rootDir/frameworks/opt/setupwizard/tools/docs"
+
+android.libraryVariants.all { variant ->
+    if (variant.buildType.name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    def suffix = variant.name.capitalize()
+
+    def javadocTask = project.tasks.create(name: "javadoc${suffix}", type: Javadoc) {
+        title = null
+        source variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files) + files(
+                "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+        exclude '**/R.java'
+        exclude '**/R.html', '**/R.*.html'
+        exclude '**/BuildConfig.java'
+
+        options {
+            bootClasspath = files(android.getBootClasspath()).asType(List)
+            doclet = 'com.google.doclava.Doclava'
+            docletpath = files("$DOCSDIR/doclava.jar", "$DOCSDIR/jsilver.jar").asType(List)
+
+            addOption(new DoclavaJavadocOptionFileOption('offlinemode'))
+            addOption(new DoclavaJavadocOptionFileOption('federate'))
+                    .setValue(['Android', 'http://developer.android.com'])
+
+            addOption(new DoclavaJavadocOptionFileOption('federationapi'))
+                    .setValue(['Android', file("$DOCSDIR/android-22.txt").canonicalPath])
+            addStringOption('templatedir',
+                    file("$rootDir/external/doclava/res/assets/templates-sdk").canonicalPath)
+        }
+
+        dependsOn(variant.assemble)
+
+        doLast {
+            println "Docs generated: file://${project.docsDir}/javadoc/reference/index.html"
+        }
+    }
+}

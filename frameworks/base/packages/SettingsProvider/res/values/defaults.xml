@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * Copyright (c) 2009, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<resources>
+    <bool name="def_dim_screen">true</bool>
+    <integer name="def_screen_off_timeout">60000</integer>
+    <integer name="def_sleep_timeout">-1</integer>
+    <bool name="def_airplane_mode_on">false</bool>
+    <bool name="def_theater_mode_on">false</bool>
+    <!-- Comma-separated list of bluetooth, wifi, and cell. -->
+    <string name="def_airplane_mode_radios" translatable="false">cell,bluetooth,wifi,nfc,wimax</string>
+    <string name="airplane_mode_toggleable_radios" translatable="false">bluetooth,wifi,nfc</string>
+    <string name="def_bluetooth_disabled_profiles" translatable="false">0</string>
+    <bool name="def_auto_time">true</bool>
+    <bool name="def_auto_time_zone">true</bool>
+    <bool name="def_accelerometer_rotation">false</bool>
+    <!-- Default screen brightness, from 0 to 255.  102 is 40%. -->
+    <integer name="def_screen_brightness">102</integer>
+    <bool name="def_screen_brightness_automatic_mode">false</bool>
+    <fraction name="def_window_animation_scale">100%</fraction>
+    <fraction name="def_window_transition_scale">100%</fraction>
+    <bool name="def_haptic_feedback">true</bool>
+
+    <bool name="def_bluetooth_on">true</bool>
+    <bool name="def_wifi_display_on">false</bool>
+    <bool name="def_install_non_market_apps">false</bool>
+    <bool name="def_package_verifier_enable">true</bool>
+    <!-- 0 == off, 3 == on -->
+    <integer name="def_location_mode">3</integer>
+    <bool name="assisted_gps_enabled">true</bool>
+    <bool name="def_netstats_enabled">true</bool>
+    <bool name="def_usb_mass_storage_enabled">true</bool>
+    <bool name="def_wifi_on">false</bool>
+    <!-- 0 == never, 1 == only when plugged in, 2 == always -->
+    <integer name="def_wifi_sleep_policy">2</integer>
+    <bool name="def_wifi_wakeup_enabled">true</bool>
+    <bool name="def_networks_available_notification_on">true</bool>
+
+    <bool name="def_backup_enabled">false</bool>
+    <string name="def_backup_transport" translatable="false">com.android.localtransport/.LocalTransport</string>
+
+    <!-- Default value for whether or not to pulse the notification LED when there is a
+         pending notification -->
+    <bool name="def_notification_pulse">true</bool>
+
+    <bool name="def_mount_play_notification_snd">true</bool>
+    <bool name="def_mount_ums_autostart">false</bool>
+    <bool name="def_mount_ums_prompt">true</bool>
+    <bool name="def_mount_ums_notify_enabled">true</bool>
+
+    <!-- user interface sound effects -->
+    <integer name="def_power_sounds_enabled">1</integer>
+    <string name="def_low_battery_sound" translatable="false">/product/media/audio/ui/LowBattery.ogg</string>
+    <integer name="def_dock_sounds_enabled">0</integer>
+    <integer name="def_dock_sounds_enabled_when_accessibility">0</integer>
+    <string name="def_desk_dock_sound" translatable="false">/product/media/audio/ui/Dock.ogg</string>
+    <string name="def_desk_undock_sound" translatable="false">/product/media/audio/ui/Undock.ogg</string>
+    <string name="def_car_dock_sound" translatable="false">/product/media/audio/ui/Dock.ogg</string>
+    <string name="def_car_undock_sound" translatable="false">/product/media/audio/ui/Undock.ogg</string>
+    <integer name="def_lockscreen_sounds_enabled">1</integer>
+    <string name="def_lock_sound" translatable="false">/product/media/audio/ui/Lock.ogg</string>
+    <string name="def_unlock_sound" translatable="false">/product/media/audio/ui/Unlock.ogg</string>
+    <string name="def_trusted_sound" translatable="false">/product/media/audio/ui/Trusted.ogg</string>
+    <string name="def_wireless_charging_started_sound" translatable="false">/product/media/audio/ui/WirelessChargingStarted.ogg</string>
+    <string name="def_charging_started_sound" translatable="false">/product/media/audio/ui/ChargingStarted.ogg</string>
+
+    <!-- sound trigger detection service default values -->
+    <integer name="def_max_sound_trigger_detection_service_ops_per_day" translatable="false">1000</integer>
+    <integer name="def_sound_trigger_detection_service_op_timeout" translatable="false">15000</integer>
+
+    <bool name="def_lockscreen_disabled">false</bool>
+    <bool name="def_device_provisioned">false</bool>
+    <integer name="def_dock_audio_media_enabled">1</integer>
+
+    <!-- Notifications use ringer volume -->
+    <bool name="def_notifications_use_ring_volume">true</bool>
+
+    <!-- Default for Settings.System.VIBRATE_IN_SILENT -->
+    <bool name="def_vibrate_in_silent">true</bool>
+
+    <!-- Default for Settings.Secure.SYNC_PARENT_SOUNDS -->
+    <bool name="def_sync_parent_sounds">true</bool>
+
+    <!-- Default for Settings.Secure.ACCESSIBILITY_SPEAK_PASSWORD -->
+    <bool name="def_accessibility_speak_password">true</bool>
+
+    <!-- Default for Settings.Secure.TOUCH_EXPLORATION_ENABLED -->
+    <bool name="def_touch_exploration_enabled">false</bool>
+
+    <!-- Default value for Settings.Secure.ACCESSIBILITY_DISPLAY_MAGNIFICATION_SCALE -->
+    <fraction name="def_accessibility_display_magnification_scale">200%</fraction>
+
+    <!-- Default value for Settings.Secure.ACCESSIBILITY_DISPLAY_MAGNIFICATION_ENABLED -->
+    <bool name="def_accessibility_display_magnification_enabled">false</bool>
+
+    <!-- Default value for Settings.Secure.ACCESSIBILITY_DISPLAY_MAGNIFICATION_AUTO_UPDATE -->
+    <bool name="def_accessibility_display_magnification_auto_update">true</bool>
+
+    <!-- Default for Settings.System.USER_ROTATION -->
+    <integer name="def_user_rotation">0</integer>
+
+    <!-- Default for Settings.Secure.DOWNLOAD_MAX_BYTES_OVER_MOBILE. <=0 if no limit -->
+    <integer name="def_download_manager_max_bytes_over_mobile">-1</integer>
+    <!-- Default for Settings.Secure.DOWNLOAD_RECOMMENDED_MAX_BYTES_OVER_MOBILE. <=0 if no limit -->
+    <integer name="def_download_manager_recommended_max_bytes_over_mobile">-1</integer>
+
+    <!-- Default for Settings.Secure.LONG_PRESS_TIMEOUT_MILLIS -->
+    <integer name="def_long_press_timeout_millis">400</integer>
+
+    <!-- Default for Settings.Secure.MULTI_PRESS_TIMEOUT -->
+    <integer name="def_multi_press_timeout_millis">300</integer>
+
+    <!-- Default for Settings.Secure.SHOW_IME_WITH_HARD_KEYBOARD -->
+    <bool name="def_show_ime_with_hard_keyboard">false</bool>
+
+    <!-- Default for Settings.System.POINTER_SPEED -->
+    <integer name="def_pointer_speed">0</integer>
+
+    <!-- Default for DTMF tones enabled -->
+    <bool name="def_dtmf_tones_enabled">true</bool>
+    <!-- Default for UI touch sounds enabled -->
+    <bool name="def_sound_effects_enabled">true</bool>
+
+    <!-- Development settings -->
+    <bool name="def_stay_on_while_plugged_in">false</bool>
+
+    <!-- Number of retries for connecting to DHCP.
+         Value here is the same as WifiStateMachine.DEFAULT_MAX_DHCP_RETRIES -->
+    <integer name="def_max_dhcp_retries">9</integer>
+
+    <!-- Default for Settings.Secure.USER_SETUP_COMPLETE -->
+    <bool name="def_user_setup_complete">false</bool>
+
+    <!-- Default for Settings.Global.LOW_BATTERY_SOUND_TIMEOUT.
+         0 means no timeout; battery sounds will always play
+         >0 is milliseconds of screen-off time after which battery sounds will not play -->
+    <integer name="def_low_battery_sound_timeout">0</integer>
+
+    <!-- Initial value for the Settings.Secure.IMMERSIVE_MODE_CONFIRMATIONS setting,
+         which is a comma separated list of packages that no longer need confirmation
+         for immersive mode.
+         Override to disable immersive mode confirmation for certain packages. -->
+    <string name="def_immersive_mode_confirmations" translatable="false"></string>
+
+    <!-- Default for Settings.Global.WIFI_SCAN_ALWAYS_AVAILABLE -->
+    <integer name="def_wifi_scan_always_available">0</integer>
+
+    <!-- Default for Settings.Secure.LOCK_SCREEN_SHOW_NOTIFICATIONS, 1==on -->
+    <integer name="def_lock_screen_show_notifications">1</integer>
+
+    <!-- Default for Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS -->
+    <bool name="def_lock_screen_allow_private_notifications">true</bool>
+
+    <!-- Default for Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED, 1==on -->
+    <integer name="def_heads_up_enabled">1</integer>
+
+    <!-- Default for Settings.Global.DEVICE_NAME $1=MANUFACTURER $2=MODEL-->
+    <string name="def_device_name">%1$s %2$s</string>
+
+    <!-- Default for Settings.Global.DEVICE_NAME $1=MODEL-->
+    <string name="def_device_name_simple">%1$s</string>
+
+    <!-- Default for Settings.Secure.WAKE_GESTURE_ENABLED -->
+    <bool name="def_wake_gesture_enabled">true</bool>
+
+    <!-- Default state of tap to wake -->
+    <bool name="def_double_tap_to_wake">true</bool>
+
+    <!-- Default for Settings.Secure.NFC_PAYMENT_COMPONENT -->
+    <string name="def_nfc_payment_component"></string>
+
+    <!-- Default setting for ability to add users from the lock screen -->
+    <bool name="def_add_users_from_lockscreen">false</bool>
+
+    <!--  default setting for Settings.System.END_BUTTON_BEHAVIOR : END_BUTTON_BEHAVIOR_SLEEP -->
+    <integer name="def_end_button_behavior">0x2</integer>
+
+    <!-- default setting for Settings.Global.DEFAULT_RESTRICT_BACKGROUND_DATA -->
+    <bool name="def_restrict_background_data">false</bool>
+
+    <!-- Default for Settings.Secure.BACKUP_MANAGER_CONSTANTS -->
+    <string name="def_backup_manager_constants"></string>
+
+    <!-- Default setting for Settings.Global.MOBILE_DATA_ALWAYS_ON -->
+    <bool name="def_mobile_data_always_on">true</bool>
+
+    <!-- Default for Settings.Secure.BACKUP_LOCAL_TRANSPORT_PARAMETERS -->
+    <string name="def_backup_local_transport_parameters"></string>
+
+    <!-- Default for Settings.Global.ZEN_DURATION
+        If 0, turning on dnd manually will last indefinitely.
+        Else if non-negative, turning on dnd manually will last for this many minutes.
+        Else (if negative), turning on dnd manually will surface a dialog that prompts
+            user to specify a duration.-->
+    <integer name="def_zen_duration">0</integer>
+
+    <!-- Default for Settings.Global.BACKUP_AGENT_TIMEOUT_PARAMETERS -->
+    <string name="def_backup_agent_timeout_parameters"></string>
+
+    <!-- Default for Settings.System.VIBRATE_WHEN_RINGING -->
+    <bool name="def_vibrate_when_ringing">false</bool>
+
+    <!-- Default for Settings.Global.APPLY_RAMPING_RINGER -->
+    <bool name="def_apply_ramping_ringer">false</bool>
+
+    <!-- Default for Settings.Secure.CHARGING_VIBRATION_ENABLED -->
+    <bool name="def_charging_vibration_enabled">true</bool>
+
+    <!-- Default for Settings.Secure.CHARGING_SOUNDS_ENABLED -->
+    <bool name="def_charging_sounds_enabled">true</bool>
+
+    <!-- Default for Settings.Secure.NOTIFICATION_BUBBLES -->
+    <bool name="def_notification_bubbles">false</bool>
+
+    <!-- Default for Settings.Secure.AWARE_ENABLED -->
+    <bool name="def_aware_enabled">false</bool>
+
+    <!-- Default for Settings.Secure.SKIP_GESTURE -->
+    <bool name="def_skip_gesture">false</bool>
+
+    <!-- Default for Settings.Secure.SILENCE_GESTURE -->
+    <bool name="def_silence_gesture">false</bool>
+
+    <!-- Default for Settings.Secure.AWARE_LOCK_ENABLED -->
+    <bool name="def_aware_lock_enabled">false</bool>
+</resources>

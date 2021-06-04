@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// libandroid_runtime_lazy is a shim library.
+// This provides very limited small set of APIs from libandroid_runtime.
+//
+// By depending on this instead of libandroid_runtime,
+// a library can be loaded without paying the cost of libandroid_runtime
+// which is quite huge. The cost will be paid when libandroid_runtime is actually used.
+//
+// For Partial-source PDK build, there is a constraint that
+// frameworks/native modules should not depend on frameworks/base.
+// This library can be used to cut down the dependency between them.
+// (e.g. libbinder_ndk)
+//
+// Some libraries which serve as LL-NDK and NDK as well may depend on this
+// instead of libandroid_runtime. When they are used by a vendor process,
+// depending on libandroid_runtime is meaningless. In this case,
+// they can depend on libandroid_runtime_lazy.
+cc_library {
+    name: "libandroid_runtime_lazy",
+    vendor_available: true,
+    double_loadable: true,
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wunused",
+        "-Wunreachable-code",
+    ],
+
+    srcs: [
+        "android_runtime_lazy.cpp",
+    ],
+
+    shared_libs: [
+        "liblog",
+        "libutils",
+    ],
+
+    required: [
+        "libandroid_runtime",
+    ],
+
+    export_include_dirs: [
+        "include",
+    ],
+
+    header_libs: [
+        "jni_headers",
+        "libbinder_headers",
+    ],
+}

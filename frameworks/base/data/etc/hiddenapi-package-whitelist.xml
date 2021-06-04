@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+
+<!--
+This XML file declares which system apps should be exempted from the hidden API blacklisting, i.e.
+which apps should be allowed to access the entire private API. Only apps NOT signed with the
+platform cert need to be included, as apps signed with the platform cert are exempted by default.
+-->
+
+<config>
+  <hidden-api-whitelisted-app package="android.ext.services" />
+  <hidden-api-whitelisted-app package="com.android.apps.tag" />
+  <hidden-api-whitelisted-app package="com.android.basicsmsreceiver" />
+  <hidden-api-whitelisted-app package="com.android.bookmarkprovider" />
+  <hidden-api-whitelisted-app package="com.android.calllogbackup" />
+  <hidden-api-whitelisted-app package="com.android.camera" />
+  <hidden-api-whitelisted-app package="com.android.car.dialer" />
+  <hidden-api-whitelisted-app package="com.android.car.messenger" />
+  <hidden-api-whitelisted-app package="com.android.car.overview" />
+  <hidden-api-whitelisted-app package="com.android.car.stream" />
+  <hidden-api-whitelisted-app package="com.android.companiondevicemanager" />
+  <hidden-api-whitelisted-app package="com.android.dreams.basic" />
+  <hidden-api-whitelisted-app package="com.android.gallery" />
+  <hidden-api-whitelisted-app package="com.android.launcher3" />
+  <hidden-api-whitelisted-app package="com.android.mtp" />
+  <hidden-api-whitelisted-app package="com.android.musicfx" />
+  <hidden-api-whitelisted-app package="com.android.permissioncontroller" />
+  <hidden-api-whitelisted-app package="com.android.printservice.recommendation" />
+  <hidden-api-whitelisted-app package="com.android.printspooler" />
+  <hidden-api-whitelisted-app package="com.android.providers.blockednumber" />
+  <hidden-api-whitelisted-app package="com.android.providers.calendar" />
+  <hidden-api-whitelisted-app package="com.android.providers.contacts" />
+  <hidden-api-whitelisted-app package="com.android.providers.downloads" />
+  <hidden-api-whitelisted-app package="com.android.providers.downloads.ui" />
+  <hidden-api-whitelisted-app package="com.android.providers.media" />
+  <hidden-api-whitelisted-app package="com.android.providers.tv" />
+  <hidden-api-whitelisted-app package="com.android.providers.userdictionary" />
+  <hidden-api-whitelisted-app package="com.android.smspush" />
+  <hidden-api-whitelisted-app package="com.android.spare_parts" />
+  <hidden-api-whitelisted-app package="com.android.statementservice" />
+  <hidden-api-whitelisted-app package="com.android.storagemanager" />
+  <hidden-api-whitelisted-app package="com.android.systemui.plugins" />
+  <hidden-api-whitelisted-app package="com.android.terminal" />
+  <hidden-api-whitelisted-app package="com.android.wallpaper" />
+  <hidden-api-whitelisted-app package="jp.co.omronsoft.openwnn" />
+</config>

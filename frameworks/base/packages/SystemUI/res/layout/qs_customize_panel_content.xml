@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2016 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">->
+    <View
+        android:id="@+id/customizer_transparent_view"
+        android:layout_width="match_parent"
+        android:layout_height="@*android:dimen/quick_qs_offset_height"
+        android:background="@android:color/transparent" />
+
+    <com.android.keyguard.AlphaOptimizedLinearLayout
+        android:id="@+id/customize_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/notification_side_paddings"
+        android:layout_marginRight="@dimen/notification_side_paddings"
+        android:orientation="vertical"
+        android:background="@drawable/qs_customizer_background">
+        <Toolbar
+            android:id="@*android:id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/qs_customizer_toolbar"
+            android:navigationContentDescription="@*android:string/action_bar_up_description"
+            style="@style/QSCustomizeToolbar"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/qs_tile_layout_margin_side"
+            android:paddingRight="@dimen/qs_tile_layout_margin_side"
+            android:paddingBottom="28dp"
+            android:clipToPadding="false"
+            android:scrollIndicators="top"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:importantForAccessibility="no" />
+    </com.android.keyguard.AlphaOptimizedLinearLayout>
+
+    <View
+        android:id="@+id/nav_bar_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_bar_size"
+        android:layout_gravity="bottom"
+        android:background="#ff000000" />
+</merge>

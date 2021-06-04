@@ -1,0 +1,5 @@
+service virtual_touchpad /system/bin/virtual_touchpad
+  class core
+  user system
+  group system input
+  writepid /dev/cpuset/system/tasks

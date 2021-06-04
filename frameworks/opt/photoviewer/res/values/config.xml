@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- If true, thumbnails will be forcibly set to ScaleType.CENTER -->
+  <bool name="force_thumbnail_no_scaling">true</bool>
+</resources>

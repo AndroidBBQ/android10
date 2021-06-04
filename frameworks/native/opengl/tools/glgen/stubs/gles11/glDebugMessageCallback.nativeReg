@@ -1,0 +1,1 @@
+{"glDebugMessageCallback", "(Landroid/opengl/GLES32$DebugProc;)V", (void *) android_glDebugMessageCallback },

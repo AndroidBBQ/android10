@@ -1,0 +1,55 @@
+// Signature format: 2.0
+package com.android.location.provider {
+
+  @Deprecated public abstract class FusedProvider {
+    ctor @Deprecated public FusedProvider();
+    method @Deprecated public android.os.IBinder getBinder();
+  }
+
+  public abstract class LocationProviderBase {
+    ctor public LocationProviderBase(String, com.android.location.provider.ProviderPropertiesUnbundled);
+    method public android.os.IBinder getBinder();
+    method public boolean isEnabled();
+    method @Deprecated protected void onDisable();
+    method @Deprecated protected void onDump(java.io.FileDescriptor, java.io.PrintWriter, String[]);
+    method @Deprecated protected void onEnable();
+    method @Deprecated protected int onGetStatus(android.os.Bundle);
+    method @Deprecated protected long onGetStatusUpdateTime();
+    method protected void onInit();
+    method protected boolean onSendExtraCommand(@Nullable String, @Nullable android.os.Bundle);
+    method protected abstract void onSetRequest(com.android.location.provider.ProviderRequestUnbundled, android.os.WorkSource);
+    method public void reportLocation(android.location.Location);
+    method public void setAdditionalProviderPackages(java.util.List<java.lang.String>);
+    method public void setEnabled(boolean);
+    method public void setProperties(com.android.location.provider.ProviderPropertiesUnbundled);
+    field public static final String EXTRA_NO_GPS_LOCATION = "noGPSLocation";
+    field public static final String FUSED_PROVIDER = "fused";
+  }
+
+  public final class LocationRequestUnbundled {
+    method public long getFastestInterval();
+    method public long getInterval();
+    method public int getQuality();
+    method public float getSmallestDisplacement();
+    method public boolean isLocationSettingsIgnored();
+    field public static final int ACCURACY_BLOCK = 102; // 0x66
+    field public static final int ACCURACY_CITY = 104; // 0x68
+    field public static final int ACCURACY_FINE = 100; // 0x64
+    field public static final int POWER_HIGH = 203; // 0xcb
+    field public static final int POWER_LOW = 201; // 0xc9
+    field public static final int POWER_NONE = 200; // 0xc8
+  }
+
+  public final class ProviderPropertiesUnbundled {
+    method public static com.android.location.provider.ProviderPropertiesUnbundled create(boolean, boolean, boolean, boolean, boolean, boolean, boolean, int, int);
+  }
+
+  public final class ProviderRequestUnbundled {
+    method public long getInterval();
+    method public java.util.List<com.android.location.provider.LocationRequestUnbundled> getLocationRequests();
+    method public boolean getReportLocation();
+    method public boolean isLocationSettingsIgnored();
+  }
+
+}
+

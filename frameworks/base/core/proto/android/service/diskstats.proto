@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+package android.service.diskstats;
+
+import "frameworks/base/core/proto/android/privacy.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "DiskStatsServiceProto";
+
+message DiskStatsServiceDumpProto {
+    option (android.msg_privacy).dest = DEST_AUTOMATIC;
+
+    enum EncryptionType {
+        // Unknown encryption type
+        ENCRYPTION_UNKNOWN = 0;
+        // No encryption
+        ENCRYPTION_NONE = 1;
+        // Full disk encryption
+        ENCRYPTION_FULL_DISK = 2;
+        // File-based encryption
+        ENCRYPTION_FILE_BASED = 3;
+    }
+    // Whether the latency test resulted in an error
+    optional bool has_test_error = 1;
+    // If the test encountered an IOException, the error message is logged here.
+    optional string error_message = 2;
+    // 512B write latency in milliseconds, if the test was successful
+    optional int32 write_512b_latency_millis = 3;
+    // Free Space in the major partitions
+    repeated DiskStatsFreeSpaceProto partitions_free_space = 4;
+    // Is the device using file-based encryption, full disk encryption or other
+    optional EncryptionType encryption = 5;
+    // Cached values of folder sizes, etc.
+    optional DiskStatsCachedValuesProto cached_folder_sizes = 6;
+    // Average write speed of storaged benchmark for last 24 hours
+    optional int32 benchmarked_write_speed_kbps = 7;
+}
+
+message DiskStatsCachedValuesProto {
+    option (android.msg_privacy).dest = DEST_AUTOMATIC;
+
+    // Total app code size, in kilobytes
+    optional int64 agg_apps_size_kb = 1;
+    // Total app cache size, in kilobytes
+    optional int64 agg_apps_cache_size_kb = 2;
+    // Size of image files, in kilobytes
+    optional int64 photos_size_kb = 3;
+    // Size of video files, in kilobytes
+    optional int64 videos_size_kb = 4;
+    // Size of audio files, in kilobytes
+    optional int64 audio_size_kb = 5;
+    // Size of downloads, in kilobytes
+    optional int64 downloads_size_kb = 6;
+    // Size of system directory, in kilobytes
+    optional int64 system_size_kb = 7;
+    // Size of other files, in kilobytes
+    optional int64 other_size_kb = 8;
+    // Sizes of individual packages
+    repeated DiskStatsAppSizesProto app_sizes = 9;
+    // Total app data size, in kilobytes
+    optional int64 agg_apps_data_size_kb = 10;
+}
+
+message DiskStatsAppSizesProto {
+    option (android.msg_privacy).dest = DEST_AUTOMATIC;
+
+    // Name of the package
+    optional string package_name = 1;
+    // App's code size in kilobytes
+    optional int64 app_size_kb = 2;
+    // App's cache size in kilobytes
+    optional int64 cache_size_kb = 3;
+    // App's data size in kilobytes
+    optional int64 app_data_size_kb = 4;
+}
+
+message DiskStatsFreeSpaceProto {
+    option (android.msg_privacy).dest = DEST_AUTOMATIC;
+
+    enum Folder {
+        // Data folder
+        FOLDER_DATA = 0;
+        // Cache folder
+        FOLDER_CACHE = 1;
+        // System folder
+        FOLDER_SYSTEM = 2;
+    }
+    // Which folder?
+    optional Folder folder = 1;
+    // Available space, in kilobytes
+    optional int64 available_space_kb = 2;
+    // Total space, in kilobytes
+    optional int64 total_space_kb = 3;
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+** Copyright 2012, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+-->
+
+<!-- Extends FrameLayout -->
+<com.android.systemui.qs.QSFooterImpl
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/qs_footer"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/qs_footer_height"
+    android:layout_marginStart="@dimen/qs_footer_margin"
+    android:layout_marginEnd="@dimen/qs_footer_margin"
+    android:elevation="4dp"
+    android:background="@android:color/transparent"
+    android:baselineAligned="false"
+    android:clickable="false"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="end" >
+
+        <com.android.keyguard.AlphaOptimizedLinearLayout
+            android:id="@+id/qs_footer_actions_edit_container"
+            android:layout_width="@integer/qs_footer_actions_width"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/qs_footer_actions_weight"
+            android:gravity="center_vertical|start" >
+            <com.android.systemui.statusbar.AlphaOptimizedImageView
+                android:id="@android:id/edit"
+                android:layout_width="@dimen/qs_footer_action_button_size"
+                android:layout_height="@dimen/qs_footer_action_button_size"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:clipToPadding="false"
+                android:contentDescription="@string/accessibility_quick_settings_edit"
+                android:focusable="true"
+                android:padding="@dimen/qs_footer_icon_padding"
+                android:src="@*android:drawable/ic_mode_edit"
+                android:tint="?android:attr/colorForeground"/>
+
+            <TextView
+                android:id="@+id/build"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:focusable="true"
+                android:textAppearance="@style/TextAppearance.QS.Status"
+                android:visibility="gone"/>
+         </com.android.keyguard.AlphaOptimizedLinearLayout>
+
+        <com.android.systemui.qs.PageIndicator
+            android:id="@+id/footer_page_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+
+        <com.android.keyguard.AlphaOptimizedLinearLayout
+            android:id="@+id/qs_footer_actions_container"
+            android:layout_width="@integer/qs_footer_actions_width"
+            android:layout_height="match_parent"
+            android:layout_weight="@integer/qs_footer_actions_weight"
+            android:gravity="center_vertical|end" >
+            <com.android.systemui.statusbar.phone.MultiUserSwitch
+                android:id="@+id/multi_user_switch"
+                android:layout_width="@dimen/qs_footer_action_button_size"
+                android:layout_height="@dimen/qs_footer_action_button_size"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ripple_drawable"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/multi_user_avatar"
+                    android:layout_width="@dimen/multi_user_avatar_expanded_size"
+                    android:layout_height="@dimen/multi_user_avatar_expanded_size"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"/>
+            </com.android.systemui.statusbar.phone.MultiUserSwitch>
+
+            <com.android.systemui.statusbar.AlphaOptimizedFrameLayout
+                android:id="@+id/settings_button_container"
+                android:layout_width="@dimen/qs_footer_action_button_size"
+                android:layout_height="@dimen/qs_footer_action_button_size"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <com.android.systemui.statusbar.phone.SettingsButton
+                    android:id="@+id/settings_button"
+                    style="@android:style/Widget.Material.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/qs_footer_icon_padding"
+                    android:background="@drawable/ripple_drawable"
+                    android:contentDescription="@string/accessibility_quick_settings_settings"
+                    android:src="@drawable/ic_settings"
+                    android:scaleType="centerInside"
+                    android:tint="?android:attr/colorForeground"/>
+
+                <com.android.systemui.statusbar.AlphaOptimizedImageView
+                    android:id="@+id/tuner_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="36dp"
+                    android:paddingEnd="4dp"
+                    android:src="@drawable/tuner"
+                    android:tint="?android:attr/textColorTertiary"
+                    android:visibility="invisible"/>
+
+            </com.android.systemui.statusbar.AlphaOptimizedFrameLayout>
+        </com.android.keyguard.AlphaOptimizedLinearLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/qs_drag_handle_view"
+        android:layout_width="24dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@drawable/qs_footer_drag_handle" />
+
+</com.android.systemui.qs.QSFooterImpl>

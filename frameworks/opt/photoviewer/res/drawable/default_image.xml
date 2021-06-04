@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+
+  <!-- these are the dimensions of the original default_image.png -->
+  <size
+      android:width="215dp"
+      android:height="210dp" />
+
+  <solid
+      android:color="#ccc" />
+
+</shape>

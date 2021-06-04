@@ -1,0 +1,205 @@
+// Copyright 2010 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+cc_library_headers {
+    name: "libgui_headers",
+    vendor_available: true,
+    export_include_dirs: ["include"],
+}
+
+cc_library_shared {
+    name: "libgui",
+    vendor_available: false,
+    vndk: {
+        enabled: true,
+    },
+    double_loadable: true,
+
+    defaults: ["libgui_bufferqueue-defaults"],
+
+    srcs: [
+        "BitTube.cpp",
+        "BufferHubConsumer.cpp",
+        "BufferHubProducer.cpp",
+        "BufferItemConsumer.cpp",
+        "ConsumerBase.cpp",
+        "CpuConsumer.cpp",
+        "DebugEGLImageTracker.cpp",
+        "DisplayEventReceiver.cpp",
+        "GLConsumer.cpp",
+        "GuiConfig.cpp",
+        "IDisplayEventConnection.cpp",
+        "IRegionSamplingListener.cpp",
+        "ISurfaceComposer.cpp",
+        "ISurfaceComposerClient.cpp",
+        "ITransactionCompletedListener.cpp",
+        "LayerDebugInfo.cpp",
+        "LayerMetadata.cpp",
+        "LayerState.cpp",
+        "StreamSplitter.cpp",
+        "Surface.cpp",
+        "SurfaceControl.cpp",
+        "SurfaceComposerClient.cpp",
+        "SyncFeatures.cpp",
+        "view/Surface.cpp",
+    ],
+
+    shared_libs: [
+        "android.frameworks.bufferhub@1.0",
+        "libbufferhub",
+        "libbufferhubqueue", // TODO(b/70046255): Remove this once BufferHub is integrated into libgui.
+        "libinput",
+        "libpdx_default_transport",
+    ],
+
+    // bufferhub is not used when building libgui for vendors
+    target: {
+        vendor: {
+            cflags: [
+                "-DNO_BUFFERHUB",
+                "-DNO_INPUT",
+            ],
+            exclude_srcs: [
+                "BufferHubConsumer.cpp",
+                "BufferHubProducer.cpp",
+            ],
+            exclude_shared_libs: [
+                "android.frameworks.bufferhub@1.0",
+                "libbufferhub",
+                "libbufferhubqueue",
+                "libinput",
+                "libpdx_default_transport",
+            ],
+        },
+    },
+
+    header_libs: [
+        "libdvr_headers",
+        "libpdx_headers",
+    ],
+}
+
+// Used by media codec services exclusively as a static lib for
+// core bufferqueue support only.
+cc_library_static {
+    name: "libgui_bufferqueue_static",
+    vendor_available: true,
+
+    cflags: [
+        "-DNO_BUFFERHUB",
+    ],
+
+    defaults: ["libgui_bufferqueue-defaults"],
+}
+
+// Common build config shared by libgui and libgui_bufferqueue_static.
+cc_defaults {
+    name: "libgui_bufferqueue-defaults",
+
+    clang: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+
+    cppflags: [
+        "-Wextra",
+        "-DDEBUG_ONLY_CODE=0",
+    ],
+
+    product_variables: {
+        eng: {
+            cppflags: [
+                "-UDEBUG_ONLY_CODE",
+                "-DDEBUG_ONLY_CODE=1",
+            ],
+        },
+    },
+
+    srcs: [
+        "BufferItem.cpp",
+        "BufferQueue.cpp",
+        "BufferQueueConsumer.cpp",
+        "BufferQueueCore.cpp",
+        "BufferQueueProducer.cpp",
+        "BufferQueueThreadState.cpp",
+        "BufferSlot.cpp",
+        "FrameTimestamps.cpp",
+        "GLConsumerUtils.cpp",
+        "HdrMetadata.cpp",
+        "IConsumerListener.cpp",
+        "IGraphicBufferConsumer.cpp",
+        "IGraphicBufferProducer.cpp",
+        "IProducerListener.cpp",
+        "OccupancyTracker.cpp",
+        "bufferqueue/1.0/B2HProducerListener.cpp",
+        "bufferqueue/1.0/Conversion.cpp",
+        "bufferqueue/1.0/H2BGraphicBufferProducer.cpp",
+        "bufferqueue/1.0/H2BProducerListener.cpp",
+        "bufferqueue/1.0/WProducerListener.cpp",
+        "bufferqueue/2.0/B2HGraphicBufferProducer.cpp",
+        "bufferqueue/2.0/B2HProducerListener.cpp",
+        "bufferqueue/2.0/H2BGraphicBufferProducer.cpp",
+        "bufferqueue/2.0/H2BProducerListener.cpp",
+        "bufferqueue/2.0/types.cpp",
+    ],
+
+    shared_libs: [
+        "android.hardware.graphics.bufferqueue@1.0",
+        "android.hardware.graphics.bufferqueue@2.0",
+        "android.hardware.graphics.common@1.1",
+        "android.hardware.graphics.common@1.2",
+        "android.hidl.token@1.0-utils",
+        "libbase",
+        "libbinder",
+        "libcutils",
+        "libEGL",
+        "libGLESv2",
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "liblog",
+        "libnativewindow",
+        "libsync",
+        "libui",
+        "libutils",
+        "libvndksupport",
+    ],
+
+    header_libs: [
+        "libgui_headers",
+        "libnativebase_headers",
+    ],
+
+    export_shared_lib_headers: [
+        "libbinder",
+        "libEGL",
+        "libnativewindow",
+        "libui",
+        "android.hardware.graphics.bufferqueue@1.0",
+        "android.hardware.graphics.bufferqueue@2.0",
+        "android.hardware.graphics.common@1.1",
+        "android.hardware.graphics.common@1.2",
+        "android.hidl.token@1.0-utils",
+    ],
+
+    export_header_lib_headers: [
+        "libgui_headers",
+    ],
+
+    export_include_dirs: [
+        "include",
+    ],
+}
+
+subdirs = ["tests"]

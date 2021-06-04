@@ -1,0 +1,3 @@
+hidl_package_root {
+    name: "android.frameworks",
+}

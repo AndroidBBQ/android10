@@ -1,0 +1,15 @@
+{
+  "postsubmit": [
+    {
+      "name": "CtsMediaTestCases",
+      "options": [
+        {
+          "include-annotation": "android.platform.test.annotations.RequiresDevice"
+        }
+      ]
+    },
+    {
+       "name": "BatteryChecker_test"
+    }
+  ]
+}

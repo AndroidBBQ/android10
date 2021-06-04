@@ -1,0 +1,130 @@
+cc_library_shared {
+    name: "libRSCpuRef",
+    defaults: ["libbcc-targets"],
+    vendor_available: true,
+    vndk: {
+        enabled: true,
+        support_system_process: true,
+    },
+
+    srcs: [
+        "rsCpuCore.cpp",
+        "rsCpuExecutable.cpp",
+        "rsCpuScript.cpp",
+        "rsCpuRuntimeMath.cpp",
+        "rsCpuScriptGroup.cpp",
+        "rsCpuScriptGroup2.cpp",
+        "rsCpuIntrinsic.cpp",
+        "rsCpuIntrinsic3DLUT.cpp",
+        "rsCpuIntrinsicBLAS.cpp",
+        "rsCpuIntrinsicBlend.cpp",
+        "rsCpuIntrinsicBlur.cpp",
+        "rsCpuIntrinsicColorMatrix.cpp",
+        "rsCpuIntrinsicConvolve3x3.cpp",
+        "rsCpuIntrinsicConvolve5x5.cpp",
+        "rsCpuIntrinsicHistogram.cpp",
+        "rsCpuIntrinsicResize.cpp",
+        "rsCpuIntrinsicLUT.cpp",
+        "rsCpuIntrinsicYuvToRGB.cpp",
+    ],
+
+    arch: {
+        arm64: {
+            cflags: [
+                "-DARCH_ARM_USE_INTRINSICS",
+                "-DARCH_ARM64_USE_INTRINSICS",
+                "-DARCH_ARM64_HAVE_NEON",
+            ],
+
+            srcs: [
+                "rsCpuIntrinsics_advsimd_3DLUT.S",
+                "rsCpuIntrinsics_advsimd_Convolve.S",
+                "rsCpuIntrinsics_advsimd_Blur.S",
+                "rsCpuIntrinsics_advsimd_ColorMatrix.S",
+                "rsCpuIntrinsics_advsimd_Resize.S",
+                "rsCpuIntrinsics_advsimd_YuvToRGB.S",
+                "rsCpuIntrinsics_advsimd_Blend.S",
+            ],
+        },
+
+        arm: {
+            cflags: [
+                "-DARCH_ARM_HAVE_VFP",
+                "-DARCH_ARM_USE_INTRINSICS",
+            ],
+
+            srcs: [
+                "rsCpuIntrinsics_neon_3DLUT.S",
+                "rsCpuIntrinsics_neon_Blend.S",
+                "rsCpuIntrinsics_neon_Blur.S",
+                "rsCpuIntrinsics_neon_Convolve.S",
+                "rsCpuIntrinsics_neon_ColorMatrix.S",
+                "rsCpuIntrinsics_neon_Resize.S",
+                "rsCpuIntrinsics_neon_YuvToRGB.S",
+            ],
+
+            asflags: ["-mfpu=neon"],
+
+            neon: {
+                cflags: [
+                    "-DARCH_ARM_HAVE_NEON",
+                ],
+            },
+        },
+
+        x86: {
+            ssse3: {
+                cflags: ["-DARCH_X86_HAVE_SSSE3"],
+                srcs: ["rsCpuIntrinsics_x86.cpp"],
+            },
+        },
+        x86_64: {
+            ssse3: {
+                cflags: ["-DARCH_X86_HAVE_SSSE3"],
+                srcs: ["rsCpuIntrinsics_x86.cpp"],
+            },
+        },
+    },
+
+    target: {
+        arm_on_x86: {
+            cflags: ["-DBUILD_ARM_FOR_X86"],
+        },
+    },
+
+    shared_libs: [
+        "libRS_internal",
+        "libc++",
+        "liblog",
+        "libz",
+
+        "libbcinfo",
+        "libblas",
+    ],
+    static_libs: ["libbnnmlowp"],
+    header_libs: [
+        "libutils_headers",
+        "libhardware_headers",
+    ],
+
+    include_dirs: [
+        "frameworks/compile/libbcc/include",
+        "frameworks/rs",
+    ],
+
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
+
+    product_variables: {
+        pdk: {
+            // Not building RenderScript modules in PDK builds, as libmediandk
+            // is not available in PDK.
+            enabled: false,
+        },
+    },
+}

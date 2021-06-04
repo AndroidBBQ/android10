@@ -1,0 +1,85 @@
+digraph paused {
+initial [label="INITIAL\n\
+mIgnoreNextPausedInt = false\n\
+mPaused = false\n\
+mPausedInt = false"];
+
+resume_body [label="mIgnoreNextPausedInt = true\nif (mPaused || mPausedInt)"];
+resume_paused [label="mPaused = false\nmPausedInt = false\nsignal()"];
+resume_paused -> resume_merged;
+resume_merged [label="return"];
+
+Application -> ATstop;
+ATstop [label="AudioTrack::stop()"];
+ATstop -> pause;
+Application -> ATpause;
+ATpause [label="AudioTrack::pause()"];
+ATpause -> pause;
+ATstart -> resume;
+ATstart [label="AudioTrack::start()"];
+destructor [label="~AudioTrack()"];
+destructor -> requestExit;
+requestExit [label="AudioTrackThread::requestExit()"];
+requestExit -> resume;
+Application -> ATsetMarkerPosition
+ATsetMarkerPosition [label="AudioTrack::setMarkerPosition()\n[sets marker variables]"];
+ATsetMarkerPosition -> ATTwake
+Application -> ATsetPositionUpdatePeriod
+ATsetPositionUpdatePeriod [label="AudioTrack::setPositionUpdatePeriod()\n[sets update period variables]"];
+ATsetPositionUpdatePeriod -> ATTwake
+Application -> ATstart;
+
+resume [label="AudioTrackThread::resume()"];
+resume -> resume_body;
+
+resume_body -> resume_paused [label="true"];
+resume_body -> resume_merged [label="false"];
+
+ATTwake [label="AudioTrackThread::wake()\nif (!mPaused && mPausedInt && mPausedNs > 0)"];
+ATTwake-> ATTWake_wakeable [label="true"];
+ATTWake_wakeable [label="mIgnoreNextPausedInt = true\nmPausedInt = false\nsignal()"];
+ATTwake-> ATTWake_cannotwake [label="false"]
+ATTWake_cannotwake [label="ignore"];
+
+pause [label="mPaused = true"];
+pause -> return;
+
+threadLoop [label="AudioTrackThread::threadLoop()\nENTRY"];
+threadLoop -> threadLoop_1;
+threadLoop_1 [label="if (mPaused)"];
+threadLoop_1 -> threadLoop_1_true [label="true"];
+threadLoop_1 -> threadLoop_2 [label="false"];
+threadLoop_1_true [label="wait()\nreturn true"];
+threadLoop_2 [label="if (mIgnoreNextPausedInt)"];
+threadLoop_2 -> threadLoop_2_true [label="true"];
+threadLoop_2 -> threadLoop_3 [label="false"];
+threadLoop_2_true [label="mIgnoreNextPausedInt = false\nmPausedInt = false"];
+threadLoop_2_true -> threadLoop_3;
+threadLoop_3 [label="if (mPausedInt)"];
+threadLoop_3 -> threadLoop_3_true [label="true"];
+threadLoop_3 -> threadLoop_4 [label="false"];
+threadLoop_3_true [label="wait()\nmPausedInt = false\nreturn true"];
+threadLoop_4 [label="if (exitPending)"];
+threadLoop_4 -> threadLoop_4_true [label="true"];
+threadLoop_4 -> threadLoop_5 [label="false"];
+threadLoop_4_true [label="return false"];
+threadLoop_5 [label="ns = processAudioBuffer()"];
+threadLoop_5 -> threadLoop_6;
+threadLoop_6 [label="case ns"];
+threadLoop_6 -> threadLoop_6_0 [label="0"];
+threadLoop_6 -> threadLoop_6_NS_INACTIVE [label="NS_INACTIVE"];
+threadLoop_6 -> threadLoop_6_NS_NEVER [label="NS_NEVER"];
+threadLoop_6 -> threadLoop_6_NS_WHENEVER [label="NS_WHENEVER"];
+threadLoop_6 -> threadLoop_6_default [label="default"];
+threadLoop_6_default [label="if (ns < 0)"];
+threadLoop_6_default -> threadLoop_6_default_true [label="true"];
+threadLoop_6_default -> threadLoop_6_default_false [label="false"];
+threadLoop_6_default_true [label="FATAL"];
+threadLoop_6_default_false [label="pauseInternal(ns) [wake()-able]\nmPausedInternal = true\nmPausedNs = ns\nreturn true"];
+threadLoop_6_0 [label="return true"];
+threadLoop_6_NS_INACTIVE [label="pauseInternal()\nmPausedInternal = true\nmPausedNs = 0\nreturn true"];
+threadLoop_6_NS_NEVER [label="return false"];
+threadLoop_6_NS_WHENEVER [label="ns = 1s"];
+threadLoop_6_NS_WHENEVER -> threadLoop_6_default_false;
+
+}

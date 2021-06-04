@@ -1,0 +1,44 @@
+This directory contains OpenGL ES and EGL extension specifications that have
+been or are being defined for Android.
+
+The table below tracks usage of EGL enumerant values that have been reserved
+for use by Android extensions.
+
+See https://github.com/KhronosGroup/EGL-Registry/blob/master/api/egl.xml
+for a list of all enumarant values currently reserved and registered with
+Khronos.
+
+     Value                       Extension
+================     ==================================
+0x3140 - 0x314F      Reserved block
+================     ==================================
+0x3140               EGL_NATIVE_BUFFER_ANDROID (EGL_ANDROID_image_native_buffer)
+0x3141               EGL_PLATFORM_ANDROID_KHR (KHR_platform_android)
+0x3142               EGL_RECORDABLE_ANDROID (EGL_ANDROID_recordable)
+0x3144               EGL_SYNC_NATIVE_FENCE_ANDROID (EGL_ANDROID_native_fence_sync)
+0x3145               EGL_SYNC_NATIVE_FENCE_FD_ANDROID (EGL_ANDROID_native_fence_sync)
+0x3146               EGL_SYNC_NATIVE_FENCE_SIGNALED_ANDROID (EGL_ANDROID_native_fence_sync)
+0x3147               EGL_FRAMEBUFFER_TARGET_ANDROID (EGL_ANDROID_framebuffer_target)
+0x3148 - 0x314B      previously used by the undocumented, deprecated extension EGL_ANDROID_image_crop
+0x314C               EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID (EGL_ANDROID_front_buffer_auto_refresh)
+0x314D               EGL_GL_COLORSPACE_DEFAULT_EXT (EGL_EXT_image_gl_colorspace)
+0x314E - 0x314F      (unused)
+
+     Value                       Extension
+================     ==================================
+0x3430 - 0x343F      Reserved block
+================     ==================================
+0x3430               EGL_TIMESTAMPS_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3431               EGL_COMPOSITE_DEADLINE_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3432               EGL_COMPOSITE_INTERVAL_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3433               EGL_COMPOSITE_TO_PRESENT_LATENCY_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3434               EGL_REQUESTED_PRESENT_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3435               EGL_RENDERING_COMPLETE_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3436               EGL_COMPOSITION_LATCH_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3437               EGL_FIRST_COMPOSITION_START_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3438               EGL_LAST_COMPOSITION_START_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x3439               EGL_FIRST_COMPOSITION_GPU_FINISHED_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x343A               EGL_DISPLAY_PRESENT_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x343B               EGL_DEQUEUE_READY_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x343C               EGL_READS_DONE_TIME_ANDROID (EGL_ANDROID_get_frame_timestamps)
+0x343D - 0x343F      (unused)

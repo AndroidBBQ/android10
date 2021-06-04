@@ -1,0 +1,64 @@
+// Copyright 2010 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+cc_library_shared {
+    name: "libsensor",
+
+    clang: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    cppflags: [
+        "-Weverything",
+
+        // The static constructors and destructors in this library have not been noted to
+        // introduce significant overheads
+        "-Wno-exit-time-destructors",
+        "-Wno-global-constructors",
+
+        // We only care about compiling as C++14
+        "-Wno-c++98-compat-pedantic",
+
+        // android/sensors.h uses nested anonymous unions and anonymous structs
+        "-Wno-nested-anon-types",
+        "-Wno-gnu-anonymous-struct",
+
+        // Don't warn about struct padding
+        "-Wno-padded",
+    ],
+
+    srcs: [
+        "BitTube.cpp",
+        "ISensorEventConnection.cpp",
+        "ISensorServer.cpp",
+        "Sensor.cpp",
+        "SensorEventQueue.cpp",
+        "SensorManager.cpp",
+    ],
+
+    shared_libs: [
+        "libbinder",
+        "libcutils",
+        "libutils",
+        "liblog",
+        "libhardware",
+    ],
+
+    export_include_dirs: ["include"],
+
+    export_shared_lib_headers: ["libbinder", "libhardware"],
+}
+
+subdirs = ["tests"]

@@ -1,0 +1,5 @@
+service inputflinger /system/bin/inputflinger
+    class main
+    user system
+    group input wakelock
+#    onrestart restart zygote

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * Copyright (c) 2009, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="accessibility_desc_recent_apps" msgid="7556662260274154402">"አጠቃላይ እይታ።"</string>
+    <string name="accessibility_recents_item_will_be_dismissed" msgid="1987979391731836442">"<xliff:g id="APP">%s</xliff:g> አስወግድ።"</string>
+    <string name="accessibility_recents_item_dismissed" msgid="99149432850273747">"<xliff:g id="APP">%s</xliff:g> ተሰናብቷል።"</string>
+    <string name="accessibility_recents_all_items_dismissed" msgid="2584965907377043255">"ሁሉም የቅርብ ጊዜ ማመልከቻዎች ተሰናብተዋል።"</string>
+    <string name="accessibility_recents_item_open_app_info" msgid="5843409407745673280">"የ<xliff:g id="APP">%s</xliff:g> መተግበሪያ መረጃውን ይክፈቱ።"</string>
+    <string name="accessibility_recents_item_launched" msgid="2439069760172103351">"<xliff:g id="APP">%s</xliff:g> በመጀመር ላይ።"</string>
+    <string name="recents_empty_message" msgid="4718114148356836203">"ምንም የቅርብ ጊዜ ንጥሎች የሉም"</string>
+    <string name="recents_empty_message_dismissed_all" msgid="2873215505812268822">"ሁሉንም ነገር አጽድተዋል"</string>
+    <string name="recents_app_info_button_label" msgid="5371319329151716224">"የመተግበሪያ መረጃ"</string>
+    <string name="recents_lock_to_app_button_label" msgid="3282305316722066169">"ማያ ገጽ መሰካት"</string>
+    <string name="recents_search_bar_label" msgid="1910412649656301014">"ፈልግ"</string>
+    <string name="recents_launch_error_message" msgid="8622817255751191462">"<xliff:g id="APP">%s</xliff:g>ን መጀመር አልተቻለም።"</string>
+    <string name="recents_launch_disabled_message" msgid="1055364973720665718">"<xliff:g id="APP">%s</xliff:g> በጥንቃቄ ሁነታ ውስጥ ታግዷል።"</string>
+    <string name="recents_stack_action_button_label" msgid="7396636872618564201">"ሁሉንም አጽዳ"</string>
+    <string name="recents_drag_hint_message" msgid="3309424039418402577">"የተከፈለ ማያ ገጽን ለመጠቀም እዚህ ላይ ይጎትቱ"</string>
+    <string name="recents_multistack_add_stack_dialog_split_horizontal" msgid="3361339364058788960">"አግድም ክፈል"</string>
+    <string name="recents_multistack_add_stack_dialog_split_vertical" msgid="5525527159623478768">"ቁልቁል ክፈል"</string>
+    <string name="recents_multistack_add_stack_dialog_split_custom" msgid="8749946272357062148">"በብጁ ክፈል"</string>
+    <string name="recents_accessibility_split_screen_top" msgid="4034331660613790457">"ማያ ገጽ ወደ ላይ ክፈል"</string>
+    <string name="recents_accessibility_split_screen_left" msgid="6523694635909067802">"ማያ ገጽ ወደ ግራ ክፈል"</string>
+    <string name="recents_accessibility_split_screen_right" msgid="559141375304415400">"ማያ ገጽ ወደ ቀኝ ክፈል"</string>
+</resources>

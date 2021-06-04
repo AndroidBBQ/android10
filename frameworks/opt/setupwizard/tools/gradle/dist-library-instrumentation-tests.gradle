@@ -1,0 +1,33 @@
+/**
+ * This script plugin is used to build and dist the test APK outputs of a library with multiple
+ * build flavors.
+ *
+ * Compared to the defaults of the 'dist' plugin, it does two additional things:
+ * 1. It builds the "debug" test APKs when the 'dist' task is run.
+ * 2. It dist the test APKs using the original output file name instead of hard coding
+ *    "${project.archivesBaseName}Tests.apk". This allows multiple flavors of test APKs to be built
+ *    without conflicting file names.
+ */
+
+apply plugin: 'dist'
+
+// Set the dist files to empty map, and to tell DistExtension to not include the default files,
+// because the default output only supports one test APK output for libraries.
+dist.files = [:]
+android.testVariants.all { variant ->
+    // "Debug" tests are not built by BuildSrc by default. Depend on the task so it will be built.
+    tasks.dist.dependsOn variant.assemble
+
+    // Output all test APKs to the distribution folder.
+    // For a project named "setup-wizard-lib" with build flavor "platform" and build type "debug",
+    // the output file will be named "setup-wizard-lib-platform-debug-androidTest.apk"
+    variant.outputs.each { output ->
+        dist.file output.outputFile.canonicalPath, output.outputFile.name
+    }
+}
+android.libraryVariants.all { variant ->
+    // Output all library AARs to the distribution folder
+    variant.outputs.each { output ->
+        dist.file output.outputFile.canonicalPath, output.outputFile.name
+    }
+}

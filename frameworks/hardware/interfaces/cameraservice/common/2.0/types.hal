@@ -1,0 +1,182 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.cameraservice.common@2.0;
+
+/**
+ * All camera service and device HIDL calls may return the following
+ * status codes
+ */
+enum Status : int32_t {
+    /**
+     * Call succeeded.
+     */
+    NO_ERROR = 0,
+
+    /**
+     * Call failed due to inadequete permissions.
+     */
+    PERMISSION_DENIED = 1,
+
+    /**
+     * Call tried added something that already existed, eg: add a duplicate
+     * listener.
+     */
+    ALREADY_EXISTS = 2,
+
+    /**
+     * Call received illegal argument.
+     */
+    ILLEGAL_ARGUMENT = 3,
+
+    /**
+     * The camera device is no longer connected.
+     */
+    DISCONNECTED = 4,
+
+    /**
+     * Request timed out.
+     */
+    TIMED_OUT = 5,
+
+    /**
+     * The device has been disabled by policy.
+     */
+    DISABLED = 6,
+
+    /**
+     * The camera device is currently in use.
+     */
+    CAMERA_IN_USE = 7,
+
+    /**
+     * Too many cameras are connected, more cameras cannot be opened.
+     */
+    MAX_CAMERAS_IN_USE = 8,
+
+    /**
+     * Camera server is using a camera HAL version that does not support
+     * android.frameworks.hardware.interfaces.cameraservice.ICameraService@2.0
+     * and android.frameworks.hardware.interfaces.cameraservice.device.ICameraDeviceUser@2.0.
+     */
+    DEPRECATED_HAL = 9,
+
+    /**
+     * An invalid operation was attempted by the client. Eg: a waitUntilIdle()
+     * call was made, with active repeating requests.
+     */
+    INVALID_OPERATION = 10,
+
+    /**
+     * An unknown error was encountered by the camera subsystem.
+     */
+    UNKNOWN_ERROR = 11,
+};
+
+/**
+ * Camera metadata type.
+ */
+enum CameraMetadataType : uint32_t {
+    /**
+     * Unsigned 8-bit integer (uint8_t)
+     */
+    BYTE = 0,
+
+    /**
+     * Signed 32-bit integer (int32_t)
+     */
+    INT32 = 1,
+
+    /**
+     * 32-bit float (float)
+     */
+    FLOAT = 2,
+
+    /**
+     * Signed 64-bit integer (int64_t)
+     */
+    INT64 = 3,
+
+    /**
+     * 64-bit float (double)
+     */
+    DOUBLE = 4,
+
+    /**
+     * A 64-bit fraction (camera_metadata_rational_t)
+     */
+    RATIONAL = 5
+};
+
+/**
+ * Boundaries for VendorTag tagIds.
+ */
+enum TagBoundaryId : uint32_t {
+    /**
+     * First valid tag id for android-defined tags.
+     */
+    AOSP = 0x0,
+
+    /**
+     * First valid tag id for vendor extension tags.
+     */
+    VENDOR = 0x80000000u
+};
+
+/**
+ * A single vendor-unique metadata tag.
+ * The full name of the tag is <sectionName>.<tagName>
+ */
+struct VendorTag {
+    /**
+     * Tag identifier, must be >= TagBoundaryId::VENDOR.
+     */
+    uint32_t tagId;
+
+    /**
+     * Name of tag, not including section name.
+     */
+    string tagName;
+
+    CameraMetadataType tagType;
+};
+
+/**
+ * A set of related vendor tags.
+ */
+struct VendorTagSection {
+    /**
+     * Section name; must be namespaced within vendor's name.
+     */
+    string sectionName;
+
+    /**
+     * List of tags in this section
+     */
+    vec<VendorTag> tags;
+};
+
+struct ProviderIdAndVendorTagSections {
+    /**
+     * provider id
+     */
+    uint64_t providerId;
+
+    /**
+     * List of VendorTagSections provided by this provider
+     */
+    vec<VendorTagSection> vendorTagSections;
+};

@@ -1,0 +1,51 @@
+cc_defaults {
+    name: "servicemanager_flags",
+
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+    product_variables: {
+        binder32bit: {
+            cflags: ["-DBINDER_IPC_32BIT=1"],
+        },
+    },
+
+    shared_libs: ["liblog"],
+}
+
+cc_binary {
+    name: "bctest",
+    defaults: ["servicemanager_flags"],
+    srcs: [
+        "bctest.c",
+        "binder.c",
+    ],
+}
+
+cc_binary {
+    name: "servicemanager",
+    defaults: ["servicemanager_flags"],
+    srcs: [
+        "service_manager.c",
+        "binder.c",
+    ],
+    shared_libs: ["libcutils", "libselinux"],
+    init_rc: ["servicemanager.rc"],
+}
+
+cc_binary {
+    name: "vndservicemanager",
+    defaults: ["servicemanager_flags"],
+    vendor: true,
+    srcs: [
+        "service_manager.c",
+        "binder.c",
+    ],
+    cflags: [
+        "-DVENDORSERVICEMANAGER=1",
+    ],
+    shared_libs: ["libcutils", "libselinux"],
+    init_rc: ["vndservicemanager.rc"],
+}

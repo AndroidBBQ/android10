@@ -1,0 +1,1 @@
+{"glGetDebugMessageCallbackKHR", "()Landroid/opengl/GLES31Ext$DebugProcKHR;", (void *) android_glGetDebugMessageCallbackKHR },

@@ -1,0 +1,78 @@
+subdirs = [
+    "hidl"
+]
+cc_library_shared {
+    name: "libsensorservice",
+
+    srcs: [
+        "BatteryService.cpp",
+        "CorrectedGyroSensor.cpp",
+        "Fusion.cpp",
+        "GravitySensor.cpp",
+        "LinearAccelerationSensor.cpp",
+        "OrientationSensor.cpp",
+        "RecentEventLogger.cpp",
+        "RotationVectorSensor.cpp",
+        "SensorDevice.cpp",
+        "SensorDeviceUtils.cpp",
+        "SensorDirectConnection.cpp",
+        "SensorEventConnection.cpp",
+        "SensorFusion.cpp",
+        "SensorInterface.cpp",
+        "SensorList.cpp",
+        "SensorRecord.cpp",
+        "SensorService.cpp",
+        "SensorServiceUtils.cpp",
+    ],
+
+    cflags: [
+        "-DLOG_TAG=\"SensorService\"",
+        "-Wall",
+        "-Werror",
+        "-Wextra",
+        "-fvisibility=hidden"
+    ],
+
+    shared_libs: [
+        "libcutils",
+        "libhardware",
+        "libhardware_legacy",
+        "libutils",
+        "liblog",
+        "libbinder",
+        "libsensor",
+        "libsensorprivacy",
+        "libcrypto",
+        "libbase",
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "libfmq",
+        "android.hardware.sensors@1.0",
+        "android.hardware.sensors@2.0",
+    ],
+
+    static_libs: ["android.hardware.sensors@1.0-convert"],
+
+    // our public headers depend on libsensor and libsensorprivacy
+    export_shared_lib_headers: ["libsensor", "libsensorprivacy"],
+}
+
+cc_binary {
+    name: "sensorservice",
+
+    srcs: ["main_sensorservice.cpp"],
+
+    shared_libs: [
+        "libsensorservice",
+        "libsensorprivacy",
+        "libbinder",
+        "libutils",
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wextra",
+    ],
+}

@@ -1,0 +1,240 @@
+syntax = "proto2";
+
+package androidgamesdk_deviceinfo;
+
+option java_package = "com.google.androidgamesdk";
+option java_outer_classname = "DeviceInfoProto";
+
+message Info {
+  message CpuCore {
+    optional int64 freq_max = 1;
+  }
+  message Gl {
+    optional string renderer                    = 1;
+    optional string vendor                      = 2;
+    optional string version                     = 3;
+    optional int32 version_major                = 4;
+    optional int32 version_minor                = 5;
+    optional string shading_language_version    = 6;
+
+    repeated string extension                   = 7;
+
+    // gles min: 2.0
+    optional float GL_ALIASED_LINE_WIDTH_RANGE          = 2001;
+    optional float GL_ALIASED_POINT_SIZE_RANGE          = 2002;
+    optional int32 GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS  = 2003;
+    optional int32 GL_MAX_CUBE_MAP_TEXTURE_SIZE         = 2005;
+    optional int32 GL_MAX_FRAGMENT_UNIFORM_VECTORS      = 2006;
+    optional int32 GL_MAX_RENDERBUFFER_SIZE             = 2007;
+    optional int32 GL_MAX_TEXTURE_IMAGE_UNITS           = 2008;
+    optional int32 GL_MAX_TEXTURE_SIZE                  = 2009;
+    optional int32 GL_MAX_VARYING_VECTORS               = 2010;
+    optional int32 GL_MAX_VERTEX_ATTRIBS                = 2011;
+    optional int32 GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS    = 2012;
+    optional int32 GL_MAX_VERTEX_UNIFORM_VECTORS        = 2013;
+    optional int32 GL_MAX_VIEWPORT_DIMS                 = 2014;
+    optional bool  GL_SHADER_COMPILER                   = 2015;
+    optional int32 GL_SUBPIXEL_BITS                     = 2016;
+
+    optional int32 GL_NUM_COMPRESSED_TEXTURE_FORMATS    = 2021;
+    repeated int32 GL_COMPRESSED_TEXTURE_FORMATS        = 2022;
+    optional int32 GL_NUM_SHADER_BINARY_FORMATS         = 2023;
+    repeated int32 GL_SHADER_BINARY_FORMATS             = 2024;
+
+    // glGetShaderPrecisionFormat
+    optional int32 SPF_VERTEX_FLOAT_LOW_RANGE           = 2031;
+    optional int32 SPF_VERTEX_FLOAT_LOW_PREC            = 2032;
+    optional int32 SPF_VERTEX_FLOAT_MED_RANGE           = 2033;
+    optional int32 SPF_VERTEX_FLOAT_MED_PREC            = 2034;
+    optional int32 SPF_VERTEX_FLOAT_HIG_RANGE           = 2035;
+    optional int32 SPF_VERTEX_FLOAT_HIG_PREC            = 2036;
+    optional int32 SPF_VERTEX_INT_LOW_RANGE             = 2037;
+    optional int32 SPF_VERTEX_INT_LOW_PREC              = 2038;
+    optional int32 SPF_VERTEX_INT_MED_RANGE             = 2039;
+    optional int32 SPF_VERTEX_INT_MED_PREC              = 2040;
+    optional int32 SPF_VERTEX_INT_HIG_RANGE             = 2041;
+    optional int32 SPF_VERTEX_INT_HIG_PREC              = 2042;
+    optional int32 SPF_FRAGMENT_FLOAT_LOW_RANGE         = 2043;
+    optional int32 SPF_FRAGMENT_FLOAT_LOW_PREC          = 2044;
+    optional int32 SPF_FRAGMENT_FLOAT_MED_RANGE         = 2045;
+    optional int32 SPF_FRAGMENT_FLOAT_MED_PREC          = 2046;
+    optional int32 SPF_FRAGMENT_FLOAT_HIG_RANGE         = 2047;
+    optional int32 SPF_FRAGMENT_FLOAT_HIG_PREC          = 2048;
+    optional int32 SPF_FRAGMENT_INT_LOW_RANGE           = 2049;
+    optional int32 SPF_FRAGMENT_INT_LOW_PREC            = 2050;
+    optional int32 SPF_FRAGMENT_INT_MED_RANGE           = 2051;
+    optional int32 SPF_FRAGMENT_INT_MED_PREC            = 2052;
+    optional int32 SPF_FRAGMENT_INT_HIG_RANGE           = 2053;
+    optional int32 SPF_FRAGMENT_INT_HIG_PREC            = 2054;
+
+    // gles min: 3.0
+    optional int32 GL_MAX_3D_TEXTURE_SIZE                           = 3001;
+    optional int32 GL_MAX_ARRAY_TEXTURE_LAYERS                      = 3002;
+    optional int32 GL_MAX_COLOR_ATTACHMENTS                         = 3003;
+    optional int64 GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS      = 3004;
+    optional int32 GL_MAX_COMBINED_UNIFORM_BLOCKS                   = 3005;
+    optional int64 GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS        = 3006;
+    optional int32 GL_MAX_DRAW_BUFFERS                              = 3007;
+    optional int32 GL_MAX_ELEMENTS_INDICES                          = 3008;
+    optional int32 GL_MAX_ELEMENTS_VERTICES                         = 3009;
+    optional int64 GL_MAX_ELEMENT_INDEX                             = 3010;
+    optional int32 GL_MAX_FRAGMENT_INPUT_COMPONENTS                 = 3011;
+    optional int32 GL_MAX_FRAGMENT_UNIFORM_BLOCKS                   = 3012;
+    optional int32 GL_MAX_FRAGMENT_UNIFORM_COMPONENTS               = 3013;
+    optional int32 GL_MAX_PROGRAM_TEXEL_OFFSET                      = 3014;
+    optional int64 GL_MAX_SERVER_WAIT_TIMEOUT                       = 3015;
+    optional float GL_MAX_TEXTURE_LOD_BIAS                          = 3016;
+    optional int32 GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS = 3017;
+    optional int32 GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS       = 3018;
+    optional int32 GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS    = 3019;
+    optional int64 GL_MAX_UNIFORM_BLOCK_SIZE                        = 3020;
+    optional int32 GL_MAX_UNIFORM_BUFFER_BINDINGS                   = 3021;
+    optional int32 GL_MAX_VARYING_COMPONENTS                        = 3022;
+    optional int32 GL_MAX_VERTEX_OUTPUT_COMPONENTS                  = 3023;
+    optional int32 GL_MAX_VERTEX_UNIFORM_BLOCKS                     = 3024;
+    optional int32 GL_MAX_VERTEX_UNIFORM_COMPONENTS                 = 3025;
+    optional int32 GL_MIN_PROGRAM_TEXEL_OFFSET                      = 3026;
+    optional int32 GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT               = 3027;
+    optional int32 GL_MAX_SAMPLES                                   = 3028;
+
+    optional int32 GL_NUM_PROGRAM_BINARY_FORMATS                    = 3031;
+    repeated int32 GL_PROGRAM_BINARY_FORMATS                        = 3032;
+
+    // gles min: 3.1
+    optional int32 GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS        = 3101;
+    optional int32 GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE            = 3102;
+    optional int32 GL_MAX_COLOR_TEXTURE_SAMPLES                 = 3103;
+    optional int32 GL_MAX_COMBINED_ATOMIC_COUNTERS              = 3104;
+    optional int32 GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS       = 3105;
+    optional int32 GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS   = 3106;
+    optional int32 GL_MAX_COMBINED_IMAGE_UNIFORMS               = 3107;
+    optional int32 GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES      = 3108;
+    optional int32 GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS        = 3109;
+    optional int32 GL_MAX_COMPUTE_ATOMIC_COUNTERS               = 3110;
+    optional int32 GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS        = 3111;
+    optional int32 GL_MAX_COMPUTE_IMAGE_UNIFORMS                = 3112;
+    optional int32 GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS         = 3113;
+    optional int32 GL_MAX_COMPUTE_SHARED_MEMORY_SIZE            = 3114;
+    optional int32 GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS           = 3115;
+    optional int32 GL_MAX_COMPUTE_UNIFORM_BLOCKS                = 3116;
+    optional int32 GL_MAX_COMPUTE_UNIFORM_COMPONENTS            = 3117;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_COUNT_0            = 3118;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_COUNT_1            = 3119;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_COUNT_2            = 3120;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS        = 3121;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_SIZE_0             = 3122;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_SIZE_1             = 3123;
+    optional int32 GL_MAX_COMPUTE_WORK_GROUP_SIZE_2             = 3124;
+    optional int32 GL_MAX_DEPTH_TEXTURE_SAMPLES                 = 3125;
+    optional int32 GL_MAX_FRAGMENT_ATOMIC_COUNTERS              = 3126;
+    optional int32 GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS       = 3127;
+    optional int32 GL_MAX_FRAGMENT_IMAGE_UNIFORMS               = 3128;
+    optional int32 GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS        = 3129;
+    optional int32 GL_MAX_FRAMEBUFFER_HEIGHT                    = 3130;
+    optional int32 GL_MAX_FRAMEBUFFER_SAMPLES                   = 3131;
+    optional int32 GL_MAX_FRAMEBUFFER_WIDTH                     = 3132;
+    optional int32 GL_MAX_IMAGE_UNITS                           = 3133;
+    optional int32 GL_MAX_INTEGER_SAMPLES                       = 3134;
+    optional int32 GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET         = 3135;
+    optional int32 GL_MAX_SAMPLE_MASK_WORDS                     = 3136;
+    optional int64 GL_MAX_SHADER_STORAGE_BLOCK_SIZE             = 3137;
+    optional int32 GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS        = 3138;
+    optional int32 GL_MAX_UNIFORM_LOCATIONS                     = 3139;
+    optional int32 GL_MAX_VERTEX_ATOMIC_COUNTERS                = 3140;
+    optional int32 GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS         = 3141;
+    optional int32 GL_MAX_VERTEX_ATTRIB_BINDINGS                = 3142;
+    optional int32 GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET         = 3143;
+    optional int32 GL_MAX_VERTEX_ATTRIB_STRIDE                  = 3144;
+    optional int32 GL_MAX_VERTEX_IMAGE_UNIFORMS                 = 3145;
+    optional int32 GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS          = 3146;
+    optional int32 GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET         = 3147;
+    optional int32 GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT    = 3148;
+
+    // gles min: 3.2
+    optional int32 GL_CONTEXT_FLAGS                                     = 3201;
+    optional int32 GL_FRAGMENT_INTERPOLATION_OFFSET_BITS                = 3202;
+    optional int32 GL_LAYER_PROVOKING_VERTEX                            = 3203;
+    optional int32 GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS          = 3204;
+    optional int32 GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS      = 3205;
+    optional int32 GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS   = 3206;
+    optional int32 GL_MAX_DEBUG_GROUP_STACK_DEPTH                       = 3207;
+    optional int32 GL_MAX_DEBUG_LOGGED_MESSAGES                         = 3208;
+    optional int32 GL_MAX_DEBUG_MESSAGE_LENGTH                          = 3209;
+    optional float GL_MAX_FRAGMENT_INTERPOLATION_OFFSET                 = 3210;
+    optional int32 GL_MAX_FRAMEBUFFER_LAYERS                            = 3211;
+    optional int32 GL_MAX_GEOMETRY_ATOMIC_COUNTERS                      = 3212;
+    optional int32 GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS               = 3213;
+    optional int32 GL_MAX_GEOMETRY_IMAGE_UNIFORMS                       = 3214;
+    optional int32 GL_MAX_GEOMETRY_INPUT_COMPONENTS                     = 3215;
+    optional int32 GL_MAX_GEOMETRY_OUTPUT_COMPONENTS                    = 3216;
+    optional int32 GL_MAX_GEOMETRY_OUTPUT_VERTICES                      = 3217;
+    optional int32 GL_MAX_GEOMETRY_SHADER_INVOCATIONS                   = 3218;
+    optional int32 GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS                = 3219;
+    optional int32 GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS                  = 3220;
+    optional int32 GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS              = 3221;
+    optional int32 GL_MAX_GEOMETRY_UNIFORM_BLOCKS                       = 3222;
+    optional int32 GL_MAX_GEOMETRY_UNIFORM_COMPONENTS                   = 3223;
+    optional int32 GL_MAX_LABEL_LENGTH                                  = 3224;
+    optional int32 GL_MAX_PATCH_VERTICES                                = 3225;
+    optional int32 GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS                  = 3226;
+    optional int32 GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS           = 3227;
+    optional int32 GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS                   = 3228;
+    optional int32 GL_MAX_TESS_CONTROL_INPUT_COMPONENTS                 = 3229;
+    optional int32 GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS                = 3230;
+    optional int32 GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS            = 3231;
+    optional int32 GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS              = 3232;
+    optional int32 GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS          = 3233;
+    optional int32 GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS                   = 3234;
+    optional int32 GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS               = 3235;
+    optional int32 GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS               = 3236;
+    optional int32 GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS        = 3237;
+    optional int32 GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS                = 3238;
+    optional int32 GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS              = 3239;
+    optional int32 GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS             = 3240;
+    optional int32 GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS         = 3241;
+    optional int32 GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS           = 3242;
+    optional int32 GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS                = 3243;
+    optional int32 GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS            = 3244;
+    optional int32 GL_MAX_TESS_GEN_LEVEL                                = 3245;
+    optional int32 GL_MAX_TESS_PATCH_COMPONENTS                         = 3246;
+    optional int32 GL_MAX_TEXTURE_BUFFER_SIZE                           = 3247;
+    optional float GL_MIN_FRAGMENT_INTERPOLATION_OFFSET                 = 3248;
+    optional float GL_MULTISAMPLE_LINE_WIDTH_GRANULARITY                = 3249;
+    optional float GL_MULTISAMPLE_LINE_WIDTH_RANGE                      = 3250;
+    optional bool GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED            = 3251;
+    optional int32 GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT                   = 3252;
+    optional int32 GL_RESET_NOTIFICATION_STRATEGY                       = 3254;
+  }
+
+  optional int32 version = 1;
+
+  optional int32 cpu_max_index  = 11;
+  repeated CpuCore cpu_core     = 12;
+  optional string cpu_present   = 13;
+  optional string cpu_possible  = 14;
+  repeated string cpu_extension = 15;
+  repeated string hardware      = 16;
+
+  optional string ro_build_version_sdk = 21;
+  optional string ro_chipname          = 22;
+  optional string ro_board_platform    = 23;
+  optional string ro_product_board     = 24;
+  optional string ro_mediatek_platform = 25;
+  optional string ro_arch              = 26;
+  optional string ro_build_fingerprint = 27;
+
+  optional Gl gl = 31;
+}
+
+message Errors {
+  optional string hardware     = 1;
+  optional string features     = 2;
+  repeated string system_props = 3;
+  optional string egl          = 4;
+  repeated string gl           = 5;
+}
+
+message InfoWithErrors {
+  optional Info info      = 1;
+  optional Errors errors  = 2;
+}

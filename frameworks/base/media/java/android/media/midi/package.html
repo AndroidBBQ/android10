@@ -1,0 +1,409 @@
+<html>
+<body>
+
+<p>
+Provides classes for sending and receiving messages using the standard MIDI
+event protocol over USB, Bluetooth LE, and virtual (inter-app) transports.
+</p>
+
+<h1 id=overview>Overview</h1>
+
+<p>The Android MIDI package allows users to:</p>
+
+<ul>
+  <li> Connect a MIDI keyboard to Android to play a synthesizer or drive music apps.</li>
+  <li> Connect alternative MIDI controllers to Android.</li>
+  <li> Drive external MIDI synths from Android.</li>
+  <li> Drive external peripherals, lights, show control, etc from Android.</li>
+  <li> Generate music dynamically from games or music creation apps.</li>
+  <li> Generate MIDI messages in one app and send them to a second app.</li>
+  <li> Use an Android device running in <em>peripheral mode</em> as a multitouch controller
+  connected to a laptop.</li>
+</ul>
+
+<h2 id=the_api_features_include>The API features include:</h2>
+
+<ul>
+  <li> Enumeration of currently available devices. Information includes name, vendor,
+capabilities, etc.</li>
+  <li> Provide notification when MIDI devices are plugged in or unplugged.</li>
+  <li> Support efficient transmission of single or multiple short 1-3 byte MIDI messages.</li>
+  <li> Support transmission of arbitrary length data for SysEx, etc.</li>
+  <li> Timestamps to avoid jitter.</li>
+  <li> Support creation of <em>virtual MIDI devices</em> that can be connected to other devices.
+  An example might be a synthesizer app that can be controlled by a composing app.</li>
+  <li> Support direct connection or &ldquo;patching&rdquo; of devices for lower latency.</li>
+</ul>
+
+<h2 id=transports_supported>Transports Supported</h2>
+
+
+<p>The API is &ldquo;transport agnostic&rdquo;. But there are several transports currently
+supported:</p>
+
+<ul>
+  <li> USB
+  <li> software routing
+  <li> BTLE
+</ul>
+
+<h1 id=android_midi_terminology>Android MIDI Terminology</h1>
+
+
+<h2 id=terminology>Terminology</h2>
+
+
+<p>A <strong>Device</strong> is a MIDI capable object that has zero or more InputPorts and OutputPorts.</p>
+
+<p>An <strong>InputPort</strong> has 16 channels and can <strong>receive</strong> MIDI messages from an OutputPort or an app.</p>
+
+<p>An <strong>OutputPort</strong> has 16 channels and can <strong>send</strong> MIDI messages to an InputPort or an app.</p>
+
+<p><strong>MidiService</strong> is a centralized process that keeps track of all devices and brokers
+communication between them.</p>
+
+<p><strong>MidiManager</strong> is a class that the application or a device manager calls to communicate with
+the MidiService.</p>
+
+<h1 id=writing_a_midi_application>Writing a MIDI Application</h1>
+
+<h2 id=manifest_feature>Declare Feature in Manifest</h2>
+
+<p>An app that requires the MIDI API should declare that in the AndroidManifest.xml file.
+Then the app will not appear in the Play Store for old devices that do not support the MIDI API.</p>
+
+<pre class=prettyprint>
+&lt;uses-feature android:name="android.software.midi" android:required="true"/>
+</pre>
+
+<h2 id=check_feature>Check for Feature Support</h2>
+
+<p>An app can also check at run-time whether the MIDI feature is supported on a platform.
+This is particularly useful during development when you install apps directly on a device.
+</p>
+
+<pre class=prettyprint>
+if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+    // do MIDI stuff
+}
+</pre>
+
+<h2 id=the_midimanager>The MidiManager</h2>
+
+
+<p>The primary class for accessing the MIDI package is through the MidiManager.</p>
+
+<pre class=prettyprint>
+MidiManager m = (MidiManager)context.getSystemService(Context.MIDI_SERVICE);
+</pre>
+
+
+<h2 id=get_list_of_already_plugged_in_entities>Get List of Already Plugged In Entities</h2>
+
+
+<p>When an app starts, it can get a list of all the available MIDI devices. This
+information can be presented to a user, allowing them to choose a device.</p>
+
+<pre class=prettyprint>
+MidiDeviceInfo[] infos = m.getDevices();
+</pre>
+
+
+<h2 id=notification_of_midi_devices_hotplug_events>Notification of MIDI Devices HotPlug Events</h2>
+
+
+<p>The application can request notification when, for example, keyboards are
+plugged in or unplugged.</p>
+
+<pre class=prettyprint>
+m.registerDeviceCallback(new MidiManager.DeviceCallback() {
+    public void onDeviceAdded( MidiDeviceInfo info ) {
+      ...
+    }
+    public void onDeviceRemoved( MidiDeviceInfo info ) {
+      ...
+    }
+  });
+</pre>
+
+
+<h2 id=device_and_port_information>Device and Port Information</h2>
+
+
+<p>You can query the number of input and output ports.</p>
+
+<pre class=prettyprint>
+int numInputs = info.getInputPortCount();
+int numOutputs = info.getOutputPortCount();
+</pre>
+
+
+<p>Note that &ldquo;input&rdquo; and &ldquo;output&rdquo; directions reflect the point of view
+of the MIDI device itself, not your app.
+For example, to send MIDI notes to a synthesizer, open the synth's INPUT port.
+To receive notes from a keyboard, open the keyboard's OUTPUT port.</p>
+
+<p>The MidiDeviceInfo has a bundle of properties.</p>
+
+<pre class=prettyprint>
+Bundle properties = info.getProperties();
+String manufacturer = properties
+      .getString(MidiDeviceInfo.PROPERTY_MANUFACTURER);
+</pre>
+
+
+<p>Other properties include PROPERTY_PRODUCT, PROPERTY_NAME,
+PROPERTY_SERIAL_NUMBER</p>
+
+<p>You can get the names and types of the ports from a PortInfo object.
+The type will be either TYPE_INPUT or TYPE_OUTPUT.</p>
+
+<pre class=prettyprint>
+MidiDeviceInfo.PortInfo[] portInfos = info.getPorts();
+String portName = portInfos[0].getName();
+if (portInfos[0].getType() == MidiDeviceInfo.PortInfo.TYPE_INPUT) {
+    ...
+}
+</pre>
+
+
+<h2 id=open_a_midi_device>Open a MIDI Device</h2>
+
+
+<p>To access a MIDI device you need to open it first. The open is asynchronous so
+you need to provide a callback for completion. You can specify an optional
+Handler if you want the callback to occur on a specific Thread.</p>
+
+<pre class=prettyprint>
+m.openDevice(info, new MidiManager.OnDeviceOpenedListener() {
+    &#64;Override
+    public void onDeviceOpened(MidiDevice device) {
+        if (device == null) {
+            Log.e(TAG, "could not open device " + info);
+        } else {
+            ...
+        }
+    }, new Handler(Looper.getMainLooper())
+    );
+</pre>
+
+
+<h2 id=open_a_midi_input_port>Open a MIDI Input Port</h2>
+
+
+<p>If you want to send a message to a MIDI Device then you need to open an &ldquo;input&rdquo;
+port with exclusive access.</p>
+
+<pre class=prettyprint>
+MidiInputPort inputPort = device.openInputPort(index);
+</pre>
+
+
+<h2 id=send_a_noteon>Send a NoteOn</h2>
+
+
+<p>MIDI messages are sent as byte arrays. Here we encode a NoteOn message.</p>
+
+<pre class=prettyprint>
+byte[] buffer = new byte[32];
+int numBytes = 0;
+int channel = 3; // MIDI channels 1-16 are encoded as 0-15.
+buffer[numBytes++] = (byte)(0x90 + (channel - 1)); // note on
+buffer[numBytes++] = (byte)60; // pitch is middle C
+buffer[numBytes++] = (byte)127; // max velocity
+int offset = 0;
+// post is non-blocking
+inputPort.send(buffer, offset, numBytes);
+</pre>
+
+
+<p>Sometimes it is convenient to send MIDI messages with a timestamp. By
+scheduling events in the future we can mask scheduling jitter. Android MIDI
+timestamps are based on the monotonic nanosecond system timer. This is
+consistent with the other audio and input timers.</p>
+
+<p>Here we send a message with a timestamp 2 seconds in the future.</p>
+
+<pre class=prettyprint>
+final long NANOS_PER_SECOND = 1000000000L;
+long now = System.nanoTime();
+long future = now + (2 * NANOS_PER_SECOND);
+inputPort.send(buffer, offset, numBytes, future);
+</pre>
+
+
+<p>If you want to cancel events that you have scheduled in the future then call
+flush().</p>
+
+<pre class=prettyprint>
+inputPort.flush(); // discard events
+</pre>
+
+
+<p>If there were any MIDI NoteOff message left in the buffer then they will be
+discarded and you may get stuck notes. So we recommend sending &ldquo;all notes off&rdquo;
+after doing a flush.</p>
+
+<h2 id=receive_a_note>Receive a Note</h2>
+
+
+<p>To receive MIDI data from a device you need to extend MidiReceiver. Then
+connect your receiver to an output port of the device.</p>
+
+<pre class=prettyprint>
+class MyReceiver extends MidiReceiver {
+    public void onSend(byte[] data, int offset,
+            int count, long timestamp) throws IOException {
+        // parse MIDI or whatever
+    }
+}
+MidiOutputPort outputPort = device.openOutputPort(index);
+outputPort.connect(new MyReceiver());
+</pre>
+
+
+<p>The data that arrives is not validated or aligned in any particular way. It is
+raw MIDI data and can contain multiple messages or partial messages. It might
+contain System Real-Time messages, which can be interleaved inside other
+messages.</p>
+
+<h1 id=creating_a_midi_virtual_device_service>Creating a MIDI Virtual Device Service</h1>
+
+
+<p>An app can provide a MIDI Service that can be used by other apps. For example,
+an app can provide a custom synthesizer that other apps can send messages to.
+The service must be guarded with permission &quot;android.permission.BIND_MIDI_DEVICE_SERVICE&quot;.</p>
+
+<h2 id=manifest_files>Manifest Files</h2>
+
+
+<p>An app declares that it will function as a MIDI server in the
+AndroidManifest.xml file.</p>
+
+<pre class=prettyprint>
+&lt;service android:name="<strong>MySynthDeviceService</strong>"
+  android:permission="android.permission.BIND_MIDI_DEVICE_SERVICE">
+  &lt;intent-filter>
+    &lt;action android:name="android.media.midi.MidiDeviceService" />
+  &lt;/intent-filter>
+  &lt;meta-data android:name="android.media.midi.MidiDeviceService"
+      android:resource="@xml/<strong>synth_device_info</strong>" />
+&lt;/service>
+</pre>
+
+
+<p>The details of the resource in this example is stored in
+&ldquo;res/xml/synth_device_info.xml&rdquo;. The port names that you
+declare in this file will be available from PortInfo.getName().</p>
+
+<pre class=prettyprint>
+&lt;devices>
+    &lt;device manufacturer="MyCompany" product="MidiSynthBasic">
+        &lt;input-port name="input" />
+    &lt;/device>
+&lt;/devices>
+</pre>
+
+
+<h2 id=extend_midideviceservice>Extend MidiDeviceService</h2>
+
+
+<p>You then define your server by extending android.media.midi.MidiDeviceService.
+Let&lsquo;s assume you have a MySynthEngine class that extends MidiReceiver.</p>
+
+<pre class=prettyprint>
+import android.media.midi.MidiDeviceService;
+import android.media.midi.MidiDeviceStatus;
+import android.media.midi.MidiReceiver;
+
+public class MidiSynthDeviceService extends MidiDeviceService {
+    private static final String TAG = "MidiSynthDeviceService";
+    private MySynthEngine mSynthEngine = new MySynthEngine();
+    private boolean synthStarted = false;
+
+    &#64;Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    &#64;Override
+    public void onDestroy() {
+        mSynthEngine.stop();
+        super.onDestroy();
+    }
+
+    &#64;Override
+    // Declare the receivers associated with your input ports.
+    public MidiReceiver[] onGetInputPortReceivers() {
+        return new MidiReceiver[] { mSynthEngine };
+    }
+
+    /**
+     * This will get called when clients connect or disconnect.
+     * You can use it to turn on your synth only when needed.
+     */
+    &#64;Override
+    public void onDeviceStatusChanged(MidiDeviceStatus status) {
+        if (status.isInputPortOpen(0) && !synthStarted) {
+            mSynthEngine.start();
+            synthStarted = true;
+        } else if (!status.isInputPortOpen(0) && synthStarted){
+            mSynthEngine.stop();
+            synthStarted = false;
+        }
+    }
+}
+</pre>
+
+<h1 id=using_midi_btle>Using MIDI Over Bluetooth LE</h1>
+
+<p>MIDI devices can be connected to Android using Bluetooth LE.</p>
+
+<p>Before using the device, the app must scan for available BTLE devices and then allow
+the user to connect.
+See the Android developer website for an
+<a href="https://source.android.com/devices/audio/midi_test#apps" target="_blank">example
+program</a>.</p>
+
+<h2 id=btle_location_permissions>Request Location Permission for BTLE</h2>
+
+<p>Applications that scan for Bluetooth devices must request permission in the
+manifest file. This LOCATION permission is required because it may be possible to
+guess the location of an Android device by seeing which BTLE devices are nearby.</p>
+
+<pre class=prettyprint>
+&lt;uses-permission android:name="android.permission.BLUETOOTH"/>
+&lt;uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+&lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+</pre>
+
+<p>Apps must also request location permission from the user at run-time.
+See the documentation for <code>Activity.requestPermissions()</code> for details and an example.
+</p>
+
+<h2 id=btle_scan_devices>Scan for MIDI Devices</h2>
+
+<p>The app will only want to see MIDI devices and not mice or other non-MIDI devices.
+So construct a ScanFilter using the UUID for standard MIDI over BTLE.</p>
+
+<pre class=prettyprint>
+MIDI over BTLE UUID = "03B80E5A-EDE8-4B33-A751-6CE34EC4C700"
+</pre>
+
+<h2 id=btle_open_device>Open a MIDI Bluetooth Device</h2>
+
+<p>See the documentation for <code>android.bluetooth.le.BluetoothLeScanner.startScan()</code>
+method for details. When the user selects a MIDI/BTLE device then you can open it
+using the MidiManager.</p>
+
+<pre class=prettyprint>
+m.openBluetoothDevice(bluetoothDevice, callback, handler);
+</pre>
+
+<p>Once the MIDI/BTLE device has been opened by one app then it will also become available to other
+apps using the
+<a href="#get_list_of_already_plugged_in_entities">MIDI device discovery calls described above</a>.
+</p>
+
+</body>
+</html>

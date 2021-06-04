@@ -1,0 +1,6 @@
+cc_library_static {
+    name: "libmcldAArch64Info",
+    defaults: ["mcld-defaults"],
+    host_supported: true,
+    srcs: ["AArch64TargetInfo.cpp"],
+}

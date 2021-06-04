@@ -1,0 +1,190 @@
+// Copyright (C) 2010 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+cc_library_shared {
+    name: "libui",
+    vendor_available: true,
+    vndk: {
+        enabled: true,
+    },
+    double_loadable: true,
+
+    clang: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    cppflags: [
+        "-Weverything",
+
+        // The static constructors and destructors in this library have not been noted to
+        // introduce significant overheads
+        "-Wno-exit-time-destructors",
+        "-Wno-global-constructors",
+
+        // We only care about compiling as C++14
+        "-Wno-c++98-compat-pedantic",
+
+        // We are aware of the risks inherent in comparing floats for equality
+        "-Wno-float-equal",
+
+        // We use four-character constants for the GraphicBuffer header, and don't care
+        // that they're non-portable as long as they're consistent within one execution
+        "-Wno-four-char-constants",
+
+        // Don't warn about struct padding
+        "-Wno-padded",
+
+        "-Wno-switch-enum",
+    ],
+
+    sanitize: {
+        integer_overflow: true,
+    },
+
+    srcs: [
+        "ColorSpace.cpp",
+        "BufferHubBuffer.cpp",
+        "BufferHubEventFd.cpp",
+        "BufferHubMetadata.cpp",
+        "DebugUtils.cpp",
+        "Fence.cpp",
+        "FenceTime.cpp",
+        "FrameStats.cpp",
+        "Gralloc.cpp",
+        "Gralloc2.cpp",
+        "Gralloc3.cpp",
+        "GraphicBuffer.cpp",
+        "GraphicBufferAllocator.cpp",
+        "GraphicBufferMapper.cpp",
+        "HdrCapabilities.cpp",
+        "PixelFormat.cpp",
+        "PublicFormat.cpp",
+        "Rect.cpp",
+        "Region.cpp",
+        "Size.cpp",
+        "Transform.cpp",
+        "UiConfig.cpp",
+    ],
+
+    include_dirs: [
+        "frameworks/native/include",
+    ],
+
+    // Uncomment the following line to enable VALIDATE_REGIONS traces
+    //defaults: ["libui-validate-regions-defaults"],
+
+    shared_libs: [
+        "android.frameworks.bufferhub@1.0",
+        "android.hardware.graphics.allocator@2.0",
+        "android.hardware.graphics.allocator@3.0",
+        "android.hardware.graphics.common@1.2",
+        "android.hardware.graphics.mapper@2.0",
+        "android.hardware.graphics.mapper@2.1",
+        "android.hardware.graphics.mapper@3.0",
+        "libbase",
+        "libcutils",
+        "libhardware",
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "libsync",
+        "libutils",
+        "liblog",
+    ],
+
+    export_shared_lib_headers: [
+        "android.hardware.graphics.common@1.2",
+    ],
+
+    static_libs: [
+        "libarect",
+        "libgrallocusage",
+        "libmath",
+    ],
+
+    // bufferhub is not used when building libgui for vendors
+    target: {
+        vendor: {
+            cflags: ["-DLIBUI_IN_VNDK"],
+            exclude_srcs: [
+                "BufferHubBuffer.cpp",
+                "BufferHubEventFd.cpp",
+                "BufferHubMetadata.cpp",
+            ],
+            exclude_header_libs: [
+                "libbufferhub_headers",
+                "libdvr_headers",
+            ],
+            exclude_shared_libs: [
+                "android.frameworks.bufferhub@1.0",
+                "libpdx_default_transport",
+            ],
+        },
+    },
+
+    header_libs: [
+        "libbase_headers",
+        "libbufferhub_headers",
+        "libdvr_headers",
+        "libnativebase_headers",
+        "libnativewindow_headers",
+        "libhardware_headers",
+        "libui_headers",
+        "libpdx_headers",
+    ],
+
+    export_static_lib_headers: [
+        "libarect",
+        "libmath",
+    ],
+
+    export_header_lib_headers: [
+        "libbase_headers",
+        "libnativebase_headers",
+        "libnativewindow_headers",
+        "libhardware_headers",
+        "libui_headers",
+    ],
+}
+
+cc_library_headers {
+    name: "libui_headers",
+    export_include_dirs: ["include"],
+    vendor_available: true,
+    target: {
+        vendor: {
+            cflags: ["-DLIBUI_IN_VNDK"],
+            override_export_include_dirs: ["include_vndk"],
+        },
+    },
+    header_libs: [
+        "libnativewindow_headers",
+    ],
+    export_header_lib_headers: [
+        "libnativewindow_headers",
+    ],
+}
+
+// defaults to enable VALIDATE_REGIONS traces
+cc_defaults {
+    name: "libui-validate-regions-defaults",
+    shared_libs: ["libutilscallstack"],
+    cflags: ["-DVALIDATE_REGIONS"],
+}
+
+subdirs = [
+    "tests",
+    "tools",
+]

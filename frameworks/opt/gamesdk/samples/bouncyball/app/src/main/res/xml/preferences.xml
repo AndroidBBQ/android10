@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListPreference
+        android:key="@string/swap_interval_key"
+        android:title="@string/swap_interval_title" />
+
+    <SwitchPreference
+        android:key="use_auto_swap_interval"
+        android:defaultValue="true"
+        android:title="@string/use_auto_swap_interval_title"
+        android:summary="@string/use_auto_swap_interval_summary"/>
+
+    <SwitchPreference
+        android:key="use_affinity"
+        android:title="@string/use_affinity_title"
+        android:summary="@string/use_affinity_summary"/>
+
+    <SwitchPreference
+        android:key="hot_pocket"
+        android:title="@string/hot_pocket_title"
+        android:summary="@string/hot_pocket_summary"/>
+
+    <SeekBarPreference
+        android:key="workload"
+        android:title="@string/workload_title"
+        android:summary="@string/workload_summary"
+        android:defaultValue="0" />
+
+
+</PreferenceScreen>

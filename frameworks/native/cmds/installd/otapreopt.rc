@@ -1,0 +1,8 @@
+# When /data is available, look for A/B artifacts for the current slot and move them
+# into the dalvik-cache (relabeling them).
+on post-fs-data
+    exec - root -- /system/bin/otapreopt_slot
+    # The dalvik-cache was not moved itself, so as to restrict the rights of otapreopt_slot.
+    # But now the relabeling is annoying as there is no force option available here. So
+    # explicitly list all the ISAs we know.
+    restorecon_recursive /data/dalvik-cache/arm /data/dalvik-cache/arm64 /data/dalvik-cache/mips /data/dalvik-cache/mips64 /data/dalvik-cache/x86 /data/dalvik-cache/x86_64

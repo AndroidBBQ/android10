@@ -1,0 +1,24 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.android.providers.settings"
+        coreApp="true"
+        android:sharedUserId="android.uid.system">
+
+    <application android:allowClearUserData="false"
+                 android:label="@string/app_label"
+                 android:process="system"
+                 android:backupAgent="SettingsBackupAgent"
+                 android:killAfterRestore="false"
+                 android:restoreAnyVersion="true"
+                 android:icon="@mipmap/ic_launcher_settings"
+                 android:defaultToDeviceProtectedStorage="true"
+                 android:directBootAware="true">
+
+        <provider android:name="SettingsProvider"
+                  android:authorities="settings"
+                  android:multiprocess="false"
+                  android:exported="true"
+                  android:singleUser="true"
+                  android:initOrder="100"
+                  android:visibleToInstantApps="true" />
+    </application>
+</manifest>

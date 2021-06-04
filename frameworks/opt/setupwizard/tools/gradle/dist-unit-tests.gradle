@@ -1,0 +1,108 @@
+/**
+ * This script plugin is used to bundle the host test (e.g. Robolectric) results and dist it in
+ * a location where TradeFed knows how to parse.
+ *
+ * - If a non-dist build is run with test, it will run the normal unit tests, failing the build if
+ *   there are test failures.
+ * - If a dist build is run with test (e.g. ./gradlew dist test), the build will ignore any test
+ *   failures, and will create a zip of the XML test reports for each test run, and copy them to
+ *   dist/host-test-reports for consumption by TradeFed.
+ */
+
+apply plugin: 'dist'
+apply plugin: 'jacoco'
+
+// If unit tests are run as part of the build, dist the test XML reports to host-test-reports/*.zip
+android.unitTestVariants.all { variant ->
+    def task = tasks.findByName('test' + variant.name.capitalize())
+    gradle.taskGraph.whenReady { taskGraph ->
+        // Ignore the failures, so the build continues even on test errors when the build is
+        // running with 'dist'. (Usually as part of a build server build)
+        task.ignoreFailures = taskGraph.hasTask(tasks.dist)
+    }
+
+    def junitReport = task.reports.junitXml
+    if (junitReport.enabled) {
+        // Create a zip file of the XML test reports
+        def zipTask = tasks.create("zipResultsOf${task.name.capitalize()}", Zip) {
+            from junitReport.destination
+            archiveName = task.name + 'Result.zip'
+            destinationDir = junitReport.destination.parentFile
+        }
+        task.finalizedBy zipTask
+
+        // Copy the test reports to dist/host-test-reports
+        // The file path and format should match GradleHostBasedTest class in TradeFed.
+        tasks.dist.mustRunAfter zipTask
+        dist.file zipTask.archivePath.path, "host-test-reports/${zipTask.archiveName}"
+    }
+}
+
+/*
+ * The section below adds code coverage to all the unitTest targets. By default, the jacoco plugin
+ * only adds to the 'java' plugin and not the Android ones.
+ *
+ * For each unitTest task "fooUnitTest", a new target "fooUnitTestCoverage" will be generated for
+ * to generate the jacoco report.
+ */
+android.testOptions.unitTests.all {
+    // Fix robolectric tests reporting 0 coverage on newer versions of the plugin.
+    jacoco {
+        includeNoLocationClasses = true
+    }
+}
+
+// Define the main coverage task if it does not exist. This task generates coverage report for all
+// unit tests.
+def coverageTask = tasks.findByName('coverage') ?: tasks.create('coverage') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+}
+
+android.unitTestVariants.all { variant ->
+    def testTaskName = "test${variant.name.capitalize()}"
+    def testTask = tasks.findByName(testTaskName)
+
+    // Create coverage task of form 'testFlavorCoverageUnitTestCoverage' depending on
+    // 'testFlavorCoverageUnitTest'
+    def jacocoTask = tasks.create("${testTaskName}Coverage", JacocoReport) {
+        group = "Reporting"
+        description = "Generate a Jacoco coverage report for robolectric tests on ${variant.name}."
+
+        classDirectories = fileTree(
+            dir: "${project.buildDir}/intermediates/classes/" +
+                "${variant.productFlavors[0].name}/${variant.buildType.name}",
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+        )
+
+        sourceDirectories = files(variant.testedVariant.sourceSets.collect { it.java.srcDirs })
+        executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
+
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+    }
+    jacocoTask.dependsOn testTask
+
+    // Create a zip file of the HTML coverage reports
+    def zipTask = tasks.create("zipResultsOf${jacocoTask.name.capitalize()}", Zip) {
+        from jacocoTask.reports.html.destination
+        archiveName = "${testTaskName}HtmlCoverage.zip"
+        destinationDir = jacocoTask.reports.html.destination.parentFile
+    }
+    jacocoTask.finalizedBy zipTask
+
+    // Copy the coverage reports to dist/host-test-coverage
+    // The file path and format should match JacocoLogForwarder class in TradeFed.
+    tasks.dist.mustRunAfter jacocoTask
+    dist.file jacocoTask.reports.xml.destination.path, "host-test-coverage/${jacocoTask.name}.xml"
+
+    tasks.dist.mustRunAfter zipTask
+    dist.file zipTask.archivePath.path, "host-test-coverage/${zipTask.archiveName}"
+
+    coverageTask.dependsOn(jacocoTask)
+}

@@ -1,0 +1,3 @@
+{"glGetShaderSource", "(II[II[BI)V", (void *) android_glGetShaderSource__II_3II_3BI },
+{"glGetShaderSource", "(IILjava/nio/IntBuffer;B)V", (void *) android_glGetShaderSource__IILjava_nio_IntBuffer_2B },
+{"glGetShaderSource", "(I)Ljava/lang/String;", (void *) android_glGetShaderSource },

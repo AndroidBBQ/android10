@@ -1,0 +1,198 @@
+//
+// Copyright (C) 2018 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+java_library {
+    name: "SystemUI-proto",
+
+    srcs: ["src/**/*.proto"],
+
+    proto: {
+        type: "nano",
+    },
+}
+
+java_library {
+    name: "SystemUI-tags",
+    srcs: ["src/com/android/systemui/EventLogTags.logtags"],
+}
+
+android_library {
+    name: "SystemUI-core",
+    srcs: [
+        "src/**/*.kt",
+        "src/**/*.java",
+        "src/**/I*.aidl",
+    ],
+    resource_dirs: [
+        "res-keyguard",
+        "res",
+    ],
+    static_libs: [
+        "SystemUIPluginLib",
+        "SystemUISharedLib",
+        "SettingsLib",
+        "androidx.legacy_legacy-support-v4",
+        "androidx.recyclerview_recyclerview",
+        "androidx.preference_preference",
+        "androidx.appcompat_appcompat",
+        "androidx.mediarouter_mediarouter",
+        "androidx.palette_palette",
+        "androidx.legacy_legacy-preference-v14",
+        "androidx.leanback_leanback",
+        "androidx.slice_slice-core",
+        "androidx.slice_slice-view",
+        "androidx.slice_slice-builders",
+        "androidx.arch.core_core-runtime",
+        "androidx.lifecycle_lifecycle-extensions",
+        "androidx.dynamicanimation_dynamicanimation",
+        "androidx-constraintlayout_constraintlayout",
+        "iconloader_base",
+        "SystemUI-tags",
+        "SystemUI-proto",
+        "dagger2-2.19",
+        "jsr330"
+    ],
+    manifest: "AndroidManifest.xml",
+
+    libs: [
+        "telephony-common",
+    ],
+
+    kotlincflags: ["-Xjvm-default=enable"],
+
+    plugins: ["dagger2-compiler-2.19"],
+}
+
+android_library {
+    name: "SystemUI-tests",
+    manifest: "tests/AndroidManifest.xml",
+    resource_dirs: [
+        "tests/res",
+        "res-keyguard",
+        "res",
+    ],
+    srcs: [
+        "tests/src/**/*.kt",
+        "tests/src/**/*.java",
+        "src/**/*.kt",
+        "src/**/*.java",
+        "src/**/I*.aidl",
+    ],
+    static_libs: [
+        "SystemUIPluginLib",
+        "SystemUISharedLib",
+        "SettingsLib",
+        "androidx.legacy_legacy-support-v4",
+        "androidx.recyclerview_recyclerview",
+        "androidx.preference_preference",
+        "androidx.appcompat_appcompat",
+        "androidx.mediarouter_mediarouter",
+        "androidx.palette_palette",
+        "androidx.legacy_legacy-preference-v14",
+        "androidx.leanback_leanback",
+        "androidx.slice_slice-core",
+        "androidx.slice_slice-view",
+        "androidx.slice_slice-builders",
+        "androidx.arch.core_core-runtime",
+        "androidx.lifecycle_lifecycle-extensions",
+        "androidx.dynamicanimation_dynamicanimation",
+        "androidx-constraintlayout_constraintlayout",
+        "iconloader_base",
+        "SystemUI-tags",
+        "SystemUI-proto",
+        "metrics-helper-lib",
+        "androidx.test.rules", "hamcrest-library",
+        "mockito-target-inline-minus-junit4",
+        "testables",
+        "truth-prebuilt",
+        "dagger2-2.19",
+        "jsr330"
+    ],
+    libs: [
+        "android.test.runner",
+        "telephony-common",
+        "android.test.base",
+    ],
+    kotlincflags: ["-Xjvm-default=enable"],
+    aaptflags: [
+        "--extra-packages",
+        "com.android.systemui",
+    ],
+    plugins: ["dagger2-compiler-2.19"],
+}
+
+android_app {
+    name: "SystemUI",
+    static_libs: [
+        "SystemUI-core",
+    ],
+    resource_dirs: [],
+
+    platform_apis: true,
+    product_specific: true,
+    certificate: "platform",
+    privileged: true,
+
+    optimize: {
+        proguard_flags_files: ["proguard.flags"],
+    },
+
+    libs: [
+        "telephony-common",
+    ],
+
+    kotlincflags: ["-Xjvm-default=enable"],
+
+    dxflags: ["--multi-dex"],
+    required: ["privapp_whitelist_com.android.systemui"],
+
+}
+
+// Only used for products that are shipping legacy Recents
+android_app {
+    name: "SystemUIWithLegacyRecents",
+    overrides: [
+        "SystemUI",
+    ],
+
+    platform_apis: true,
+    certificate: "platform",
+    privileged: true,
+
+    dxflags: ["--multi-dex"],
+    optimize: {
+        proguard_flags_files: ["proguard.flags", "legacy/recents/proguard.flags"],
+    },
+
+    static_libs: [
+        "SystemUI-core",
+    ],
+    libs: [
+        "telephony-common",
+    ],
+
+    kotlincflags: ["-Xjvm-default=enable"],
+
+    srcs: [
+        "legacy/recents/src/**/*.java",
+        "legacy/recents/src/**/I*.aidl",
+    ],
+    resource_dirs: [
+        "legacy/recents/res",
+    ],
+
+    manifest: "legacy/recents/AndroidManifest.xml",
+}

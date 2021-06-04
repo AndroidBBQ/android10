@@ -1,0 +1,6 @@
+service vr_hwc /system/bin/vr_hwc
+  class hal animation
+  user system
+  group system graphics
+  onrestart restart surfaceflinger
+  writepid /dev/cpuset/system-background/tasks

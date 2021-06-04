@@ -1,0 +1,60 @@
+cc_library_shared {
+    name: "libcodec2_soft_vp9dec",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: ["C2SoftVpxDec.cpp"],
+
+    shared_libs: ["libvpx"],
+
+    cflags: [
+        "-DVP9",
+    ],
+}
+
+cc_library_shared {
+    name: "libcodec2_soft_vp8dec",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: ["C2SoftVpxDec.cpp"],
+
+    shared_libs: ["libvpx"],
+}
+
+cc_library_shared {
+    name: "libcodec2_soft_vp9enc",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: [
+        "C2SoftVp9Enc.cpp",
+        "C2SoftVpxEnc.cpp",
+    ],
+
+    shared_libs: ["libvpx"],
+
+    cflags: ["-DVP9"],
+}
+
+cc_library_shared {
+    name: "libcodec2_soft_vp8enc",
+    defaults: [
+        "libcodec2_soft-defaults",
+        "libcodec2_soft_sanitize_all-defaults",
+    ],
+
+    srcs: [
+        "C2SoftVp8Enc.cpp",
+        "C2SoftVpxEnc.cpp",
+    ],
+
+    shared_libs: ["libvpx"],
+}
+

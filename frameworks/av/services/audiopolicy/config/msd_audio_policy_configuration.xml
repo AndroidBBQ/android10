@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2017-2018 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- Multi Stream Decoder Audio Policy Configuration file -->
+<module name="msd" halVersion="2.0">
+    <attachedDevices>
+        <item>MS12 Input</item>
+        <item>MS12 Output</item>
+    </attachedDevices>
+    <mixPorts>
+        <mixPort name="ms12 input" role="source">
+            <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                     samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+        </mixPort>
+        <mixPort name="ms12 compressed input" role="source"
+                flags="AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING">
+            <profile name="" format="AUDIO_FORMAT_AC3"
+                     samplingRates="32000,44100,48000"
+                     channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1"/>
+            <profile name="" format="AUDIO_FORMAT_E_AC3"
+                     samplingRates="32000,44100,48000"
+                     channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+            <profile name="" format="AUDIO_FORMAT_E_AC3_JOC"
+                     samplingRates="32000,44100,48000"
+                     channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+            <profile name="" format="AUDIO_FORMAT_AC4"
+                     samplingRates="32000,44100,48000"
+                     channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+        </mixPort>
+        <!-- The HW AV Sync flag is not required, but is recommended -->
+        <mixPort name="ms12 output" role="sink" flags="AUDIO_INPUT_FLAG_HW_AV_SYNC">
+            <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                     samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_STEREO"/>
+            <profile name="" format="AUDIO_FORMAT_AC3"
+                     samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_5POINT1"/>
+            <profile name="" format="AUDIO_FORMAT_E_AC3"
+                     samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_5POINT1"/>
+        </mixPort>
+   </mixPorts>
+   <devicePorts>
+       <devicePort tagName="MS12 Input" type="AUDIO_DEVICE_OUT_BUS"  role="sink">
+           <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                    samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+           <profile name="" format="AUDIO_FORMAT_AC3"
+                    samplingRates="32000,44100,48000"
+                    channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1"/>
+           <profile name="" format="AUDIO_FORMAT_E_AC3"
+                    samplingRates="32000,44100,48000"
+                    channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+            <profile name="" format="AUDIO_FORMAT_E_AC3_JOC"
+                     samplingRates="32000,44100,48000"
+                     channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+           <profile name="" format="AUDIO_FORMAT_AC4"
+                    samplingRates="32000,44100,48000"
+                    channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+       </devicePort>
+       <devicePort tagName="MS12 Output" type="AUDIO_DEVICE_IN_BUS"  role="source">
+           <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                    samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_STEREO"/>
+        </devicePort>
+    </devicePorts>
+    <routes>
+        <route type="mix" sink="MS12 Input" sources="ms12 input,ms12 compressed input"/>
+        <route type="mix" sink="ms12 output" sources="MS12 Output"/>
+    </routes>
+</module>

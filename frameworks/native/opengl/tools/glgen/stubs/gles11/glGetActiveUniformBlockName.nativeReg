@@ -1,0 +1,3 @@
+{"glGetActiveUniformBlockName", "(III[II[BI)V", (void *) android_glGetActiveUniformBlockName_III_3II_3BI },
+{"glGetActiveUniformBlockName", "(IILjava/nio/Buffer;Ljava/nio/Buffer;)V", (void *) android_glGetActiveUniformBlockName_IILjava_nio_Buffer_2Ljava_nio_Buffer_2 },
+{"glGetActiveUniformBlockName", "(II)Ljava/lang/String;", (void *) android_glGetActiveUniformBlockName_II },

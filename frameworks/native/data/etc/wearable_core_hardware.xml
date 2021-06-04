@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2014 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<!-- These are the hardware and software components that all wearable devices
+     must include. Devices with optional hardware/software must also include
+     extra hardware/software files, per the comments below.
+
+     Wearable devices include watches, glasses, backpacks, and sweaters.
+-->
+<permissions>
+    <!-- This is Android and fully CTS compatible.  Basically this is for CTS tests to use. -->
+    <feature name="android.software.cts" />
+
+    <feature name="android.hardware.location" />
+    <!-- devices supporting compass/magnitometer sensor must include
+	 android.hardware.sensor.compass.xml -->
+    <feature name="android.hardware.sensor.gyroscope" />
+    <feature name="android.hardware.sensor.accelerometer" />
+    <feature name="android.hardware.bluetooth" />
+    <feature name="android.hardware.touchscreen" />
+    <feature name="android.hardware.microphone" />
+
+    <!-- basic system services -->
+    <feature name="android.software.home_screen" />
+    <feature name="android.software.secure_lock_screen" />
+
+    <!-- input management and third-party input method editors -->
+    <feature name="android.software.input_methods" />
+
+    <!-- devices with GPS must include device/google/clockwork/gps.xml -->
+    <!-- devices with an autofocus camera and/or flash must include either
+         android.hardware.camera.autofocus.xml or
+         android.hardware.camera.autofocus-flash.xml -->
+    <!-- devices with a front facing camera must include
+         android.hardware.camera.front.xml -->
+    <!-- devices with WiFi must also include android.hardware.wifi.xml -->
+    <!-- devices that support multitouch must include the most appropriate one
+         of these files:
+
+         If only partial (non-independent) pointers are supported:
+         android.hardware.touchscreen.multitouch.xml
+
+         If up to 4 independently tracked pointers are supported:
+         include android.hardware.touchscreen.multitouch.distinct.xml
+
+         If 5 or more independently tracked pointers are supported:
+         include android.hardware.touchscreen.multitouch.jazzhand.xml
+
+         ONLY ONE of the above should be included. -->
+    <!-- devices with an ambient light sensor must also include
+         android.hardware.sensor.light.xml -->
+    <!-- devices with a proximity sensor must also include
+         android.hardware.sensor.proximity.xml -->
+    <!-- Devices that have low-latency audio stacks suitable for apps like
+         VoIP may include android.hardware.audio.low_latency.xml. ONLY apps
+         that meet the requirements specified in the CDD may include this. -->
+    <!-- devices that have audio output capability as specified in the CDD must
+         also include android.hardware.audio.output.xml -->
+</permissions>

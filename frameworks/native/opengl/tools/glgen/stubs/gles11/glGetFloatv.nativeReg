@@ -1,0 +1,2 @@
+{"glGetFloatv", "(I[FI)V", (void *) android_glGetFloatv__I_3FI },
+{"glGetFloatv", "(ILjava/nio/FloatBuffer;)V", (void *) android_glGetFloatv__ILjava_nio_FloatBuffer_2 },

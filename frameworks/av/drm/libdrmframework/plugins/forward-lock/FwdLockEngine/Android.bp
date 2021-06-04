@@ -1,0 +1,52 @@
+//
+// Copyright (C) 2010 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//2
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+cc_library_shared {
+    name: "libfwdlockengine",
+
+    cflags: [
+        "-DUSE_64BIT_DRM_API",
+        // The flag below turns on local debug printouts
+        //"-DDRM_OMA_FL_ENGINE_DEBUG",
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-variable",
+    ],
+
+    srcs: ["src/FwdLockEngine.cpp"],
+
+    shared_libs: [
+        "libandroidicu",
+        "libutils",
+        "liblog",
+        "libdl",
+        "libcrypto",
+        "libssl",
+        "libdrmframework",
+    ],
+
+    static_libs: [
+        "libdrmutility",
+        "libdrmframeworkcommon",
+        "libfwdlock-common",
+        "libfwdlock-converter",
+        "libfwdlock-decoder",
+    ],
+
+    local_include_dirs: ["include"],
+
+    relative_install_path: "drm",
+}

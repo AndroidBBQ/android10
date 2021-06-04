@@ -1,0 +1,44 @@
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
+With -Wl,-s:
+
+-rwxr-xr-x 1 willosborn primarygroup   30696 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 1161536 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libprotobuf-lite.so
+-rwxr-xr-x 1 willosborn primarygroup  190592 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   43136 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork_test.so
+-rwxr-xr-x 1 willosborn primarygroup   18088 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup  747448 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/armeabi-v7a/libprotobuf-lite.so
+-rwxr-xr-x 1 willosborn primarygroup  141076 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/armeabi-v7a/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   30444 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/armeabi-v7a/libtuningfork_test.so
+-rwxr-xr-x 1 willosborn primarygroup   26872 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86_64/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 1227344 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86_64/libprotobuf-lite.so
+-rwxr-xr-x 1 willosborn primarygroup  194960 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86_64/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   43408 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86_64/libtuningfork_test.so
+-rwxr-xr-x 1 willosborn primarygroup   26232 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 1214296 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86/libprotobuf-lite.so
+-rwxr-xr-x 1 willosborn primarygroup  181984 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   38624 Oct 23 14:17 ./app/build/intermediates/cmake/release/obj/x86/libtuningfork_test.so
+
+
+
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Werror -Wthread-safety -DGOOGLE_PROTOBUF_NO_RTTI -DHAVE_PTHREAD -fno-rtti -fno-exceptions")
+set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-s -Wl,--gc-sections")
+
+-rwxr-xr-x 1 willosborn primarygroup    9976 Oct 23 15:30 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 1141056 Oct 23 15:30 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libprotobuf-lite.so
+-rwxr-xr-x 1 willosborn primarygroup 1898632 Oct 23 15:30 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libprotobuf.so
+-rwxr-xr-x 1 willosborn primarygroup  149624 Oct 23 15:30 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   22560 Oct 23 15:30 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork_test.so
+
+With static libprotobuf-lite:
+-rwxr-xr-x 1 willosborn primarygroup   59432 Oct 23 15:32 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 2972072 Oct 23 15:32 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libprotobuf.so
+-rwxr-xr-x 1 willosborn primarygroup 1194304 Oct 23 15:32 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   26656 Oct 23 15:32 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork_test.so
+
+With static libprotobuf and making tuningfork depend on it and recompiling the protos without LITE_RUNTIME:
+-rwxr-xr-x 1 willosborn primarygroup    9976 Oct 23 15:42 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so
+-rwxr-xr-x 1 willosborn primarygroup 2238784 Oct 23 15:42 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork.so
+-rwxr-xr-x 1 willosborn primarygroup   22560 Oct 23 15:42 ./app/build/intermediates/cmake/release/obj/arm64-v8a/libtuningfork_test.so
+-rwxr-xr-x 1 willosborn primarygroup    9744 Oct 23 15:43 ./app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so

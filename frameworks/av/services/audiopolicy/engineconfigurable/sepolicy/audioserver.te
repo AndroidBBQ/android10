@@ -1,0 +1,4 @@
+userdebug_or_eng(`
+  allow audioserver audioserver_socket:dir rw_dir_perms;
+  allow audioserver audioserver_socket:sock_file create_file_perms;
+')

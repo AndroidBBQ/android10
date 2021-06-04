@@ -1,0 +1,76 @@
+#
+# Copyright (C) 2017 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# This lists the entry points visible to applications that use the
+# Neural Networks lib. Other entry points present in the library won't be
+# usable.
+
+LIBNEURALNETWORKS {
+  global:
+    ANeuralNetworks_getDeviceCount; # introduced=Q
+    ANeuralNetworks_getDevice; # introduced=Q
+    ANeuralNetworksDevice_getName; # introduced=Q
+    ANeuralNetworksDevice_getType; # introduced=Q
+    ANeuralNetworksDevice_getVersion; # introduced=Q
+    ANeuralNetworksDevice_getFeatureLevel; # introduced=Q
+    ANeuralNetworksMemory_createFromAHardwareBuffer; # introduced=Q
+    ANeuralNetworksMemory_createFromFd;
+    ANeuralNetworksMemory_free;
+    ANeuralNetworksModel_create;
+    ANeuralNetworksModel_free;
+    ANeuralNetworksModel_finish;
+    ANeuralNetworksModel_addOperand;
+    ANeuralNetworksModel_setOperandSymmPerChannelQuantParams; # introduced=Q
+    ANeuralNetworksModel_setOperandValue;
+    ANeuralNetworksModel_setOperandValueFromMemory;
+    ANeuralNetworksModel_addOperation;
+    ANeuralNetworksModel_identifyInputsAndOutputs;
+    ANeuralNetworksModel_relaxComputationFloat32toFloat16;
+    ANeuralNetworksModel_getSupportedOperationsForDevices; # introduced=Q
+    ANeuralNetworksCompilation_create;
+    ANeuralNetworksCompilation_createForDevices; # introduced=Q
+    ANeuralNetworksCompilation_free;
+    ANeuralNetworksCompilation_setCaching; # introduced=Q
+    ANeuralNetworksCompilation_setPreference;
+    ANeuralNetworksCompilation_finish;
+    ANeuralNetworksBurst_create; # introduced=Q
+    ANeuralNetworksBurst_free; # introduced=Q
+    ANeuralNetworksExecution_burstCompute; # introduced=Q
+    ANeuralNetworksExecution_compute; # introduced=Q
+    ANeuralNetworksExecution_create;
+    ANeuralNetworksExecution_free;
+    ANeuralNetworksExecution_getDuration; # introduced=Q
+    ANeuralNetworksExecution_setInput;
+    ANeuralNetworksExecution_setInputFromMemory;
+    ANeuralNetworksExecution_setMeasureTiming; # introduced=Q
+    ANeuralNetworksExecution_setOutput;
+    ANeuralNetworksExecution_setOutputFromMemory;
+    ANeuralNetworksExecution_startCompute;
+    ANeuralNetworksExecution_getOutputOperandDimensions; # introduced=Q
+    ANeuralNetworksExecution_getOutputOperandRank; # introduced=Q
+    ANeuralNetworksEvent_wait;
+    ANeuralNetworksEvent_free;
+  local:
+    *;
+};
+
+LIBNEURALNETWORKS_PLATFORM {
+  global:
+    ANeuralNetworksDevice_getExtensionSupport;
+    ANeuralNetworksModel_getExtensionOperandType;
+    ANeuralNetworksModel_getExtensionOperationType;
+    ANeuralNetworksModel_setOperandExtensionData;
+} LIBNEURALNETWORKS;

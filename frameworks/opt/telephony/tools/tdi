@@ -1,0 +1,48 @@
+#!/bin/bash
+# Telephony Debug Intents
+#set -x
+
+file_name='tdi'
+
+# Get the command as the first parameter
+cmd=$1
+shift
+
+function dc_errors()
+{
+    if [ "$1" == "" ]; then
+        echo "Usage: $file_name $cmd <dc> <count> <cause> <retry-time>"
+        echo "  <dc> must specifiy the DataConnection such as DC or GsmDC-1"
+        echo "  <count> := number of times to retry"
+        echo "  <cause> := From DataConnection.FailCause; such as -3 for SIGNAL_LOST"
+        echo "  <retry-time> := suggested retry time in milli-seconds"
+        exit
+    fi
+    the_DC=$1
+    echo "the_DC=$the_DC"
+
+    if [ "$2" != "" ]; then
+        counter="--ei counter $2";
+    fi
+    echo "counter=$counter"
+
+    if [ "$3" != "" ]; then
+        fail_cause="--ei fail_cause $3";
+    fi
+    echo "fail_cause=$fail_cause"
+
+    if [ "$4" != "" ]; then
+        suggested_retry_time="--ei suggested_retry_time $4";
+    fi
+    echo "suggested_retry_time=$suggested_retry_time"
+
+
+    adb shell am broadcast -a com.android.internal.telephony.$the_DC.action_fail_bringup $counter $fail_cause $suggested_retry_time
+}
+
+
+case ${cmd} in
+	dce) dc_errors "$@";;
+    # Add more commands in the future
+	*) echo 'Broadcast telephony debug intents'; echo 'usage: tdi [dce]'; echo '  dce=DC errors';;
+esac

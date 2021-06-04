@@ -1,0 +1,283 @@
+LIBGLESV1_CM {
+  global:
+    glActiveTexture;
+    glAlphaFunc;
+    glAlphaFuncx;
+    glAlphaFuncxOES;
+    glBindBuffer;
+    glBindFramebufferOES;
+    glBindRenderbufferOES;
+    glBindTexture;
+    glBindVertexArrayOES; # introduced-mips=9 introduced-x86=9
+    glBlendEquationOES;
+    glBlendEquationSeparateOES;
+    glBlendFunc;
+    glBlendFuncSeparateOES;
+    glBufferData;
+    glBufferSubData;
+    glCheckFramebufferStatusOES;
+    glClear;
+    glClearColor;
+    glClearColorx;
+    glClearColorxOES;
+    glClearDepthf;
+    glClearDepthfOES;
+    glClearDepthx;
+    glClearDepthxOES;
+    glClearStencil;
+    glClientActiveTexture;
+    glClipPlanef;
+    glClipPlanefIMG; # introduced-mips=9 introduced-x86=9
+    glClipPlanefOES;
+    glClipPlanex;
+    glClipPlanexIMG; # introduced-mips=9 introduced-x86=9
+    glClipPlanexOES;
+    glColor4f;
+    glColor4ub;
+    glColor4x;
+    glColor4xOES;
+    glColorMask;
+    glColorPointer;
+    glColorPointerBounds;
+    glCompressedTexImage2D;
+    glCompressedTexSubImage2D;
+    glCopyTexImage2D;
+    glCopyTexSubImage2D;
+    glCullFace;
+    glCurrentPaletteMatrixOES;
+    glDeleteBuffers;
+    glDeleteFencesNV; # introduced-mips=9 introduced-x86=9
+    glDeleteFramebuffersOES;
+    glDeleteRenderbuffersOES;
+    glDeleteTextures;
+    glDeleteVertexArraysOES; # introduced-mips=9 introduced-x86=9
+    glDepthFunc;
+    glDepthMask;
+    glDepthRangef;
+    glDepthRangefOES;
+    glDepthRangex;
+    glDepthRangexOES;
+    glDisable;
+    glDisableClientState;
+    glDisableDriverControlQCOM; # introduced-mips=9 introduced-x86=9
+    glDiscardFramebufferEXT; # introduced-mips=9 introduced-x86=9
+    glDrawArrays;
+    glDrawElements;
+    glDrawTexfOES;
+    glDrawTexfvOES;
+    glDrawTexiOES;
+    glDrawTexivOES;
+    glDrawTexsOES;
+    glDrawTexsvOES;
+    glDrawTexxOES;
+    glDrawTexxvOES;
+    glEGLImageTargetRenderbufferStorageOES;
+    glEGLImageTargetTexture2DOES;
+    glEnable;
+    glEnableClientState;
+    glEnableDriverControlQCOM; # introduced-mips=9 introduced-x86=9
+    glEndTilingQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetBufferPointervQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetBuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetFramebuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetProgramBinarySourceQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetProgramsQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetRenderbuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetShadersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexLevelParameterivQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexSubImageQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexturesQCOM; # introduced-mips=9 introduced-x86=9
+    glExtIsProgramBinaryQCOM; # introduced-mips=9 introduced-x86=9
+    glExtTexObjectStateOverrideiQCOM; # introduced-mips=9 introduced-x86=9
+    glFinish;
+    glFinishFenceNV; # introduced-mips=9 introduced-x86=9
+    glFlush;
+    glFogf;
+    glFogfv;
+    glFogx;
+    glFogxOES;
+    glFogxv;
+    glFogxvOES;
+    glFramebufferRenderbufferOES;
+    glFramebufferTexture2DMultisampleIMG; # introduced-mips=9 introduced-x86=9
+    glFramebufferTexture2DOES;
+    glFrontFace;
+    glFrustumf;
+    glFrustumfOES;
+    glFrustumx;
+    glFrustumxOES;
+    glGenBuffers;
+    glGenFencesNV; # introduced-mips=9 introduced-x86=9
+    glGenFramebuffersOES;
+    glGenRenderbuffersOES;
+    glGenTextures;
+    glGenVertexArraysOES; # introduced-mips=9 introduced-x86=9
+    glGenerateMipmapOES;
+    glGetBooleanv;
+    glGetBufferParameteriv;
+    glGetBufferPointervOES;
+    glGetClipPlanef;
+    glGetClipPlanefOES;
+    glGetClipPlanex;
+    glGetClipPlanexOES;
+    glGetDriverControlStringQCOM; # introduced-mips=9 introduced-x86=9
+    glGetDriverControlsQCOM; # introduced-mips=9 introduced-x86=9
+    glGetError;
+    glGetFenceivNV; # introduced-mips=9 introduced-x86=9
+    glGetFixedv;
+    glGetFixedvOES;
+    glGetFloatv;
+    glGetFramebufferAttachmentParameterivOES;
+    glGetIntegerv;
+    glGetLightfv;
+    glGetLightxv;
+    glGetLightxvOES;
+    glGetMaterialfv;
+    glGetMaterialxv;
+    glGetMaterialxvOES;
+    glGetPointerv;
+    glGetRenderbufferParameterivOES;
+    glGetString;
+    glGetTexEnvfv;
+    glGetTexEnviv;
+    glGetTexEnvxv;
+    glGetTexEnvxvOES;
+    glGetTexGenfvOES;
+    glGetTexGenivOES;
+    glGetTexGenxvOES;
+    glGetTexParameterfv;
+    glGetTexParameteriv;
+    glGetTexParameterxv;
+    glGetTexParameterxvOES;
+    glHint;
+    glIsBuffer;
+    glIsEnabled;
+    glIsFenceNV; # introduced-mips=9 introduced-x86=9
+    glIsFramebufferOES;
+    glIsRenderbufferOES;
+    glIsTexture;
+    glIsVertexArrayOES; # introduced-mips=9 introduced-x86=9
+    glLightModelf;
+    glLightModelfv;
+    glLightModelx;
+    glLightModelxOES;
+    glLightModelxv;
+    glLightModelxvOES;
+    glLightf;
+    glLightfv;
+    glLightx;
+    glLightxOES;
+    glLightxv;
+    glLightxvOES;
+    glLineWidth;
+    glLineWidthx;
+    glLineWidthxOES;
+    glLoadIdentity;
+    glLoadMatrixf;
+    glLoadMatrixx;
+    glLoadMatrixxOES;
+    glLoadPaletteFromModelViewMatrixOES;
+    glLogicOp;
+    glMapBufferOES;
+    glMaterialf;
+    glMaterialfv;
+    glMaterialx;
+    glMaterialxOES;
+    glMaterialxv;
+    glMaterialxvOES;
+    glMatrixIndexPointerOES;
+    glMatrixIndexPointerOESBounds; # introduced-mips=9 introduced-x86=9
+    glMatrixMode;
+    glMultMatrixf;
+    glMultMatrixx;
+    glMultMatrixxOES;
+    glMultiDrawArraysEXT; # introduced-mips=9 introduced-x86=9
+    glMultiDrawElementsEXT; # introduced-mips=9 introduced-x86=9
+    glMultiTexCoord4f;
+    glMultiTexCoord4x;
+    glMultiTexCoord4xOES;
+    glNormal3f;
+    glNormal3x;
+    glNormal3xOES;
+    glNormalPointer;
+    glNormalPointerBounds;
+    glOrthof;
+    glOrthofOES;
+    glOrthox;
+    glOrthoxOES;
+    glPixelStorei;
+    glPointParameterf;
+    glPointParameterfv;
+    glPointParameterx;
+    glPointParameterxOES;
+    glPointParameterxv;
+    glPointParameterxvOES;
+    glPointSize;
+    glPointSizePointerOES;
+    glPointSizePointerOESBounds; # introduced-mips=9 introduced-x86=9
+    glPointSizex;
+    glPointSizexOES;
+    glPolygonOffset;
+    glPolygonOffsetx;
+    glPolygonOffsetxOES;
+    glPopMatrix;
+    glPushMatrix;
+    glQueryMatrixxOES;
+    glReadPixels;
+    glRenderbufferStorageMultisampleIMG; # introduced-mips=9 introduced-x86=9
+    glRenderbufferStorageOES;
+    glRotatef;
+    glRotatex;
+    glRotatexOES;
+    glSampleCoverage;
+    glSampleCoveragex;
+    glSampleCoveragexOES;
+    glScalef;
+    glScalex;
+    glScalexOES;
+    glScissor;
+    glSetFenceNV; # introduced-mips=9 introduced-x86=9
+    glShadeModel;
+    glStartTilingQCOM; # introduced-mips=9 introduced-x86=9
+    glStencilFunc;
+    glStencilMask;
+    glStencilOp;
+    glTestFenceNV; # introduced-mips=9 introduced-x86=9
+    glTexCoordPointer;
+    glTexCoordPointerBounds;
+    glTexEnvf;
+    glTexEnvfv;
+    glTexEnvi;
+    glTexEnviv;
+    glTexEnvx;
+    glTexEnvxOES;
+    glTexEnvxv;
+    glTexEnvxvOES;
+    glTexGenfOES;
+    glTexGenfvOES;
+    glTexGeniOES;
+    glTexGenivOES;
+    glTexGenxOES;
+    glTexGenxvOES;
+    glTexImage2D;
+    glTexParameterf;
+    glTexParameterfv;
+    glTexParameteri;
+    glTexParameteriv;
+    glTexParameterx;
+    glTexParameterxOES;
+    glTexParameterxv;
+    glTexParameterxvOES;
+    glTexSubImage2D;
+    glTranslatef;
+    glTranslatex;
+    glTranslatexOES;
+    glUnmapBufferOES;
+    glVertexPointer;
+    glVertexPointerBounds;
+    glViewport;
+    glWeightPointerOES;
+    glWeightPointerOESBounds; # introduced-mips=9 introduced-x86=9
+  local:
+    *;
+};

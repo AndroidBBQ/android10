@@ -1,0 +1,5 @@
+{"glGetTransformFeedbackVarying", "(III[II[II[II[BI)V", (void *) android_glGetTransformFeedbackVarying__III_3II_3II_3II_3BI },
+{"glGetTransformFeedbackVarying", "(IIILjava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;B)V", (void *) android_glGetTransformFeedbackVarying__IIILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2B },
+{"glGetTransformFeedbackVarying", "(IIILjava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/ByteBuffer;)V", (void *) android_glGetTransformFeedbackVarying__IIILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_ByteBuffer_2 },
+{"glGetTransformFeedbackVarying", "(II[II[II)Ljava/lang/String;", (void *) android_glGetTransformFeedbackVarying1 },
+{"glGetTransformFeedbackVarying", "(IILjava/nio/IntBuffer;Ljava/nio/IntBuffer;)Ljava/lang/String;", (void *) android_glGetTransformFeedbackVarying2 },

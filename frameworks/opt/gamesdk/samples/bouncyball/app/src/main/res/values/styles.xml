@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="InfoTextSmall" parent="@android:style/TextAppearance.Material.Small">
+        <item name="android:textColor">#FFF</item>
+    </style>
+
+    <style name="InfoTextMedium" parent="@android:style/TextAppearance.Material.Medium">
+        <item name="android:textColor">#FFF</item>
+    </style>
+
+
+    <!--
+    <string-array name="strategies">
+        <item>None</item>
+        <item>Pipelined</item>
+        <item>Same Frame</item>
+    </string-array>
+    -->
+
+</resources>

@@ -1,0 +1,11 @@
+BasedOnStyle: Google
+
+AccessModifierOffset: -2
+AllowShortFunctionsOnASingleLine: Inline
+BinPackParameters: false
+ColumnLimit: 100
+CommentPragmas: NOLINT:.*
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 8
+IndentWidth: 4

@@ -1,0 +1,15 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsCurrentApiSignatureTestCases"
+    },
+    {
+      "name": "CtsSystemApiSignatureTestCases"
+    }
+  ],
+  "imports": [
+    {
+      "path": "vendor/xts/gts-tests/hostsidetests/api"
+    }
+  ]
+}

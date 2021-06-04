@@ -1,0 +1,100 @@
+cc_defaults {
+    name: "renderengine_defaults",
+    cflags: [
+        "-DLOG_TAG=\"RenderEngine\"",
+        "-Wall",
+        "-Werror",
+        "-Wthread-safety",
+        "-Wunused",
+        "-Wunreachable-code",
+    ],
+}
+
+cc_defaults {
+    name: "librenderengine_defaults",
+    defaults: ["renderengine_defaults"],
+    cflags: [
+        "-DGL_GLEXT_PROTOTYPES",
+        "-DEGL_EGLEXT_PROTOTYPES",
+    ],
+    shared_libs: [
+        "libbase",
+        "libcutils",
+        "libEGL",
+        "libGLESv1_CM",
+        "libGLESv2",
+        "libgui",
+        "liblog",
+        "libnativewindow",
+        "libprocessgroup",
+        "libsync",
+        "libui",
+        "libutils",
+    ],
+    local_include_dirs: ["include"],
+    export_include_dirs: ["include"],
+}
+
+filegroup {
+    name: "librenderengine_sources",
+    srcs: [
+        "Description.cpp",
+        "Mesh.cpp",
+        "RenderEngine.cpp",
+        "Texture.cpp",
+    ],
+}
+
+filegroup {
+    name: "librenderengine_gl_sources",
+    srcs: [
+        "gl/GLESRenderEngine.cpp",
+        "gl/GLExtensions.cpp",
+        "gl/GLFramebuffer.cpp",
+        "gl/GLImage.cpp",
+        "gl/ImageManager.cpp",
+        "gl/Program.cpp",
+        "gl/ProgramCache.cpp",
+    ],
+}
+
+cc_library_static {
+    name: "librenderengine",
+    defaults: ["librenderengine_defaults"],
+    vendor_available: true,
+    vndk: {
+        enabled: true,
+    },
+    double_loadable: true,
+    clang: true,
+    cflags: [
+        "-fvisibility=hidden",
+        "-Werror=format",
+    ],
+    cppflags: [
+        "-fwhole-program-vtables", // requires ThinLTO
+    ],
+    srcs: [
+        ":librenderengine_sources",
+        ":librenderengine_gl_sources",
+    ],
+    lto: {
+        thin: true,
+    },
+}
+
+cc_library_static {
+    name: "librenderengine_mocks",
+    defaults: ["librenderengine_defaults"],
+    srcs: [
+        "mock/Framebuffer.cpp",
+        "mock/Image.cpp",
+        "mock/RenderEngine.cpp",
+    ],
+    static_libs: [
+        "libgtest",
+        "libgmock",
+    ],
+    local_include_dirs: ["include"],
+    export_include_dirs: ["include"],
+}

@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+package com.google.tuningfork;
+
+// Passed by the user to tuning fork at initialization.
+message Settings {
+  message Histogram {
+    optional int32 instrument_key = 1;
+    optional float bucket_min = 2;
+    optional float bucket_max = 3;
+    optional int32 n_buckets = 4;
+  }
+  message AggregationStrategy {
+    enum Submission {
+      TIME_BASED = 1;
+      TICK_BASED = 2;
+    }
+    optional Submission method = 1;
+    optional int32 intervalms_or_count = 2;
+    optional int32 max_instrumentation_keys = 3;
+    repeated int32 annotation_enum_size = 4;
+  }
+  optional AggregationStrategy aggregation_strategy = 1;
+  repeated Histogram histograms = 2;
+}

@@ -1,0 +1,160 @@
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "Interpolator.h"
+
+#include <algorithm>
+
+#include <log/log.h>
+
+#include "utils/MathUtils.h"
+
+namespace android {
+namespace uirenderer {
+
+Interpolator* Interpolator::createDefaultInterpolator() {
+    return new AccelerateDecelerateInterpolator();
+}
+
+float AccelerateDecelerateInterpolator::interpolate(float input) {
+    return (float)(cosf((input + 1) * M_PI) / 2.0f) + 0.5f;
+}
+
+float AccelerateInterpolator::interpolate(float input) {
+    if (mFactor == 1.0f) {
+        return input * input;
+    } else {
+        return pow(input, mDoubleFactor);
+    }
+}
+
+float AnticipateInterpolator::interpolate(float t) {
+    return t * t * ((mTension + 1) * t - mTension);
+}
+
+static float a(float t, float s) {
+    return t * t * ((s + 1) * t - s);
+}
+
+static float o(float t, float s) {
+    return t * t * ((s + 1) * t + s);
+}
+
+float AnticipateOvershootInterpolator::interpolate(float t) {
+    if (t < 0.5f)
+        return 0.5f * a(t * 2.0f, mTension);
+    else
+        return 0.5f * (o(t * 2.0f - 2.0f, mTension) + 2.0f);
+}
+
+static float bounce(float t) {
+    return t * t * 8.0f;
+}
+
+float BounceInterpolator::interpolate(float t) {
+    t *= 1.1226f;
+    if (t < 0.3535f)
+        return bounce(t);
+    else if (t < 0.7408f)
+        return bounce(t - 0.54719f) + 0.7f;
+    else if (t < 0.9644f)
+        return bounce(t - 0.8526f) + 0.9f;
+    else
+        return bounce(t - 1.0435f) + 0.95f;
+}
+
+float CycleInterpolator::interpolate(float input) {
+    return sinf(2 * mCycles * M_PI * input);
+}
+
+float DecelerateInterpolator::interpolate(float input) {
+    float result;
+    if (mFactor == 1.0f) {
+        result = 1.0f - (1.0f - input) * (1.0f - input);
+    } else {
+        result = 1.0f - pow((1.0f - input), 2 * mFactor);
+    }
+    return result;
+}
+
+float OvershootInterpolator::interpolate(float t) {
+    t -= 1.0f;
+    return t * t * ((mTension + 1) * t + mTension) + 1.0f;
+}
+
+float PathInterpolator::interpolate(float t) {
+    if (t <= 0) {
+        return 0;
+    } else if (t >= 1) {
+        return 1;
+    }
+    // Do a binary search for the correct x to interpolate between.
+    size_t startIndex = 0;
+    size_t endIndex = mX.size() - 1;
+
+    while (endIndex > startIndex + 1) {
+        int midIndex = (startIndex + endIndex) / 2;
+        if (t < mX[midIndex]) {
+            endIndex = midIndex;
+        } else {
+            startIndex = midIndex;
+        }
+    }
+
+    float xRange = mX[endIndex] - mX[startIndex];
+    if (xRange == 0) {
+        return mY[startIndex];
+    }
+
+    float tInRange = t - mX[startIndex];
+    float fraction = tInRange / xRange;
+
+    float startY = mY[startIndex];
+    float endY = mY[endIndex];
+    return startY + (fraction * (endY - startY));
+}
+
+LUTInterpolator::LUTInterpolator(float* values, size_t size) : mValues(values), mSize(size) {}
+
+LUTInterpolator::~LUTInterpolator() {}
+
+float LUTInterpolator::interpolate(float input) {
+    // lut position should only be at the end of the table when input is 1f.
+    float lutpos = input * (mSize - 1);
+    if (lutpos >= (mSize - 1)) {
+        return mValues[mSize - 1];
+    }
+
+    float ipart, weight;
+    weight = modff(lutpos, &ipart);
+
+    int i1 = (int)ipart;
+    int i2 = std::min(i1 + 1, (int)mSize - 1);
+
+    LOG_ALWAYS_FATAL_IF(
+            i1 < 0 || i2 < 0,
+            "negatives in interpolation!"
+            " i1=%d, i2=%d, input=%f, lutpos=%f, size=%zu, values=%p, ipart=%f, weight=%f",
+            i1, i2, input, lutpos, mSize, mValues.get(), ipart, weight);
+
+    float v1 = mValues[i1];
+    float v2 = mValues[i2];
+
+    return MathUtils::lerp(v1, v2, weight);
+}
+
+} /* namespace uirenderer */
+} /* namespace android */

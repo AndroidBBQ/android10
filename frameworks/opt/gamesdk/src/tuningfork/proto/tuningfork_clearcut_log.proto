@@ -1,0 +1,68 @@
+syntax = "proto2";
+
+package logs.proto.tuningfork;
+
+import "tuningfork.proto";
+
+message DeviceInfo {
+
+  // Total device memory from /proc/meminfo.
+  optional int64 total_memory_bytes = 1;
+
+  // The upper order 16 bits represent the major version and
+  // the lower order 16 bits the minor version. A value of 0
+  // indicates that the version is unavailable.
+  optional int32 gl_es_version = 2;
+
+  // From system property 'ro.build.fingerprint'.
+  optional string build_fingerprint = 3;
+
+  // From system property 'ro.build.version.sdk'.
+  optional string build_version_sdk = 4;
+
+  // From '/sys/devices/system/cpu/cpu/#/cpufreq/cpuinfo_max_freq'.
+  repeated int64 cpu_max_freq_hz = 5;
+
+}
+
+message TuningForkLogEvent {
+
+  // FidelityParams message serialization defined by the developer
+  // See http://go/tuningfork-integration-guide
+  optional bytes fidelityparams = 1;
+
+  // Received from Play at initialization.
+  optional string experiment_id = 2;
+
+  // Data histograms, one for each active annotation / instrument_id.
+  repeated TuningForkHistogram histograms = 3;
+
+  // Tuning-fork generated id (matches FidelityParam request).
+  optional string session_id = 4;
+
+  // Static device information.
+  optional DeviceInfo device_info = 5;
+
+  // Package name from APK manifest.
+  optional string apk_package_name = 6;
+
+  // Version code from APK manifest.
+  optional int32 apk_version_code = 7;
+
+  // Tuning fork version (upper 16 bits: major, lower 16 bits minor)
+  optional int32 tuningfork_version = 8;
+}
+
+message TuningForkHistogram {
+
+  // ID of the frame capture point.
+  optional int32 instrument_id = 1;
+
+  // Annotation defined by the developer.
+  // See http://go/tuningfork-integration-guide
+  optional bytes annotation = 2;
+
+  // Bucket counts.
+  // The APK contains hard-coded bucket ranges for each instrument_id.
+  repeated int32 counts = 3 [packed=true];
+}

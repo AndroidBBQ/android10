@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2009, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<!-- These resources are around just to allow their values to be customized
+     for different hardware and product builds. -->
+<resources>
+    <!-- Whether to clip notification contents with a rounded rectangle. Might be expensive on
+         certain GPU's and thus can be turned off with only minimal visual impact. -->
+    <bool name="config_notifications_round_rect_clipping">true</bool>
+
+    <!-- Control whether status bar should distinguish HSPA data icon form UMTS
+    data icon on devices -->
+    <bool name="config_hspa_data_distinguishable">false</bool>
+
+    <!-- Component to be used as the status bar service.  Must implement the IStatusBar
+     interface.  This name is in the ComponentName flattened format (package/class)  -->
+    <string name="config_statusBarComponent" translatable="false">com.android.systemui.statusbar.phone.StatusBar</string>
+
+    <!-- Component to be used as the recents implementation.  Must implement the
+     RecentsImplementation interface.  This name is in the ComponentName flattened format
+     (package/class)  -->
+    <string name="config_recentsComponent" translatable="false">com.android.systemui.recents.OverviewProxyRecentsImpl</string>
+
+    <!-- Whether or not we show the number in the bar. -->
+    <bool name="config_statusBarShowNumber">false</bool>
+
+    <!-- For how long the lock screen can be on before the display turns off. -->
+    <integer name="config_lockScreenDisplayTimeout">10000</integer>
+
+    <!-- Vibrator pattern for camera gesture launch. -->
+    <integer-array translatable="false" name="config_cameraLaunchGestureVibePattern">
+        <item>0</item>
+        <item>400</item>
+    </integer-array>
+
+    <!-- How many icons may be shown at once in the system bar. Includes any
+         slots that may be reused for things like IME control. -->
+    <integer name="config_maxNotificationIcons">5</integer>
+
+    <!-- Show phone (voice) signal strength instead of data in mobile RSSI. -->
+    <bool name="config_showPhoneRSSIForData">false</bool>
+
+    <!-- When true, show 1/2G networks as 3G. -->
+    <bool name="config_showMin3G">false</bool>
+
+    <!-- Show rotation lock toggle in System UI-->
+    <bool name="config_showRotationLock">true</bool>
+
+    <!-- Vibration duration for GlowPadView used in SearchPanelView -->
+    <integer translatable="false" name="config_vibration_duration">0</integer>
+
+    <!-- Vibration duration for GlowPadView used in SearchPanelView -->
+    <integer translatable="false" name="config_search_panel_view_vibration_duration">20</integer>
+
+    <!-- Show mic or phone affordance on Keyguard -->
+    <bool name="config_keyguardShowLeftAffordance">false</bool>
+
+    <!-- Show camera affordance on Keyguard -->
+    <bool name="config_keyguardShowCameraAffordance">false</bool>
+
+    <!-- The length of the vibration when the notification pops open. -->
+    <integer name="one_finger_pop_duration_ms">10</integer>
+
+    <!-- decay duration (from size_max -> size), in ms -->
+    <integer name="navigation_bar_deadzone_hold">333</integer>
+    <integer name="navigation_bar_deadzone_decay">333</integer>
+
+    <!-- orientation of the dead zone when touches have recently occurred elsewhere on screen -->
+    <integer name="navigation_bar_deadzone_orientation">0</integer>
+
+    <bool name="config_dead_zone_flash">false</bool>
+
+    <!-- Whether to enable dimming navigation buttons when wallpaper is not visible, should be
+         enabled for OLED devices to reduce/prevent burn in on the navigation bar (because of the
+         black background and static button placements) and disabled for all other devices to
+         prevent wasting cpu cycles on the dimming animation -->
+    <bool name="config_navigation_bar_enable_auto_dim_no_visible_wallpaper">true</bool>
+
+    <!-- The maximum number of tiles in the QuickQSPanel -->
+    <integer name="quick_qs_panel_max_columns">6</integer>
+
+    <!-- Whether QuickSettings is in a phone landscape -->
+    <bool name="quick_settings_wide">false</bool>
+
+    <!-- The number of columns in the QuickSettings -->
+    <integer name="quick_settings_num_columns">3</integer>
+
+    <!-- The number of rows in the QuickSettings -->
+    <integer name="quick_settings_max_rows">3</integer>
+
+    <!-- The number of columns that the top level tiles span in the QuickSettings -->
+    <integer name="quick_settings_user_time_settings_tile_span">1</integer>
+
+    <!-- The default tiles to display in QuickSettings -->
+    <string name="quick_settings_tiles_default" translatable="false">
+        wifi,bt,dnd,flashlight,rotation,battery,cell,airplane,cast
+    </string>
+
+    <!-- The minimum number of tiles to display in QuickSettings -->
+    <integer name="quick_settings_min_num_tiles">6</integer>
+
+    <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
+    <string name="quick_settings_tiles_stock" translatable="false">
+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,location,hotspot,inversion,saver,dark,work,cast,night
+    </string>
+
+    <!-- The tiles to display in QuickSettings -->
+    <string name="quick_settings_tiles" translatable="false">default</string>
+
+    <!-- The tiles to display in QuickSettings in retail mode -->
+    <string name="quick_settings_tiles_retail_mode" translatable="false">
+        cell,battery,dnd,flashlight,rotation,location
+    </string>
+
+    <!-- Whether or not the RSSI tile is capitalized or not. -->
+    <bool name="quick_settings_rssi_tile_capitalization">true</bool>
+
+    <!-- Timeouts for brightness dialog to disappear -->
+    <integer name="quick_settings_brightness_dialog_short_timeout">2000</integer>
+    <integer name="quick_settings_brightness_dialog_long_timeout">4000</integer>
+
+    <!-- Show indicator for Wifi on but not connected. -->
+    <bool name="config_showWifiIndicatorWhenEnabled">false</bool>
+
+    <!-- The number of milliseconds before the heads up notification auto-dismisses. -->
+    <integer name="heads_up_notification_decay">5000</integer>
+
+    <!-- The number of milliseconds before the heads up notification sent automatically by the system auto-dismisses. -->
+    <integer name="auto_heads_up_notification_decay">3000</integer>
+
+    <!-- The number of milliseconds after a heads up notification is pushed back
+     before the app can interrupt again. -->
+    <integer name="heads_up_default_snooze_length_ms">60000</integer>
+
+    <!-- Minimum display time for a heads up notification, in milliseconds. -->
+    <integer name="heads_up_notification_minimum_time">2000</integer>
+
+    <!-- The number of milliseconds before the heads up notification accepts touches. -->
+    <integer name="touch_acceptance_delay">700</integer>
+
+    <!-- The number of milliseconds to extend ambient pulse by when prompted (e.g. on touch) -->
+    <integer name="ambient_notification_extension_time">10000</integer>
+
+    <!-- In multi-window, determines whether the stack where recents lives should grow from
+         the smallest position when being launched. -->
+    <bool name="recents_grow_in_multiwindow">true</bool>
+
+    <!-- Animation duration when using long press on recents to dock -->
+    <integer name="long_press_dock_anim_duration">250</integer>
+
+    <!-- Whether to enable KeyguardService or not -->
+    <bool name="config_enableKeyguardService">true</bool>
+
+    <!-- The maximum count of notifications on Keyguard. The rest will be collapsed in an overflow
+     card. -->
+    <integer name="keyguard_max_notification_count">3</integer>
+
+    <!-- Defines the implementation of the velocity tracker to be used for the panel expansion. Can
+         be 'platform' or 'noisy' (i.e. for noisy touch screens). -->
+    <string name="velocity_tracker_impl" translatable="false">platform</string>
+
+    <!-- Set to true to enable the user switcher on the keyguard. -->
+    <bool name="config_keyguardUserSwitcher">false</bool>
+
+    <!-- Doze: does this device support STATE_DOZE?  -->
+    <bool name="doze_display_state_supported">false</bool>
+
+    <!-- Doze: does this device support STATE_DOZE_SUSPEND?  -->
+    <bool name="doze_suspend_display_state_supported">false</bool>
+
+    <!-- Doze: should the significant motion sensor be used as a pulse signal? -->
+    <bool name="doze_pulse_on_significant_motion">false</bool>
+
+    <!-- Doze: check proximity sensor before pulsing? -->
+    <bool name="doze_proximity_check_before_pulse">true</bool>
+
+    <!-- Doze: should notifications be used as a pulse signal? -->
+    <bool name="doze_pulse_on_notifications">true</bool>
+
+    <!-- Doze: duration to avoid false pickup gestures triggered by notification vibrations -->
+    <integer name="doze_pickup_vibration_threshold">2000</integer>
+
+    <!-- Type of a sensor that provides a low-power estimate of the desired display
+         brightness, suitable to listen to while the device is asleep (e.g. during
+         always-on display) -->
+    <string name="doze_brightness_sensor_type" translatable="false"></string>
+
+    <!-- Override value to use for proximity sensor.  -->
+    <string name="proximity_sensor_type" translatable="false">@string/doze_brightness_sensor_type</string>
+
+    <!-- If using proximity_sensor_type, specifies a threshold value to distinguish near and
+         far break points. A sensor value less than or equal to this is considered "near". -->
+    <item name="proximity_sensor_threshold" translatable="false" format="float" type="dimen">
+        0</item>
+
+    <!-- Doze: pulse parameter - how long does it take to fade in? -->
+    <integer name="doze_pulse_duration_in">130</integer>
+
+    <!-- Doze: pulse parameter - once faded in, how long does it stay visible? -->
+    <integer name="doze_pulse_duration_visible">6000</integer>
+
+    <!-- Doze: pulse parameter - how long does it take to fade out? -->
+    <integer name="doze_pulse_duration_out">600</integer>
+
+    <!-- Doze: alpha to apply to small icons when dozing -->
+    <integer name="doze_small_icon_alpha">222</integer><!-- 87% of 0xff -->
+
+    <!-- Doze: Table that translates sensor values from the doze_brightness_sensor_type sensor
+               to brightness values; -1 means keeping the current brightness. -->
+    <integer-array name="config_doze_brightness_sensor_to_brightness">
+        <item>-1</item> <!-- 0: OFF -->
+        <item>2</item> <!-- 1: NIGHT -->
+        <item>5</item> <!-- 2: LOW -->
+        <item>27</item> <!-- 3: HIGH -->
+        <item>28</item> <!-- 4: SUN -->
+    </integer-array>
+
+    <!-- Doze: Table that translates sensor values from the doze_brightness_sensor_type sensor
+               to an opacity value for a black scrim that is overlayed in AOD1.
+               Valid range is from 0 (transparent) to 255 (opaque).
+               -1 means keeping the current opacity. -->
+    <integer-array name="config_doze_brightness_sensor_to_scrim_opacity">
+        <item>-1</item> <!-- 0: OFF -->
+        <item>0</item> <!-- 1: NIGHT -->
+        <item>0</item> <!-- 2: LOW -->
+        <item>0</item> <!-- 3: HIGH -->
+        <item>0</item> <!-- 4: SUN -->
+    </integer-array>
+
+    <!-- Doze: whether the double tap sensor reports 2D touch coordinates -->
+    <bool name="doze_double_tap_reports_touch_coordinates">false</bool>
+
+    <!-- Hotspot tile: number of days to show after feature is used. -->
+    <integer name="days_to_show_hotspot_tile">30</integer>
+
+    <!-- Color inversion tile: number of days to show after feature is used. -->
+    <integer name="days_to_show_color_inversion_tile">7</integer>
+
+    <!-- Number of times to show the strong alarm warning text in the volume dialog -->
+    <integer name="zen_mode_alarm_warning_threshold">5</integer>
+
+    <!-- Maximum number of total conditions to display in the zen mode selection panel -->
+    <integer name="zen_mode_max_conditions">5</integer>
+
+    <!-- Enable the default volume dialog -->
+    <bool name="enable_volume_ui">true</bool>
+
+    <!-- Enable the default volume level warning dialog -->
+    <bool name="enable_safety_warning">true</bool>
+
+    <!-- Whether to show operator name in the status bar -->
+    <bool name="config_showOperatorNameInStatusBar">false</bool>
+
+    <!-- Duration of the full carrier network change icon animation. -->
+    <integer name="carrier_network_change_anim_time">3000</integer>
+
+    <!-- Duration of the expansion animation in the volume dialog -->
+    <item name="volume_expand_animation_duration" type="integer">300</item>
+
+    <!-- Whether to show the full screen user switcher. -->
+    <bool name="config_enableFullscreenUserSwitcher">false</bool>
+
+    <!-- SystemUIFactory component -->
+    <string name="config_systemUIFactoryComponent" translatable="false">com.android.systemui.SystemUIFactory</string>
+
+    <!-- SystemUI Services: The classes of the stuff to start. -->
+    <string-array name="config_systemUIServiceComponents" translatable="false">
+        <item>com.android.systemui.util.NotificationChannels</item>
+        <item>com.android.systemui.statusbar.CommandQueue$CommandQueueStart</item>
+        <item>com.android.systemui.keyguard.KeyguardViewMediator</item>
+        <item>com.android.systemui.recents.Recents</item>
+        <item>com.android.systemui.volume.VolumeUI</item>
+        <item>com.android.systemui.stackdivider.Divider</item>
+        <item>com.android.systemui.SystemBars</item>
+        <item>com.android.systemui.usb.StorageNotification</item>
+        <item>com.android.systemui.power.PowerUI</item>
+        <item>com.android.systemui.media.RingtonePlayer</item>
+        <item>com.android.systemui.keyboard.KeyboardUI</item>
+        <item>com.android.systemui.pip.PipUI</item>
+        <item>com.android.systemui.shortcut.ShortcutKeyDispatcher</item>
+        <item>@string/config_systemUIVendorServiceComponent</item>
+        <item>com.android.systemui.util.leak.GarbageMonitor$Service</item>
+        <item>com.android.systemui.LatencyTester</item>
+        <item>com.android.systemui.globalactions.GlobalActionsComponent</item>
+        <item>com.android.systemui.ScreenDecorations</item>
+        <item>com.android.systemui.biometrics.BiometricDialogImpl</item>
+        <item>com.android.systemui.SliceBroadcastRelayHandler</item>
+        <item>com.android.systemui.SizeCompatModeActivityController</item>
+        <item>com.android.systemui.statusbar.notification.InstantAppNotifier</item>
+        <item>com.android.systemui.theme.ThemeOverlayController</item>
+    </string-array>
+
+    <!-- SystemUI vender service, used in config_systemUIServiceComponents. -->
+    <string name="config_systemUIVendorServiceComponent" translatable="false">com.android.systemui.VendorServices</string>
+
+    <!-- SystemUI Services (per user): The classes of the stuff to start for each user. This is a subset of the config_systemUIServiceComponents -->
+    <string-array name="config_systemUIServiceComponentsPerUser" translatable="false">
+        <item>com.android.systemui.util.NotificationChannels</item>
+    </string-array>
+
+    <!-- Nav bar button default ordering/layout -->
+    <string name="config_navBarLayout" translatable="false">left[.5W],back[1WC];home;recent[1WC],right[.5W]</string>
+    <string name="config_navBarLayoutQuickstep" translatable="false">back[1.7WC];home;contextual[1.7WC]</string>
+    <string name="config_navBarLayoutHandle" translatable="false">back[40AC];home_handle;ime_switcher[40AC]</string>
+
+    <bool name="quick_settings_show_full_alarm">false</bool>
+
+    <!-- Whether to show a warning notification when device's skin temperature is high. -->
+    <integer name="config_showTemperatureWarning">0</integer>
+
+    <!-- Whether to show a alarm dialog when device's usb port is overheating. -->
+    <integer name="config_showUsbPortAlarm">0</integer>
+
+    <!-- Accessibility actions -->
+    <item type="id" name="action_split_task_to_left" />
+    <item type="id" name="action_split_task_to_right" />
+    <item type="id" name="action_split_task_to_top" />
+
+    <item type="id" name="action_toggle_overview"/>
+
+    <!-- Whether or not the gear icon on notifications should be shown. The gear is shown when the
+         the notification is not swiped enough to dismiss it. -->
+    <bool name="config_showNotificationGear">true</bool>
+
+    <!-- Whether or not a background should be drawn behind a notification. -->
+    <bool name="config_drawNotificationBackground">true</bool>
+
+    <!-- Whether or the notifications can be shown and dismissed with a drag. -->
+    <bool name="config_enableNotificationShadeDrag">true</bool>
+
+    <!-- Whether to show activity indicators in the status bar -->
+    <bool name="config_showActivity">false</bool>
+
+    <!-- Whether or not the button to clear all notifications will be shown. -->
+    <bool name="config_enableNotificationsClearAll">true</bool>
+
+    <!-- Whether or not to show the notification shelf that houses the icons of notifications that
+     have been scrolled off-screen. -->
+    <bool name="config_showNotificationShelf">true</bool>
+
+    <!-- Whether or not the notifications should always fade as they are dismissed. -->
+    <bool name="config_fadeNotificationsOnDismiss">false</bool>
+
+    <!-- Whether or not the parent of the notification row itself is being translated when swiped or
+         its children views. If true, then the contents are translated and vice versa. -->
+    <bool name="config_translateNotificationContentsOnSwipe">true</bool>
+
+    <!-- Whether or not the fade on the notification is based on the amount that it has been swiped
+         off-screen. -->
+    <bool name="config_fadeDependingOnAmountSwiped">false</bool>
+
+    <!-- Whether or not to show the expand button at the end of the notification header. -->
+    <bool name="config_showNotificationExpandButtonAtEnd">false</bool>
+
+    <!-- Whether or the notifications should be clipped to be reduced in height if it has been
+         scrolled to the top of the screen. -->
+    <bool name="config_clipNotificationScrollToTop">true</bool>
+
+    <!-- Whether or not the notification contents should be clipped to any background that is
+         set on the notification container. For example, if this value is true and the background
+         has rounded corners, then the contents will be clipped to those corners. -->
+    <bool name="config_clipNotificationsToOutline">false</bool>
+
+    <!-- Whether or not notifications that can be expanded will always be in their expanded state.
+         This value only affects notifications that are not a group of notifications from the same
+         applications. If this value is false, then only the first notification will be expanded;
+         the other notifications need to be manually expanded by the user. -->
+    <bool name="config_alwaysExpandNonGroupedNotifications">false</bool>
+
+    <!-- Whether or not an expandable notification can be manually expanded or collapsed by the
+         user. Grouped notifications are still expandable even if this value is false. -->
+    <bool name="config_enableNonGroupedNotificationExpand">true</bool>
+
+    <!-- Whether or not there should be dividing lines between child notifications when the
+         group has been expanded. -->
+    <bool name="config_showDividersWhenGroupNotificationExpanded">false</bool>
+
+    <!-- Whether or not the dividing lines should be shown when the container is expanding and
+         collapsing. If this value is true, then the lines will only show when the container has
+         been completely expanded. -->
+    <bool name="config_hideDividersDuringExpand">false</bool>
+
+    <!-- Whether or not child notifications that are part of a group will have shadows. -->
+    <bool name="config_enableShadowOnChildNotifications">true</bool>
+
+    <!-- Whether or not a view containing child notifications will have a custom background when
+         it has been expanded to reveal its children. -->
+    <bool name="config_showGroupNotificationBgWhenExpanded">false</bool>
+
+    <!-- Should we vibrate on an icon animation of the shelf. This should only be active if the
+     vibrator is capable of subtle vibrations -->
+    <bool name="config_vibrateOnIconAnimation">false</bool>
+
+    <!-- If true, enable the advance anti-falsing classifier on the lockscreen. On some devices it
+         does not work well, particularly with noisy touchscreens. Note that disabling it may
+         increase the rate of unintentional unlocks. -->
+    <bool name="config_lockscreenAntiFalsingClassifierEnabled">true</bool>
+
+    <!-- Snooze: default notificaiton snooze time. -->
+    <integer name="config_notification_snooze_time_default">60</integer>
+
+    <!-- Snooze: List of snooze values in integer minutes. -->
+    <integer-array name="config_notification_snooze_times">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </integer-array>
+
+    <!-- Smart replies in notifications: Whether smart replies in notifications are enabled. -->
+    <bool name="config_smart_replies_in_notifications_enabled">true</bool>
+
+    <!-- Smart replies in notifications: Whether we disable the feature unless the app targets P -->
+    <bool name="config_smart_replies_in_notifications_requires_targeting_p">true</bool>
+
+    <!-- Smart replies in notifications: Maximum number of times SmartReplyView will try to find a
+         better (narrower) line-break for a double-line smart reply button. -->
+    <integer name="config_smart_replies_in_notifications_max_squeeze_remeasure_attempts">3</integer>
+
+    <!-- Smart replies in notifications: Whether by default tapping on a choice should let the user
+         edit the input before it is sent to the app. Developers can override this via
+         RemoteInput.Builder.setEditChoicesBeforeSending. -->
+    <bool name="config_smart_replies_in_notifications_edit_choices_before_sending">false</bool>
+
+    <!-- Smart replies in notifications: Whether smart suggestions in notifications are enabled in
+         heads-up notifications.  -->
+    <bool name="config_smart_replies_in_notifications_show_in_heads_up">true</bool>
+
+    <!-- Smart replies in notifications: Minimum number of system generated smart replies that
+         should be shown in a notification. If we cannot show at least this many replies we instead
+         show none. -->
+    <integer name="config_smart_replies_in_notifications_min_num_system_generated_replies">0</integer>
+
+    <!-- Smart replies in notifications: Maximum number of smart actions to show in notifications.
+         -->
+    <integer name="config_smart_replies_in_notifications_max_num_actions">-1</integer>
+
+    <!-- Smart replies in notifications: Delay (ms) before smart suggestions are clickable, since
+         they were added. -->
+    <integer name="config_smart_replies_in_notifications_onclick_init_delay">200</integer>
+
+    <!-- Screenshot editing default activity.  Must handle ACTION_EDIT image/png intents.
+         Blank sends the user to the Chooser first.
+         This name is in the ComponentName flattened format (package/class)  -->
+    <string name="config_screenshotEditor" translatable="false"></string>
+
+    <!-- On debuggable builds, alert the user if SystemUI PSS goes over this number (in kb) -->
+    <integer name="watch_heap_limit">256000</integer>
+
+    <!-- Allow dragging the PIP to a location to close it -->
+    <bool name="config_pipEnableDismissDragToEdge">true</bool>
+
+    <!-- SystemUI Plugins that can be loaded on user builds. -->
+    <string-array name="config_pluginWhitelist" translatable="false">
+        <item>com.android.systemui</item>
+    </string-array>
+
+    <integer name="ongoing_appops_dialog_max_apps">5</integer>
+
+    <!-- Launcher package name for overlaying icons. -->
+    <string name="launcher_overlayable_package" translatable="false">com.android.launcher3</string>
+
+    <!-- ThemePicker package name for overlaying icons. -->
+    <string name="themepicker_overlayable_package" translatable="false">com.android.wallpaper</string>
+
+    <!-- Default rounded corner curve (a Bezier). Must match (the curved path in) rounded.xml.
+         Note that while rounded.xml includes the entire path (including the horizontal and vertical
+         corner edges), this pulls out just the curve.
+     -->
+    <string name="config_rounded_mask" translatable="false">"M8,0C3.6,0,0,3.6,0,8"</string>
+
+    <!-- Preferred refresh rate at keyguard, if supported by the display -->
+    <integer name="config_keyguardRefreshRate">-1</integer>
+
+    <!-- Respect the drawable/rounded.xml that allow to customize as multiple radius corner path -->
+    <bool name="config_roundedCornerMultipleRadius">false</bool>
+
+    <!-- A path similar to frameworks/base/core/res/res/values/config.xml
+      config_mainBuiltInDisplayCutout that describes a path larger than the exact path of a display
+      cutout. If present as well as config_enableDisplayCutoutProtection is set to true, then
+      SystemUI will draw this "protection path" instead of the display cutout path that is normally
+      used for anti-aliasing.
+
+      This path will only be drawn when the front-facing camera turns on, otherwise the main
+      DisplayCutout path will be rendered
+       -->
+    <string translatable="false" name="config_frontBuiltInDisplayCutoutProtection"></string>
+
+    <!--  ID for the camera that needs extra protection -->
+    <string translatable="false" name="config_protectedCameraId"></string>
+
+    <!-- Comma-separated list of packages to exclude from camera protection e.g.
+    "com.android.systemui,com.android.xyz" -->
+    <string translatable="false" name="config_cameraProtectionExcludedPackages"></string>
+
+    <!--  Flag to turn on the rendering of the above path or not  -->
+    <bool name="config_enableDisplayCutoutProtection">false</bool>
+
+</resources>

@@ -1,0 +1,64 @@
+#
+# Copyright (C) 2016 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+on fs
+   setprop sys.wifitracing.started 0
+
+on property:sys.boot_completed=1 && property:sys.wifitracing.started=0
+   # Create trace buffer, and set basic configuration.
+   mkdir /sys/kernel/debug/tracing/instances/wifi 711
+   restorecon_recursive /sys/kernel/debug/tracing/instances/wifi
+   write /sys/kernel/debug/tracing/instances/wifi/tracing_on 0
+   write /sys/kernel/debug/tracing/instances/wifi/buffer_size_kb 1
+   write /sys/kernel/debug/tracing/instances/wifi/trace_options disable_on_free
+
+   # Enable cfg80211 events for connection and key management events.
+   # - Events are not actually logged until WifiService writes "1" to
+   #   /sys/kernel/debug/tracing/instances/wifi/tracing_on.
+   # - WifiService is responsible for turning tracing off and on.
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/cfg80211_gtk_rekey_notify/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_add_key/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_assoc/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_auth/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_connect/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_set_default_key/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_set_default_mgmt_key/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/cfg80211/rdev_set_rekey_data/enable 1
+
+   # Enable datapath events for Wifi.
+   # - Events are not actually logged until WifiService writes "1" to
+   #   /sys/kernel/debug/tracing/instances/wifi/tracing_on.
+   # - WifiService will ensure that tracing is turned back off,
+   #   when a connection attempt ends (whether in success or failure)
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/filter name==${wifi.interface:-wlan0}
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/net_dev_queue/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/net_dev_xmit/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/netif_rx/enable 1
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/netif_receive_skb/enable 1
+
+   # Set DAC to allow system_server to enable/disable, and read wifi trace
+   # events.
+   chown system /sys/kernel/debug/tracing/instances/wifi/tracing_on
+   chown system /sys/kernel/debug/tracing/instances/wifi/free_buffer
+   chown system /sys/kernel/debug/tracing/instances/wifi/trace
+   chmod 200 /sys/kernel/debug/tracing/instances/wifi/tracing_on
+   chmod 400 /sys/kernel/debug/tracing/instances/wifi/free_buffer
+   chmod 600 /sys/kernel/debug/tracing/instances/wifi/trace
+   setprop sys.wifitracing.started 1
+
+on property:sys.boot_completed=1 && property:wifi.interface=* && sys.wifitracing.started=1
+   # Override default value.
+   write /sys/kernel/debug/tracing/instances/wifi/events/net/filter name==${wifi.interface}

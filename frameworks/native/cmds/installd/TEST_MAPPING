@@ -1,0 +1,28 @@
+{
+  "presubmit": [
+    {
+      "name": "installd_cache_test"
+    },
+    {
+      "name": "installd_dexopt_test"
+    },
+    {
+      "name": "installd_otapreopt_test"
+    },
+    {
+      "name": "installd_service_test"
+    },
+    {
+      "name": "installd_utils_test"
+    },
+    {
+      "name": "CtsUsesLibraryHostTestCases"
+    },
+    {
+      "name": "CtsClassloaderSplitsHostTestCases"
+    },
+    {
+      "name": "CtsCompilationTestCases"
+    }
+  ]
+}

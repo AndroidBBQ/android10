@@ -1,0 +1,3 @@
+include(':setup-wizard-lib')
+project(':setup-wizard-lib').projectDir = new File(rootDir, 'frameworks/opt/setupwizard/library')
+project(':setup-wizard-lib').buildFileName = 'self.gradle'

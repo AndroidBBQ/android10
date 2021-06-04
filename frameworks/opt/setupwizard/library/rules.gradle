@@ -1,0 +1,74 @@
+/**
+ * Base rules for building setup wizard library. This build file is not used directly but rather
+ * included in scripts like build.gradle or standalone.gradle using 'apply from'.
+ *
+ * This allows the dependencies to be configured so that for builds in the Android tree, the
+ * dependencies like support library is built directly from source, while for standalone builds they
+ * will be fetched from maven central.
+ */
+
+apply plugin: 'com.android.library'
+
+android {
+
+    publishNonDefault true
+
+    flavorDimensions 'compat'
+
+    productFlavors {
+        // DEPRECATED: Platform version that will not include the compatibility libraries
+        platformDeprecated {
+            dimension 'compat'
+            // TODO(yukl): Bump this file to v28 once we can properly test that
+            minSdkVersion 27
+        }
+
+        // Provides backwards compatibility for Gingerbread or above, using support libraries.
+        gingerbreadCompat {
+            dimension 'compat'
+            minSdkVersion 14
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'main/AndroidManifest.xml'
+            java.srcDirs = ['main/src']
+            resources.srcDirs = ['main/src']
+            res.srcDirs = ['main/res']
+        }
+
+        platformDeprecated {
+            java.srcDirs = ['platform/src']
+            res.srcDirs = ['platform/res']
+        }
+
+        gingerbreadCompat {
+            java.srcDirs = ['gingerbread/src', 'recyclerview/src']
+            res.srcDirs = ['gingerbread/res', 'recyclerview/res']
+        }
+    }
+}
+
+dependencies {
+    // Read the dependencies from the "deps" map in the extra properties.
+    //
+    // For builds in the Android tree we want to build the dependencies from source
+    // for reproducible builds, for example in build.gradle define something like
+    // this:
+    //      ext {
+    //          deps = ['project-name': project(':project-path')]
+    //      }
+    //
+    // For standalone project clients, since the source may not be available, we
+    // fetch the dependencies from maven. For example in standalone.gradle define
+    // something like this:
+    //      ext {
+    //          deps = ['project-name': 'com.example.group:project-name:1.0.0']
+    //      }
+    //
+    platformDeprecatedCompile deps['support-annotations']
+
+    gingerbreadCompatCompile deps['support-appcompat-v7']
+    gingerbreadCompatCompile deps['support-recyclerview-v7']
+}

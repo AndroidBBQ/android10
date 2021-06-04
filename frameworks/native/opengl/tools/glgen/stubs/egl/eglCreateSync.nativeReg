@@ -1,0 +1,2 @@
+{"eglCreateSync", "(Landroid/opengl/EGLDisplay;I[JI)Landroid/opengl/EGLSync;", (void *) android_eglCreateSync },
+{"eglGetSyncAttrib", "(Landroid/opengl/EGLDisplay;Landroid/opengl/EGLSync;I[JI)Z", (void *) android_eglGetSyncAttrib },

@@ -1,0 +1,23 @@
+cc_library_shared {
+    name: "libstagefright_soft_mpeg2dec",
+    defaults: ["libstagefright_softomx-defaults"],
+
+    static_libs: ["libmpeg2dec"],
+    srcs: ["SoftMPEG2.cpp"],
+
+    cflags: [
+        "-Wall",
+        "-Wno-unused-variable",
+    ],
+
+    version_script: "exports.lds",
+
+    ldflags: ["-Wl,-Bsymbolic"],
+
+    sanitize: {
+        misc_undefined: [
+            "signed-integer-overflow",
+        ],
+        cfi: true,
+    },
+}

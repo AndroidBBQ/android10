@@ -1,0 +1,120 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package android.frameworks.vr.composer@1.0;
+
+import android.hardware.graphics.common@1.0::BufferUsage;
+import android.hardware.graphics.common@1.0::PixelFormat;
+import android.hardware.graphics.composer@2.1::IComposerClient;
+
+interface IVrComposerClient
+    extends android.hardware.graphics.composer@2.1::IComposerClient {
+    /*
+     * Describes the metadata that describes the buffer.
+     */
+    struct BufferMetadata {
+        /*
+         * Specifies how many columns of pixels are allocated in the buffer. The
+         * rows may be padded.
+         */
+        uint32_t width;
+
+        /*
+         * Specifies how many rows of pixels are allocated in the buffer.
+         */
+        uint32_t height;
+
+        /*
+         * Specifies the size of a row of pixels in the buffer. (width +
+         * padding).
+         */
+        uint32_t stride;
+
+        /*
+         * The number of image layers allocated in the buffer.
+         */
+        uint32_t layerCount;
+
+        /*
+         * Buffer pixel format.
+         */
+        PixelFormat format;
+
+        /*
+         * Buffer usage mask.
+         */
+        bitfield<BufferUsage> usage;
+    };
+
+    /*
+     * SET_LAYER_INFO has this pseudo prototype
+     *
+     * Used to annotate the layer with additional information, which must be
+     * used to describe the content of the layer (ie: notification, permission,
+     * etc) which allows VR window manager to treat certain layer types
+     * specially.
+     *
+     * @param display is the display on which the layer was created.
+     * @param layer is the layer affected by the change.
+     * @param layer_type the type of the layer as described by the window
+     * manager.
+     * @param application_id the application id the layer belongs to.
+     * @return error is NONE upon success. Otherwise,
+     *         BAD_DISPLAY when an invalid display handle was passed in.
+     *         BAD_LAYER when an invalid layer handle was passed in.
+     *
+     * setLayerInfo(Display display,
+     *              Layer layer,
+     *              uint32_t layer_type,
+     *              uint32_t application_id)
+     *     generates(Error error);
+     *
+     * SET_CLIENT_TARGET_METADATA has this pseudo prototype
+     *
+     * Used to set the native buffer handle metadata required to import and use
+     * the buffer as a graphic buffer.
+     *
+     * @param display is the display on which the buffer is used.
+     * @param metadata is the buffer metadata required to import the buffer.
+     * @return error is NONE upon success. Otherwise,
+     *         BAD_DISPLAY when an invalid display handle was passed in.
+     * setClientTargetMetadata(Display display,
+     *                         BufferMetadata metadata)
+     *     generates(Error error);
+     *
+     * SET_LAYER_BUFFER_METADATA has this pseudo prototype
+     *
+     * Used to set the native buffer handle metadata required to import and use
+     * the buffer as a graphic buffer.
+     *
+     * @param display is the display on which the buffer is used.
+     * @param layer is the layer the buffer metadata is associated with.
+     * @param metadata is the buffer metadata required to import the buffer.
+     * @return error is NONE upon success. Otherwise,
+     *         BAD_DISPLAY when an invalid display handle was passed in.
+     *         BAD_LAYER when an invalid layer handle was passed in.
+     *
+     * setLayerBufferMetadata(Display display,
+     *                        Layer layer,
+     *                        BufferMetadata metadata)
+     *     generates(Error error);
+     */
+
+    enum VrCommand : android.hardware.graphics.composer@2.1::IComposerClient.Command {
+        SET_LAYER_INFO                      = 0x800 << OPCODE_SHIFT,
+        SET_CLIENT_TARGET_METADATA          = 0x801 << OPCODE_SHIFT,
+        SET_LAYER_BUFFER_METADATA           = 0x802 << OPCODE_SHIFT,
+    };
+};

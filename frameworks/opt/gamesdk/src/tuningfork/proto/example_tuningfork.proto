@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package com.google.tuningfork;
+
+enum LoadingState {
+  LOADING = 0;
+  NOT_LOADING = 1;
+}
+// This is the base annotation for a game engine like Unity.
+// The user should extend with their own annotations.
+message Annotation {
+  LoadingState loading_state = 1;
+  int32 level = 2;
+}
+
+enum QualitySettings {
+  FASTEST = 0;
+  FAST = 1;
+  SIMPLE = 2;
+  GOOD = 3;
+  BEAUTIFUL = 4;
+  FANTASTIC = 5;
+}
+
+message FidelityParams {
+  QualitySettings qualitySettings = 1;
+}

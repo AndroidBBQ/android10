@@ -1,0 +1,98 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.cameraservice.service@2.0;
+
+import android.frameworks.cameraservice.device@2.0::CameraMetadata;
+import android.frameworks.cameraservice.device@2.0::ICameraDeviceUser;
+import android.frameworks.cameraservice.device@2.0::ICameraDeviceCallback;
+import android.frameworks.cameraservice.common@2.0::Status;
+import android.frameworks.cameraservice.common@2.0::ProviderIdAndVendorTagSections;
+import ICameraServiceListener;
+
+interface ICameraService {
+    /**
+     * connectDevice
+     *
+     * Return an ICameraDeviceUser interface for the requested cameraId.
+     *
+     * Note: The client must have camera permissions to call this method
+     *       successfully.
+     *
+     * @param callback the ICameraDeviceCallback interface which will get called
+     *        the cameraserver when capture is started, results are received
+     *        etc.
+     * @param cameraId the cameraId of the camera device to connect to.
+     *
+     * @return status Status code of the operation.
+     * @return device ICameraDeviceUser interface to the camera device requested.
+     */
+    connectDevice(ICameraDeviceCallback callback, string cameraId)
+        generates (Status status, ICameraDeviceUser device);
+
+    /**
+     * Add listener for changes to camera device status.
+     *
+     * Also returns the set of currently-known camera IDs and state of each
+     * device. Adding multiple listeners must result in the callbacks defined by
+     * ICameraServiceListener being called on all of them, on change of device
+     * status.
+     *
+     * @param listener the listener interface to be added. The cameraserver will
+     *        call callbacks on this interface when a camera device's status
+     *        changes.
+     * @return status Status code of the operation
+     * @return statuses a list of CameraStatusAndIds which store the deviceIds
+     *         and their corresponding statuses.
+     */
+    addListener(ICameraServiceListener listener)
+        generates (Status status, vec<CameraStatusAndId> statuses);
+
+    /**
+     * Remove listener for changes to camera device status.
+     *
+     * @param listener the listener to be removed from receiving callbacks on
+     *        changes to device state.
+     * @return status Status code of the operation.
+     */
+    removeListener(ICameraServiceListener listener) generates (Status status);
+
+    /**
+     * Read the static camera metadata for a camera device.
+     * @param cameraId the camera id of the camera device, whose metadata is
+     *        being requested.
+     * @return status the status code of the operation
+     * @return metadata the static metadata of the camera device requested.
+     */
+    getCameraCharacteristics(string cameraId)
+        generates (Status status, CameraMetadata metadata);
+
+    /**
+     * Read in the provider ids and corresponding vendor tag sections from the camera server.
+     * Intended to be used by the native code of CameraMetadata to correctly
+     * interpret camera metadata with vendor tags.
+     *
+     * Note: VendorTag caches may be created in process, by clients. A HIDL api
+     *       is not provided for this.
+     *
+     * @return status the status code of the operation.
+     * @return providerIdAndVendorTagSections the list of provider ids and corresponding
+     *         vendor tag sections.
+     */
+    getCameraVendorTagSections()
+        generates (Status status,
+                   vec<ProviderIdAndVendorTagSections> providerIdAndVendorTagSections);
+};

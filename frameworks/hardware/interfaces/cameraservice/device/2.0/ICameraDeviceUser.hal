@@ -1,0 +1,211 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.cameraservice.device@2.0;
+
+import android.frameworks.cameraservice.common@2.0::Status;
+
+interface ICameraDeviceUser {
+    /**
+     * disconnect from using the camera device.
+     * This method must block till in-flight requests are completed and stop
+     * all the requests submitted through submitRequestList().
+     */
+    disconnect();
+
+    /**
+     * Retrieve the fast message queue to be optionally used in CaptureRequests,
+     * to pass the settings metadata.
+     * If the client decides to use FMQ, it must:
+     *  - Call getCaptureRequestMetadataQueue to retrieve the fast message queue
+     *  - In submitRequestList calls, for each request set the fmqMetadataSize
+     *    in the settings field of physicalCameraSettings, to the size of the
+     *    metadata.
+     *
+     * @return queue the queue that the client writes the request settings
+     *         metadata to.
+     */
+    getCaptureRequestMetadataQueue() generates (fmq_sync<uint8_t> queue);
+
+    /**
+     * Retrieve the fast message queue used along with
+     * ICameraDeviceCallback.onResultReceived.
+     *
+     * Note: The client's use of this function does not affect the hidl
+     * service's decision to use / not use FMQ to pass result metadata to the
+     * cleint.
+     *
+     * Clients implementing the callback must:
+     *  - Retrieve the queue using getCaptureResultMetadataQueue.
+     *  - In the implementation of ICameraDeviceCallback.onResultReceived, if
+     *    PhysicalCaptureResultInfo.physicalCameraMetadata has a valid
+     *    fmqMetadataSize (which is > 0), the metadata must be read from the FMQ,
+     *    else, it must be read from the metadata field.
+     *    The same applies to resultMetadata.
+     *
+     * @return queue the queue that the client reads the result metadata from.
+     */
+    getCaptureResultMetadataQueue() generates (fmq_sync<uint8_t> queue);
+
+    /**
+     * Submit a list of capture requests.
+     *
+     * Note: Clients must call submitRequestList() serially if they opt
+     *       to utilize an fmq (obtained by calling getCaptureRequestMetadataQueue)
+     *       for any CaptureRequest's physicalCameraSettings metadata.
+
+     * @param requestList The list of CaptureRequests
+     * @param isRepeating Whether the set of requests repeats indefinitely.
+     *
+     * @return status status code of the operation.
+     * @return submitInfo data structure containing the request id of the
+     *         capture request and the frame number of the last frame that will
+     *         be produced(In case the request is not repeating. Otherwise it
+     *         contains the frame number of the last request, of the previus
+     *         batch of repeating requests, if any. If there is no previous
+     *         batch, the frame number returned will be -1.)
+     */
+    submitRequestList(vec<CaptureRequest> requestList, bool isRepeating)
+        generates (Status status, SubmitInfo submitInfo);
+
+    /**
+     * Cancel the current repeating request.
+     *
+     * The current repeating request may be stopped by camera device due to an
+     * error.
+     *
+     * Calling this method when there is no active repeating request, will
+     * trigger Status::INVALID_OPERATION.
+     *
+     * @return status the status code of the opertion.
+     * @return frameNumber the frame number of the last frame that will be
+     *         produced from this repeating request. If there are no inflight
+     *         repeating requests, this will return -1 as the frameNumber.
+     *         If the status is not NO_ERROR, the frame number should not be
+     *         used.
+     */
+    cancelRepeatingRequest()
+        generates (Status status, int64_t frameNumber);
+
+    /*
+     * Begin device configuration.
+     *
+     * @return status the status code of the operation.
+     */
+    beginConfigure() generates (Status status);
+
+    /**
+     * End the device configuration.
+     *
+     * endConfigure must be called after stream configuration is complete
+     * (i.e. after a call to beginConfigure and subsequent
+     * createStream/deleteStream calls). It must be called before any
+     * requests can be submitted.
+     *
+     * @param operatingMode The kind of session to create; either NORMAL_MODE,
+     *        CONSTRAINED_HIGH_SPEED_MODE, or one of the vendor modes.
+     * @param sessionParams Session-wide camera parameters. Empty session
+     *        parameters are legal inputs.
+     *
+     * @return status the status code of the operation.
+     */
+    endConfigure(StreamConfigurationMode operatingMode,
+                 CameraMetadata sessionParams) generates (Status status);
+
+    /**
+     * delete the stream specified by streamId.
+     *
+     * Note: deleteStream() must only be called within a beginConfigure() and an
+     *       endConfigure() block.
+     *
+     * @param streamId the stream id of the stream to be deleted
+     * @return status the status code of the operation
+     */
+    deleteStream(int32_t streamId) generates (Status status);
+
+    /**
+     * Create an output stream based on the given output configuration.
+     *
+     * Note: createStream() must only be called within a beginConfigure() and an
+     *       endConfigure() block.
+     *
+     * @param outputConfiguration size, format, and other parameters for the
+     *        stream
+     * @return status the status code of the operation.
+     * @return streamID new stream ID generated.
+     */
+    createStream(OutputConfiguration outputConfiguration)
+        generates (Status status, int32_t streamID);
+
+    /**
+     * Create a default capture request for capturing an image.
+     *
+     * @param templateId the type of capture request to be created.
+     *
+     * @return status the status code of the operation.
+     * @return metadata the settings metadata of the request.
+     */
+    createDefaultRequest(TemplateId templateId)
+        generates (Status status, CameraMetadata metadata);
+
+    /**
+     * Block until the device is idle.
+     *
+     * Note: This method will not block and instead will fail with
+     *       Status::INVALID_OPERATION if there are active repeating requests.
+     *
+     * @return status the status code of the operation.
+     */
+    waitUntilIdle() generates (Status status);
+
+    /**
+     * flush all the requests pending on the device.
+     *
+     * @return status the status code of the operation.
+     * @return lastFrameNumber the frame number of the last frame flushed.
+     */
+    flush() generates (Status status, int64_t lastFrameNumber);
+
+    /**
+     * Update a previously set output configuration.
+     *
+     * Note: It is legal to call this method outside of
+     *       beginConfigure()/endConfigure() blocks and also when the device
+     *       is not idle.
+     *
+     * @param streamId the stream id whose output configuration needs to be
+     *        updated.
+     * @param outputConfiguration the new outputConfiguration.
+     *
+     * @return status the status code of the operation.
+     */
+    updateOutputConfiguration(
+            int32_t streamId, OutputConfiguration outputConfiguration)
+         generates (Status status);
+
+    /**
+      * Check whether a particular session configuration has camera device
+      * support.
+      *
+      * @param sessionConfiguration Specific session configuration to be verified.
+      *
+      * @return status the status code of the operation
+      * @return true  - in case the stream combination is supported.
+      *         false - in case there is no device support.
+      */
+    isSessionConfigurationSupported(SessionConfiguration sessionConfiguration)
+        generates (Status status, bool supported);
+};

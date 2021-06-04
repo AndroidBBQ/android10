@@ -1,0 +1,8 @@
+TUNINGFORK {
+    global:
+        *TuningFork_*;
+        *tuningfork*;
+        *histogram_test*;
+    local:
+        *;
+};

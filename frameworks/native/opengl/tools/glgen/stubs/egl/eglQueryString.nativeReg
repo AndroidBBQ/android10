@@ -1,0 +1,1 @@
+{"eglQueryString", "(Landroid/opengl/EGLDisplay;I)Ljava/lang/String;", (void *) android_eglQueryString__Landroind_opengl_EGLDisplay_2I },

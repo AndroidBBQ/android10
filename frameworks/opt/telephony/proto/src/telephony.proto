@@ -1,0 +1,2583 @@
+//
+// Copyright (C) 2016 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+package clearcut.connectivity;
+
+option java_package = "com.android.internal.telephony";
+option java_outer_classname = "TelephonyProto";
+
+// The information about Telephony events.
+message TelephonyLog {
+
+  // Events logged by telephony services
+  repeated TelephonyEvent events = 1;
+
+  // Voice/Video call sessions
+  repeated TelephonyCallSession call_sessions = 2;
+
+  // Send/Receive SMS sessions
+  repeated SmsSession sms_sessions = 3;
+
+  // Telephony Histograms
+  repeated TelephonyHistogram histograms = 4;
+
+  // Indicating some telephony events are dropped
+  optional bool events_dropped = 5;
+
+  // The start time of this log
+  optional Time start_time = 6;
+
+  // The end time of this log
+  optional Time end_time = 7;
+
+  // Modem power stats
+  optional ModemPowerStats modem_power_stats = 8;
+
+  // Hardware revision (EVT, DVT, PVT etc.)
+  optional string hardware_revision = 9;
+
+  // The last active subscription info for each slot.
+  repeated ActiveSubscriptionInfo last_active_subscription_info = 10;
+}
+
+// The time information
+message Time {
+  // The system time in milli seconds. This represents the actual
+  // time of the events.
+  optional int64 system_timestamp_millis = 1;
+
+  // The time since boot in milli seconds.
+  // This is used for calculating the time interval between events. Different
+  // from the system time, this won't be affected by time changed by the network or users.
+  optional int64 elapsed_timestamp_millis = 2;
+}
+
+// Telephony Histogram
+message TelephonyHistogram {
+
+  // Type of histogram
+  optional int32 category = 1;
+
+  // Unique Id identifying a sample within
+  // particular category of the histogram.
+  optional int32 id = 2;
+
+  // Min time taken in millis.
+  optional int32 min_time_millis = 3;
+
+  // Max time taken in millis.
+  optional int32 max_time_millis = 4;
+
+  // Average time taken in millis.
+  optional int32 avg_time_millis = 5;
+
+  // Total count of histogram samples.
+  optional int32 count = 6;
+
+  // Total number of time ranges expected
+  // (must be greater than 1).
+  optional int32 bucket_count = 7;
+
+  // Array storing endpoints of range buckets.
+  repeated int32 bucket_end_points = 8;
+
+  // Array storing counts for each time range
+  // starting from smallest value range.
+  repeated int32 bucket_counters = 9;
+}
+
+// Telephony related user settings
+message TelephonySettings {
+
+  // NETWORK_MODE_* See ril.h PREF_NET_TYPE_XXXX
+  enum RilNetworkMode {
+
+    // Mode is unknown.
+    NETWORK_MODE_UNKNOWN = 0;
+
+    // GSM/WCDMA (WCDMA preferred). Note the following values are all off by 1.
+    NETWORK_MODE_WCDMA_PREF = 1;
+
+    // GSM only
+    NETWORK_MODE_GSM_ONLY = 2;
+
+    // WCDMA only
+    NETWORK_MODE_WCDMA_ONLY = 3;
+
+    // GSM/WCDMA (auto mode, according to PRL)
+    NETWORK_MODE_GSM_UMTS = 4;
+
+    // CDMA and EvDo (auto mode, according to PRL)
+    NETWORK_MODE_CDMA = 5;
+
+    // CDMA only
+    NETWORK_MODE_CDMA_NO_EVDO = 6;
+
+    // EvDo only
+    NETWORK_MODE_EVDO_NO_CDMA = 7;
+
+    // GSM/WCDMA, CDMA, and EvDo (auto mode, according to PRL)
+    NETWORK_MODE_GLOBAL = 8;
+
+    // LTE, CDMA and EvDo
+    NETWORK_MODE_LTE_CDMA_EVDO = 9;
+
+    // LTE, GSM/WCDMA
+    NETWORK_MODE_LTE_GSM_WCDMA = 10;
+
+    // LTE, CDMA, EvDo, GSM/WCDMA
+    NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA = 11;
+
+    // LTE Only mode
+    NETWORK_MODE_LTE_ONLY = 12;
+
+    // LTE/WCDMA
+    NETWORK_MODE_LTE_WCDMA = 13;
+
+    // TD-SCDMA only
+    NETWORK_MODE_TDSCDMA_ONLY = 14;
+
+    // TD-SCDMA and WCDMA
+    NETWORK_MODE_TDSCDMA_WCDMA = 15;
+
+    // TD-SCDMA and LTE
+    NETWORK_MODE_LTE_TDSCDMA = 16;
+
+    // TD-SCDMA and GSM
+    NETWORK_MODE_TDSCDMA_GSM = 17;
+
+    // TD-SCDMA,GSM and LTE
+    NETWORK_MODE_LTE_TDSCDMA_GSM = 18;
+
+    // TD-SCDMA, GSM/WCDMA
+    NETWORK_MODE_TDSCDMA_GSM_WCDMA = 19;
+
+    // TD-SCDMA, WCDMA and LTE
+    NETWORK_MODE_LTE_TDSCDMA_WCDMA = 20;
+
+    // TD-SCDMA, GSM/WCDMA and LTE
+    NETWORK_MODE_LTE_TDSCDMA_GSM_WCDMA = 21;
+
+    // TD-SCDMA,EvDo,CDMA,GSM/WCDMA
+    NETWORK_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA = 22;
+
+    // TD-SCDMA/LTE/GSM/WCDMA, CDMA, and EvDo
+    NETWORK_MODE_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA = 23;
+  }
+
+  // Constants for WiFi Calling mode
+  enum WiFiCallingMode {
+
+    // Calling mode is unknown.
+    WFC_MODE_UNKNOWN = 0;
+
+    WFC_MODE_WIFI_ONLY = 1;
+
+    WFC_MODE_CELLULAR_PREFERRED = 2;
+
+    WFC_MODE_WIFI_PREFERRED = 3;
+  }
+
+  // If the device is in airplane mode.
+  optional bool is_airplane_mode = 1;
+
+  // If cell-data has been enabled.
+  optional bool is_cellular_data_enabled = 2;
+
+  // If cell-roaming has been enabled.
+  optional bool is_data_roaming_enabled = 3;
+
+  // Preferred network mode.
+  optional RilNetworkMode preferred_network_mode = 4;
+
+  // If enhanced mode enabled.
+  optional bool is_enhanced_4g_lte_mode_enabled = 5;
+
+  // If wifi has been enabled.
+  optional bool is_wifi_enabled = 6;
+
+  // If wifi-calling has been enabled.
+  optional bool is_wifi_calling_enabled = 7;
+
+  // Wifi-calling Mode.
+  optional WiFiCallingMode wifi_calling_mode = 8;
+
+  // If video over LTE enabled.
+  optional bool is_vt_over_lte_enabled = 9;
+
+  // If video over wifi enabled.
+  optional bool is_vt_over_wifi_enabled = 10;
+}
+
+// Contains phone state and service related information.
+message TelephonyServiceState {
+
+  // The information about cellular network operator
+  message TelephonyOperator {
+
+    // Name in long alphanumeric format
+    optional string alpha_long = 1;
+
+    // Name in short alphanumeric format
+    optional string alpha_short = 2;
+
+    // Numeric id.
+    // In GSM/UMTS, numeric format is 3 digit country code plus 2 or 3 digit
+    // network code. Same as MCC/MNC.
+    optional string numeric = 3;
+  }
+
+  message NetworkRegistrationInfo {
+    // Network domain
+    optional Domain domain = 1;
+
+    // Network transport
+    optional Transport transport = 2;
+
+    // Radio access technology
+    optional RadioAccessTechnology rat = 3;
+  }
+
+  // Roaming type
+  enum RoamingType {
+
+    // Unknown. The default value. Different from ROAMING_TYPE_UNKNOWN.
+    UNKNOWN = -1;
+
+    // In home network
+    ROAMING_TYPE_NOT_ROAMING = 0;
+
+    // In a roaming network, but we can not tell
+    // if it's domestic or international
+    ROAMING_TYPE_UNKNOWN = 1;
+
+    // In domestic roaming network
+    ROAMING_TYPE_DOMESTIC = 2;
+
+    // In international roaming network
+    ROAMING_TYPE_INTERNATIONAL = 3;
+  }
+
+  // Domain type
+  enum Domain {
+    // Unknown
+    DOMAIN_UNKNOWN = 0;
+
+    // Circuit switching domain
+    DOMAIN_CS = 1;
+
+    // Packet switching domain
+    DOMAIN_PS = 2;
+  }
+
+  enum Transport {
+    // Unknown
+    TRANSPORT_UNKNOWN = 0;
+
+    // Transport type for Wireless Wide Area Networks (i.e. Cellular)
+    TRANSPORT_WWAN = 1;
+
+    // Transport type for Wireless Local Area Networks (i.e. Wifi)
+    TRANSPORT_WLAN = 2;
+  }
+
+  // Current registered operator
+  optional TelephonyOperator voice_operator = 1;
+
+  // Current registered data network operator
+  optional TelephonyOperator data_operator = 2;
+
+  // Current voice network roaming type
+  optional RoamingType voice_roaming_type = 3 [default = UNKNOWN];
+
+  // Current data network roaming type
+  optional RoamingType data_roaming_type = 4 [default = UNKNOWN];
+
+  // Current voice radio technology
+  optional RadioAccessTechnology voice_rat = 5 [default = UNKNOWN];
+
+  // Current data radio technology
+  optional RadioAccessTechnology data_rat = 6 [default = UNKNOWN];
+
+  // Current Channel Number
+  optional int32 channel_number = 7;
+
+  // Network registration info
+  repeated NetworkRegistrationInfo networkRegistrationInfo = 10;
+}
+
+// Radio access families
+enum RadioAccessTechnology {
+
+  // This is the default value. Different from RAT_UNKNOWN.
+  UNKNOWN = -1;
+
+  // Airplane mode, out of service, or when the modem cannot determine
+  // the RAT.
+  RAT_UNKNOWN = 0;
+
+  RAT_GPRS = 1;
+
+  RAT_EDGE = 2;
+
+  RAT_UMTS = 3;
+
+  RAT_IS95A = 4;
+
+  RAT_IS95B = 5;
+
+  RAT_1XRTT = 6;
+
+  RAT_EVDO_0 = 7;
+
+  RAT_EVDO_A = 8;
+
+  RAT_HSDPA = 9;
+
+  RAT_HSUPA = 10;
+
+  RAT_HSPA = 11;
+
+  RAT_EVDO_B = 12;
+
+  RAT_EHRPD = 13;
+
+  RAT_LTE = 14;
+
+  RAT_HSPAP = 15;
+
+  RAT_GSM = 16;
+
+  RAT_TD_SCDMA = 17;
+
+  RAT_IWLAN = 18;
+
+  RAT_LTE_CA = 19;
+
+  RAT_NR_NSA = 20;
+
+  RAT_NR_SA = 21;
+}
+
+// The information about IMS errors
+// https://cs.corp.google.com/#android/frameworks/base/telephony/java/com/android/ims/ImsReasonInfo.java
+message ImsReasonInfo {
+
+  // Main reason code.
+  optional int32 reason_code = 1;
+
+  // Extra code value; it depends on the code value.
+  optional int32 extra_code = 2;
+
+  // Additional message of the reason info. We get this from the modem.
+  optional string extra_message = 3;
+}
+
+// The information about state connection between IMS service and IMS server
+message ImsConnectionState {
+
+  // Current state
+  optional State state = 1;
+
+  // If DISCONNECTED then this field may have additional information about
+  // connection problem.
+  optional ImsReasonInfo reason_info = 2;
+
+  // Posible states
+  enum State {
+
+    // State is unknown.
+    STATE_UNKNOWN = 0;
+
+    CONNECTED = 1;
+
+    PROGRESSING = 2;
+
+    DISCONNECTED = 3;
+
+    RESUMED = 4;
+
+    SUSPENDED = 5;
+  }
+}
+
+// The information about current capabilities of IMS service
+message ImsCapabilities {
+
+  optional bool voice_over_lte = 1;
+
+  optional bool voice_over_wifi = 2;
+
+  optional bool video_over_lte = 3;
+
+  optional bool video_over_wifi = 4;
+
+  optional bool ut_over_lte = 5;
+
+  optional bool ut_over_wifi = 6;
+}
+
+// Errors returned by RIL
+enum RilErrno {
+
+  // type is unknown.
+  RIL_E_UNKNOWN = 0;
+
+  // Note the following values are all off by 1.
+  RIL_E_SUCCESS = 1;
+
+  // If radio did not start or is resetting
+  RIL_E_RADIO_NOT_AVAILABLE = 2;
+
+  RIL_E_GENERIC_FAILURE = 3;
+
+  // for PIN/PIN2 methods only!
+  RIL_E_PASSWORD_INCORRECT = 4;
+
+  // Operation requires SIM PIN2 to be entered
+  RIL_E_SIM_PIN2 = 5;
+
+  // Operation requires SIM PIN2 to be entered
+  RIL_E_SIM_PUK2 = 6;
+
+  RIL_E_REQUEST_NOT_SUPPORTED = 7;
+
+  RIL_E_CANCELLED = 8;
+
+  // data ops are not allowed during voice call on a Class C GPRS device
+  RIL_E_OP_NOT_ALLOWED_DURING_VOICE_CALL = 9;
+
+  // data ops are not allowed before device registers in network
+  RIL_E_OP_NOT_ALLOWED_BEFORE_REG_TO_NW = 10;
+
+  // fail to send sms and need retry
+  RIL_E_SMS_SEND_FAIL_RETRY = 11;
+
+  // fail to set the location where CDMA subscription shall be retrieved
+  // because of SIM or RUIM card absent
+  RIL_E_SIM_ABSENT = 12;
+
+  // fail to find CDMA subscription from specified location
+  RIL_E_SUBSCRIPTION_NOT_AVAILABLE = 13;
+
+  // HW does not support preferred network type
+  RIL_E_MODE_NOT_SUPPORTED = 14;
+
+  // command failed because recipient is not on FDN list
+  RIL_E_FDN_CHECK_FAILURE = 15;
+
+  // network selection failed due to illegal SIM or ME
+  RIL_E_ILLEGAL_SIM_OR_ME = 16;
+
+  // no logical channel available
+  RIL_E_MISSING_RESOURCE = 17;
+
+  // application not found on SIM
+  RIL_E_NO_SUCH_ELEMENT = 18;
+
+  // DIAL request modified to USSD
+  RIL_E_DIAL_MODIFIED_TO_USSD = 19;
+
+  // DIAL request modified to SS
+  RIL_E_DIAL_MODIFIED_TO_SS = 20;
+
+  // DIAL request modified to DIAL with different data
+  RIL_E_DIAL_MODIFIED_TO_DIAL = 21;
+
+  // USSD request modified to DIAL
+  RIL_E_USSD_MODIFIED_TO_DIAL = 22;
+
+  // USSD request modified to SS
+  RIL_E_USSD_MODIFIED_TO_SS = 23;
+
+  // USSD request modified to different USSD request
+  RIL_E_USSD_MODIFIED_TO_USSD = 24;
+
+  // SS request modified to DIAL
+  RIL_E_SS_MODIFIED_TO_DIAL = 25;
+
+  // SS request modified to USSD
+  RIL_E_SS_MODIFIED_TO_USSD = 26;
+
+  // Subscription not supported by RIL
+  RIL_E_SUBSCRIPTION_NOT_SUPPORTED = 27;
+
+  // SS request modified to different SS request
+  RIL_E_SS_MODIFIED_TO_SS = 28;
+
+  // LCE service not supported(36 in RILConstants.java. This is a mistake.
+  // The value should be off by 1 ideally.)
+  RIL_E_LCE_NOT_SUPPORTED = 36 [deprecated=true];
+
+  // LCE service not supported
+  RIL_E_LCE_NOT_SUPPORTED_NEW = 37;
+
+  // Not sufficient memory to process the request
+  RIL_E_NO_MEMORY = 38;
+
+  // Modem hit unexpected error scenario while handling this request
+  RIL_E_INTERNAL_ERR = 39;
+
+  // Hit platform or system error
+  RIL_E_SYSTEM_ERR = 40;
+
+  // Vendor RIL got unexpected or incorrect response from modem for this request
+  RIL_E_MODEM_ERR = 41;
+
+  // Unexpected request for the current state
+  RIL_E_INVALID_STATE = 42;
+
+  // Not sufficient resource to process the request
+  RIL_E_NO_RESOURCES = 43;
+
+  // Received error from SIM card
+  RIL_E_SIM_ERR = 44;
+
+  // Received invalid arguments in request
+  RIL_E_INVALID_ARGUMENTS = 45;
+
+  // Cannot process the request in current SIM state
+  RIL_E_INVALID_SIM_STATE = 46;
+
+  // Cannot process the request in current Modem state
+  RIL_E_INVALID_MODEM_STATE = 47;
+
+  // Received invalid call id in request
+  RIL_E_INVALID_CALL_ID = 48;
+
+  // ACK received when there is no SMS to ack
+  RIL_E_NO_SMS_TO_ACK = 49;
+
+  // Received error from network
+  RIL_E_NETWORK_ERR = 50;
+
+  // Operation denied due to overly-frequent requests
+  RIL_E_REQUEST_RATE_LIMITED = 51;
+
+  // SIM is busy
+  RIL_E_SIM_BUSY = 52;
+
+  // The target EF is full
+  RIL_E_SIM_FULL = 53;
+
+  // Request is rejected by network
+  RIL_E_NETWORK_REJECT = 54;
+
+  // Not allowed the request now
+  RIL_E_OPERATION_NOT_ALLOWED = 55;
+
+  // The request record is empty
+  RIL_E_EMPTY_RECORD = 56;
+
+  // Invalid sms format
+  RIL_E_INVALID_SMS_FORMAT = 57;
+
+  // Message not encoded properly
+  RIL_E_ENCODING_ERR = 58;
+
+  // SMSC address specified is invalid
+  RIL_E_INVALID_SMSC_ADDRESS = 59;
+
+  // No such entry present to perform the request
+  RIL_E_NO_SUCH_ENTRY = 60;
+
+  // Network is not ready to perform the request
+  RIL_E_NETWORK_NOT_READY = 61;
+
+  // Device does not have this value provisioned
+  RIL_E_NOT_PROVISIONED = 62;
+
+  // Device does not have subscription
+  RIL_E_NO_SUBSCRIPTION = 63;
+
+  // Network cannot be found
+  RIL_E_NO_NETWORK_FOUND = 64;
+
+  // Operation cannot be performed because the device is currently in use
+  RIL_E_DEVICE_IN_USE = 65;
+
+  // Operation aborted
+  RIL_E_ABORTED = 66;
+
+  // Invalid response sent by vendor code
+  RIL_E_INVALID_RESPONSE = 67;
+}
+
+// Errors returned by ImsService
+enum ImsServiceErrno {
+
+  // The operation error is unknown
+  IMS_E_UNKNOWN = 0;
+  // The operation has succeeded
+  IMS_E_SUCCESS = 1;
+  // Sending SMS over IMS failed. Do not retry over IMS again or fallback to CS.
+  IMS_E_SMS_SEND_STATUS_ERROR = 2;
+  // Sending SMS over IMS failed. Retry over IMS again.
+  IMS_E_SMS_SEND_STATUS_ERROR_RETRY = 3;
+  // Sending SMS over IMS failed. Fallback to sending the SMS over CS.
+  IMS_E_SMS_SEND_STATUS_ERROR_FALLBACK = 4;
+}
+
+// PDP_type values in TS 27.007 section 10.1.1.
+enum PdpType {
+
+  // type is unknown.
+  PDP_UNKNOWN = 0;
+
+  PDP_TYPE_IP = 1;
+
+  PDP_TYPE_IPV6 = 2;
+
+  PDP_TYPE_IPV4V6 = 3;
+
+  PDP_TYPE_PPP = 4;
+
+  PDP_TYPE_NON_IP = 5;
+
+  PDP_TYPE_UNSTRUCTURED = 6;
+}
+
+// The information about packet data connection
+message RilDataCall {
+
+  // Context ID, uniquely identifies this call
+  optional int32 cid = 1;
+
+  // One of the PDP_type values in TS 27.007 section 10.1.1
+  optional PdpType type = 2;
+
+  // The network interface name e.g. wlan0, rmnet_data0.
+  optional string iframe = 3;
+
+  // State of the Data Call connection
+  optional State state = 4;
+
+  // Bitmask of APN types
+  optional int32 apn_type_bitmask = 5;
+
+  enum State {
+
+    // Unknown event
+    UNKNOWN = 0;
+
+    // Connected event
+    CONNECTED = 1;
+
+    // Disconnected event
+    DISCONNECTED = 2;
+  }
+}
+
+message EmergencyNumberInfo {
+  // Dialing address
+  optional string address = 1 /* [
+    (datapol.semantic_type) = ST_PHONE_NUMBER,
+    (datapol.qualifier) = {is_public: true}
+  ] */;
+
+  // Country code string (lowercase character) in ISO 3166 format
+  optional string country_iso = 2 /* [(datapol.semantic_type) = ST_LOCATION] */;
+
+  // Mobile Network Code
+  optional string mnc = 3 /* [(datapol.semantic_type) = ST_LOCATION] */;
+
+  // Bitmask of emergency service categories
+  optional int32 service_categories_bitmask = 4;
+
+  // Emergency Uniform Resources Names (URN)
+  // Reference: https://tools.ietf.org/html/rfc5031
+  repeated string urns = 5;
+
+  // Bitmask of the sources
+  optional int32 number_sources_bitmask = 6;
+
+  // Emergency call routing information.
+  // Emergency call routing is a flag to tell how modem handles the calling with
+  // emergency numbers. For example, 110 in India, modem needs to handle/route
+  // it like a normal call. There are only two possible options for emergency
+  // call routing: emergency call routing vs normal call routing. It is usually
+  // a country or carrier requirement.
+  optional int32 routing = 7;
+}
+
+message TelephonyEvent {
+
+  enum Type {
+
+    // Unknown event
+    UNKNOWN = 0;
+
+    // Telephony related user settings changed
+    SETTINGS_CHANGED = 1;
+
+    // Phone state changed
+    RIL_SERVICE_STATE_CHANGED = 2;
+
+    // IMS connected/disconnected
+    IMS_CONNECTION_STATE_CHANGED = 3;
+
+    // IMS Voice, Video and Ut capabilities changed
+    IMS_CAPABILITIES_CHANGED = 4;
+
+    // Setup a packet data connection
+    DATA_CALL_SETUP = 5;
+
+    // RIL request result
+    DATA_CALL_SETUP_RESPONSE = 6;
+
+    // Notification that new data call has appeared in the list
+    // or old data call has removed.
+    DATA_CALL_LIST_CHANGED = 7;
+
+    // Deactivate packet data connection
+    DATA_CALL_DEACTIVATE = 8;
+
+    // RIL request result
+    DATA_CALL_DEACTIVATE_RESPONSE = 9;
+
+    // Logging a data stall + its action
+    DATA_STALL_ACTION = 10;
+
+    // Modem Restarted. Logging a baseband version and reason for restart
+    // along with the event if it is available
+    MODEM_RESTART = 11;
+
+    // System time overwritten by NITZ (Network time)
+    NITZ_TIME = 12;
+
+    // Carrier Identification Matching Event
+    CARRIER_ID_MATCHING = 13;
+
+    // Carrier Key Change event.
+    CARRIER_KEY_CHANGED = 14;
+
+    // Data switch event.
+    DATA_SWITCH = 15;
+
+    // Network validate event.
+    NETWORK_VALIDATE = 16;
+
+    // On deman data switch event.
+    ON_DEMAND_DATA_SWITCH = 17;
+
+    // SIM state change event.
+    SIM_STATE_CHANGED = 18;
+
+    // Active subscription info change event.
+    ACTIVE_SUBSCRIPTION_INFO_CHANGED = 19;
+
+    // Enabled modem change event.
+    ENABLED_MODEM_CHANGED = 20;
+
+    // Emergency Number update event (Device HAL >= 1.4).
+    EMERGENCY_NUMBER_REPORT = 21;
+
+    // Signal strength
+    SIGNAL_STRENGTH = 23;
+  }
+
+  enum ApnType {
+    APN_TYPE_UNKNOWN = 0;
+
+    APN_TYPE_DEFAULT = 1;
+
+    APN_TYPE_MMS = 2;
+
+    APN_TYPE_SUPL = 3;
+
+    APN_TYPE_DUN = 4;
+
+    APN_TYPE_HIPRI = 5;
+
+    APN_TYPE_FOTA = 6;
+
+    APN_TYPE_IMS = 7;
+
+    APN_TYPE_CBS = 8;
+
+    APN_TYPE_IA = 9;
+
+    APN_TYPE_EMERGENCY = 10;
+  }
+
+  enum EventState {
+    EVENT_STATE_UNKNOWN = 0;
+
+    EVENT_STATE_START = 1;
+
+    EVENT_STATE_END = 2;
+  }
+
+  enum NetworkValidationState {
+    /** The network validation state is unknown. */
+    NETWORK_VALIDATION_STATE_UNKNOWN = 0;
+
+    /** The network under validation is initial established. */
+    NETWORK_VALIDATION_STATE_AVAILABLE = 1;
+
+    /** The validation is failed. */
+    NETWORK_VALIDATION_STATE_FAILED = 2;
+
+    /** The validation is passed. */
+    NETWORK_VALIDATION_STATE_PASSED = 3;
+  }
+
+  message DataSwitch {
+    enum Reason {
+      /** Data switch caused by unknown reason. */
+      DATA_SWITCH_REASON_UNKNOWN = 0;
+
+      /** Data switch caused by user's manual switch. */
+      DATA_SWITCH_REASON_MANUAL = 1;
+
+      /** Data switch caused by incoming/outgoing call. */
+      DATA_SWITCH_REASON_IN_CALL = 2;
+
+      /** Data switch caused by CBRS switch. */
+      DATA_SWITCH_REASON_CBRS = 3;
+    }
+
+    /** The reason for data switch. */
+    optional Reason reason = 1;
+
+    /** Current state of the data switch event. */
+    optional EventState state = 2;
+  }
+
+  message OnDemandDataSwitch {
+    /** The apn associated with this event. */
+    optional ApnType apn = 1;
+
+    /** Current state of the on demand data switch event. */
+    optional EventState state = 2;
+  }
+
+  // Setup a packet data connection
+  message RilSetupDataCall {
+
+    // See ril.h RIL_REQUEST_SETUP_DATA_CALL
+    enum RilDataProfile {
+
+      // type is unknown.
+      RIL_DATA_UNKNOWN = 0;
+
+      RIL_DATA_PROFILE_DEFAULT = 1;
+
+      RIL_DATA_PROFILE_TETHERED = 2;
+
+      RIL_DATA_PROFILE_IMS = 3;
+
+      RIL_DATA_PROFILE_FOTA = 4;
+
+      RIL_DATA_PROFILE_CBS = 5;
+
+      RIL_DATA_PROFILE_OEM_BASE = 6;
+
+      RIL_DATA_PROFILE_INVALID = 7;
+    }
+
+    // Radio technology to use
+    optional RadioAccessTechnology rat = 1 [default = UNKNOWN];
+
+    // optional RIL_DataProfile
+    optional RilDataProfile data_profile = 2;
+
+    // APN to connect to if radio technology is GSM/UMTS
+    optional string apn = 3;
+
+    // the connection type to request
+    optional PdpType type = 4;
+  }
+
+  // RIL response to RilSetupDataCall
+  message RilSetupDataCallResponse {
+
+    // Copy of enum RIL_DataCallFailCause defined at ril.h
+    enum RilDataCallFailCause {
+
+      // Failure reason is unknown.
+      PDP_FAIL_UNKNOWN = 0;
+
+      // No error, connection ok
+      PDP_FAIL_NONE = 1;
+
+      PDP_FAIL_OPERATOR_BARRED = 8;
+
+      PDP_FAIL_NAS_SIGNALLING = 14;
+
+      PDP_FAIL_LLC_SNDCP = 25;
+
+      PDP_FAIL_INSUFFICIENT_RESOURCES = 26;
+
+      PDP_FAIL_MISSING_UKNOWN_APN = 27;
+
+      PDP_FAIL_UNKNOWN_PDP_ADDRESS_TYPE = 28;
+
+      PDP_FAIL_USER_AUTHENTICATION = 29;
+
+      PDP_FAIL_ACTIVATION_REJECT_GGSN = 30;
+
+      PDP_FAIL_ACTIVATION_REJECT_UNSPECIFIED = 31;
+
+      PDP_FAIL_SERVICE_OPTION_NOT_SUPPORTED = 32;
+
+      PDP_FAIL_SERVICE_OPTION_NOT_SUBSCRIBED = 33;
+
+      PDP_FAIL_SERVICE_OPTION_OUT_OF_ORDER = 34;
+
+      PDP_FAIL_NSAPI_IN_USE = 35;
+
+      // Possibly restart radio, based on framework config
+      PDP_FAIL_REGULAR_DEACTIVATION = 36;
+
+      PDP_FAIL_QOS_NOT_ACCEPTED = 37;
+
+      PDP_FAIL_NETWORK_FAILURE = 38;
+
+      PDP_FAIL_UMTS_REACTIVATION_REQ = 39;
+
+      PDP_FAIL_FEATURE_NOT_SUPP = 40;
+
+      PDP_FAIL_TFT_SEMANTIC_ERROR = 41;
+
+      PDP_FAIL_TFT_SYTAX_ERROR = 42;
+
+      PDP_FAIL_UNKNOWN_PDP_CONTEXT = 43;
+
+      PDP_FAIL_FILTER_SEMANTIC_ERROR = 44;
+
+      PDP_FAIL_FILTER_SYTAX_ERROR = 45;
+
+      PDP_FAIL_PDP_WITHOUT_ACTIVE_TFT = 46;
+
+      PDP_FAIL_ACTIVATION_REJECTED_BCM_VIOLATION = 48;
+
+      PDP_FAIL_ONLY_IPV4_ALLOWED = 50;
+
+      PDP_FAIL_ONLY_IPV6_ALLOWED = 51;
+
+      PDP_FAIL_ONLY_SINGLE_BEARER_ALLOWED = 52;
+
+      PDP_FAIL_ESM_INFO_NOT_RECEIVED = 53;
+
+      PDP_FAIL_PDN_CONN_DOES_NOT_EXIST = 54;
+
+      PDP_FAIL_MULTI_CONN_TO_SAME_PDN_NOT_ALLOWED = 55;
+
+      PDP_FAIL_COLLISION_WITH_NETWORK_INITIATED_REQUEST = 56;
+
+      PDP_FAIL_ONLY_IPV4V6_ALLOWED = 57;
+
+      PDP_FAIL_ONLY_NON_IP_ALLOWED = 58;
+
+      PDP_FAIL_UNSUPPORTED_QCI_VALUE = 59;
+
+      PDP_FAIL_BEARER_HANDLING_NOT_SUPPORTED = 60;
+
+      PDP_FAIL_MAX_ACTIVE_PDP_CONTEXT_REACHED = 65;
+
+      PDP_FAIL_UNSUPPORTED_APN_IN_CURRENT_PLMN = 66;
+
+      PDP_FAIL_INVALID_TRANSACTION_ID = 81;
+
+      PDP_FAIL_MESSAGE_INCORRECT_SEMANTIC = 95;
+
+      PDP_FAIL_INVALID_MANDATORY_INFO = 96;
+
+      PDP_FAIL_MESSAGE_TYPE_UNSUPPORTED = 97;
+
+      PDP_FAIL_MSG_TYPE_NONCOMPATIBLE_STATE = 98;
+
+      PDP_FAIL_UNKNOWN_INFO_ELEMENT = 99;
+
+      PDP_FAIL_CONDITIONAL_IE_ERROR = 100;
+
+      PDP_FAIL_MSG_AND_PROTOCOL_STATE_UNCOMPATIBLE = 101;
+
+      PDP_FAIL_PROTOCOL_ERRORS   = 111;
+
+      PDP_FAIL_APN_TYPE_CONFLICT = 112;
+
+      PDP_FAIL_INVALID_PCSCF_ADDR = 113;
+
+      PDP_FAIL_INTERNAL_CALL_PREEMPT_BY_HIGH_PRIO_APN = 114;
+
+      PDP_FAIL_EMM_ACCESS_BARRED = 115;
+
+      PDP_FAIL_EMERGENCY_IFACE_ONLY = 116;
+
+      PDP_FAIL_IFACE_MISMATCH = 117;
+
+      PDP_FAIL_COMPANION_IFACE_IN_USE = 118;
+
+      PDP_FAIL_IP_ADDRESS_MISMATCH = 119;
+
+      PDP_FAIL_IFACE_AND_POL_FAMILY_MISMATCH = 120;
+
+      PDP_FAIL_EMM_ACCESS_BARRED_INFINITE_RETRY = 121;
+
+      PDP_FAIL_AUTH_FAILURE_ON_EMERGENCY_CALL = 122;
+
+      PDP_FAIL_INVALID_DNS_ADDR = 123;
+
+      PDP_FAIL_INVALID_PCSCF_OR_DNS_ADDRESS = 124;
+
+      PDP_FAIL_CALL_PREEMPT_BY_EMERGENCY_APN = 127;
+
+      PDP_FAIL_UE_INITIATED_DETACH_OR_DISCONNECT = 128;
+
+      PDP_FAIL_MIP_FA_REASON_UNSPECIFIED = 2000;
+
+      PDP_FAIL_MIP_FA_ADMIN_PROHIBITED = 2001;
+
+      PDP_FAIL_MIP_FA_INSUFFICIENT_RESOURCES = 2002;
+
+      PDP_FAIL_MIP_FA_MOBILE_NODE_AUTHENTICATION_FAILURE = 2003;
+
+      PDP_FAIL_MIP_FA_HOME_AGENT_AUTHENTICATION_FAILURE = 2004;
+
+      PDP_FAIL_MIP_FA_REQUESTED_LIFETIME_TOO_LONG = 2005;
+
+      PDP_FAIL_MIP_FA_MALFORMED_REQUEST = 2006;
+
+      PDP_FAIL_MIP_FA_MALFORMED_REPLY = 2007;
+
+      PDP_FAIL_MIP_FA_ENCAPSULATION_UNAVAILABLE = 2008;
+
+      PDP_FAIL_MIP_FA_VJ_HEADER_COMPRESSION_UNAVAILABLE = 2009;
+
+      PDP_FAIL_MIP_FA_REVERSE_TUNNEL_UNAVAILABLE = 2010;
+
+      PDP_FAIL_MIP_FA_REVERSE_TUNNEL_IS_MANDATORY = 2011;
+
+      PDP_FAIL_MIP_FA_DELIVERY_STYLE_NOT_SUPPORTED = 2012;
+
+      PDP_FAIL_MIP_FA_MISSING_NAI = 2013;
+
+      PDP_FAIL_MIP_FA_MISSING_HOME_AGENT = 2014;
+
+      PDP_FAIL_MIP_FA_MISSING_HOME_ADDRESS = 2015;
+
+      PDP_FAIL_MIP_FA_UNKNOWN_CHALLENGE = 2016;
+
+      PDP_FAIL_MIP_FA_MISSING_CHALLENGE = 2017;
+
+      PDP_FAIL_MIP_FA_STALE_CHALLENGE = 2018;
+
+      PDP_FAIL_MIP_HA_REASON_UNSPECIFIED = 2019;
+
+      PDP_FAIL_MIP_HA_ADMIN_PROHIBITED = 2020;
+
+      PDP_FAIL_MIP_HA_INSUFFICIENT_RESOURCES = 2021;
+
+      PDP_FAIL_MIP_HA_MOBILE_NODE_AUTHENTICATION_FAILURE = 2022;
+
+      PDP_FAIL_MIP_HA_FOREIGN_AGENT_AUTHENTICATION_FAILURE = 2023;
+
+      PDP_FAIL_MIP_HA_REGISTRATION_ID_MISMATCH = 2024;
+
+      PDP_FAIL_MIP_HA_MALFORMED_REQUEST = 2025;
+
+      PDP_FAIL_MIP_HA_UNKNOWN_HOME_AGENT_ADDRESS = 2026;
+
+      PDP_FAIL_MIP_HA_REVERSE_TUNNEL_UNAVAILABLE = 2027;
+
+      PDP_FAIL_MIP_HA_REVERSE_TUNNEL_IS_MANDATORY = 2028;
+
+      PDP_FAIL_MIP_HA_ENCAPSULATION_UNAVAILABLE = 2029;
+
+      PDP_FAIL_CLOSE_IN_PROGRESS = 2030;
+
+      PDP_FAIL_NETWORK_INITIATED_TERMINATION = 2031;
+
+      PDP_FAIL_MODEM_APP_PREEMPTED = 2032;
+
+      PDP_FAIL_PDN_IPV4_CALL_DISALLOWED = 2033;
+
+      PDP_FAIL_PDN_IPV4_CALL_THROTTLED = 2034;
+
+      PDP_FAIL_PDN_IPV6_CALL_DISALLOWED = 2035;
+
+      PDP_FAIL_PDN_IPV6_CALL_THROTTLED = 2036;
+
+      PDP_FAIL_MODEM_RESTART = 2037;
+
+      PDP_FAIL_PDP_PPP_NOT_SUPPORTED = 2038;
+
+      PDP_FAIL_UNPREFERRED_RAT = 2039;
+
+      PDP_FAIL_PHYSICAL_LINK_CLOSE_IN_PROGRESS = 2040;
+
+      PDP_FAIL_APN_PENDING_HANDOVER = 2041;
+
+      PDP_FAIL_PROFILE_BEARER_INCOMPATIBLE = 2042;
+
+      PDP_FAIL_SIM_CARD_CHANGED = 2043;
+
+      PDP_FAIL_LOW_POWER_MODE_OR_POWERING_DOWN = 2044;
+
+      PDP_FAIL_APN_DISABLED = 2045;
+
+      PDP_FAIL_MAX_PPP_INACTIVITY_TIMER_EXPIRED = 2046;
+
+      PDP_FAIL_IPV6_ADDRESS_TRANSFER_FAILED = 2047;
+
+      PDP_FAIL_TRAT_SWAP_FAILED = 2048;
+
+      PDP_FAIL_EHRPD_TO_HRPD_FALLBACK = 2049;
+
+      PDP_FAIL_MIP_CONFIG_FAILURE = 2050;
+
+      PDP_FAIL_PDN_INACTIVITY_TIMER_EXPIRED = 2051;
+
+      PDP_FAIL_MAX_IPV4_CONNECTIONS = 2052;
+
+      PDP_FAIL_MAX_IPV6_CONNECTIONS = 2053;
+
+      PDP_FAIL_APN_MISMATCH = 2054;
+
+      PDP_FAIL_IP_VERSION_MISMATCH = 2055;
+
+      PDP_FAIL_DUN_CALL_DISALLOWED = 2056;
+
+      PDP_FAIL_INTERNAL_EPC_NONEPC_TRANSITION = 2057;
+
+      PDP_FAIL_INTERFACE_IN_USE = 2058;
+
+      PDP_FAIL_APN_DISALLOWED_ON_ROAMING = 2059;
+
+      PDP_FAIL_APN_PARAMETERS_CHANGED = 2060;
+
+      PDP_FAIL_NULL_APN_DISALLOWED = 2061;
+
+      PDP_FAIL_THERMAL_MITIGATION = 2062;
+
+      PDP_FAIL_DATA_SETTINGS_DISABLED = 2063;
+
+      PDP_FAIL_DATA_ROAMING_SETTINGS_DISABLED = 2064;
+
+      PDP_FAIL_DDS_SWITCHED = 2065;
+
+      PDP_FAIL_FORBIDDEN_APN_NAME = 2066;
+
+      PDP_FAIL_DDS_SWITCH_IN_PROGRESS = 2067;
+
+      PDP_FAIL_CALL_DISALLOWED_IN_ROAMING = 2068;
+
+      PDP_FAIL_NON_IP_NOT_SUPPORTED = 2069;
+
+      PDP_FAIL_PDN_NON_IP_CALL_THROTTLED = 2070;
+
+      PDP_FAIL_PDN_NON_IP_CALL_DISALLOWED = 2071;
+
+      PDP_FAIL_CDMA_LOCK = 2072;
+
+      PDP_FAIL_CDMA_INTERCEPT = 2073;
+
+      PDP_FAIL_CDMA_REORDER = 2074;
+
+      PDP_FAIL_CDMA_RELEASE_DUE_TO_SO_REJECTION = 2075;
+
+      PDP_FAIL_CDMA_INCOMING_CALL = 2076;
+
+      PDP_FAIL_CDMA_ALERT_STOP = 2077;
+
+      PDP_FAIL_CHANNEL_ACQUISITION_FAILURE = 2078;
+
+      PDP_FAIL_MAX_ACCESS_PROBE = 2079;
+
+      PDP_FAIL_CONCURRENT_SERVICE_NOT_SUPPORTED_BY_BASE_STATION = 2080;
+
+      PDP_FAIL_NO_RESPONSE_FROM_BASE_STATION = 2081;
+
+      PDP_FAIL_REJECTED_BY_BASE_STATION = 2082;
+
+      PDP_FAIL_CONCURRENT_SERVICES_INCOMPATIBLE = 2083;
+
+      PDP_FAIL_NO_CDMA_SERVICE = 2084;
+
+      PDP_FAIL_RUIM_NOT_PRESENT = 2085;
+
+      PDP_FAIL_CDMA_RETRY_ORDER = 2086;
+
+      PDP_FAIL_ACCESS_BLOCK = 2087;
+
+      PDP_FAIL_ACCESS_BLOCK_ALL = 2088;
+
+      PDP_FAIL_IS707B_MAX_ACCESS_PROBES = 2089;
+
+      PDP_FAIL_THERMAL_EMERGENCY = 2090;
+
+      PDP_FAIL_CONCURRENT_SERVICES_NOT_ALLOWED = 2091;
+
+      PDP_FAIL_INCOMING_CALL_REJECTED = 2092;
+
+      PDP_FAIL_NO_SERVICE_ON_GATEWAY = 2093;
+
+      PDP_FAIL_NO_GPRS_CONTEXT = 2094;
+
+      PDP_FAIL_ILLEGAL_MS = 2095;
+
+      PDP_FAIL_ILLEGAL_ME = 2096;
+
+      PDP_FAIL_GPRS_SERVICES_AND_NON_GPRS_SERVICES_NOT_ALLOWED = 2097;
+
+      PDP_FAIL_GPRS_SERVICES_NOT_ALLOWED = 2098;
+
+      PDP_FAIL_MS_IDENTITY_CANNOT_BE_DERIVED_BY_THE_NETWORK = 2099;
+
+      PDP_FAIL_IMPLICITLY_DETACHED = 2100;
+
+      PDP_FAIL_PLMN_NOT_ALLOWED = 2101;
+
+      PDP_FAIL_LOCATION_AREA_NOT_ALLOWED = 2102;
+
+      PDP_FAIL_GPRS_SERVICES_NOT_ALLOWED_IN_THIS_PLMN = 2103;
+
+      PDP_FAIL_PDP_DUPLICATE = 2104;
+
+      PDP_FAIL_UE_RAT_CHANGE = 2105;
+
+      PDP_FAIL_CONGESTION = 2106;
+
+      PDP_FAIL_NO_PDP_CONTEXT_ACTIVATED = 2107;
+
+      PDP_FAIL_ACCESS_CLASS_DSAC_REJECTION = 2108;
+
+      PDP_FAIL_PDP_ACTIVATE_MAX_RETRY_FAILED = 2109;
+
+      PDP_FAIL_RADIO_ACCESS_BEARER_FAILURE = 2110;
+
+      PDP_FAIL_ESM_UNKNOWN_EPS_BEARER_CONTEXT = 2111;
+
+      PDP_FAIL_DRB_RELEASED_BY_RRC = 2112;
+
+      PDP_FAIL_CONNECTION_RELEASED = 2113;
+
+      PDP_FAIL_EMM_DETACHED = 2114;
+
+      PDP_FAIL_EMM_ATTACH_FAILED = 2115;
+
+      PDP_FAIL_EMM_ATTACH_STARTED = 2116;
+
+      PDP_FAIL_LTE_NAS_SERVICE_REQUEST_FAILED = 2117;
+
+      PDP_FAIL_DUPLICATE_BEARER_ID = 2118;
+
+      PDP_FAIL_ESM_COLLISION_SCENARIOS = 2119;
+
+      PDP_FAIL_ESM_BEARER_DEACTIVATED_TO_SYNC_WITH_NETWORK = 2120;
+
+      PDP_FAIL_ESM_NW_ACTIVATED_DED_BEARER_WITH_ID_OF_DEF_BEARER = 2121;
+
+      PDP_FAIL_ESM_BAD_OTA_MESSAGE = 2122;
+
+      PDP_FAIL_ESM_DOWNLOAD_SERVER_REJECTED_THE_CALL = 2123;
+
+      PDP_FAIL_ESM_CONTEXT_TRANSFERRED_DUE_TO_IRAT = 2124;
+
+      PDP_FAIL_DS_EXPLICIT_DEACTIVATION = 2125;
+
+      PDP_FAIL_ESM_LOCAL_CAUSE_NONE = 2126;
+
+      PDP_FAIL_LTE_THROTTLING_NOT_REQUIRED = 2127;
+
+      PDP_FAIL_ACCESS_CONTROL_LIST_CHECK_FAILURE = 2128;
+
+      PDP_FAIL_SERVICE_NOT_ALLOWED_ON_PLMN = 2129;
+
+      PDP_FAIL_EMM_T3417_EXPIRED = 2130;
+
+      PDP_FAIL_EMM_T3417_EXT_EXPIRED = 2131;
+
+      PDP_FAIL_RRC_UPLINK_DATA_TRANSMISSION_FAILURE = 2132;
+
+      PDP_FAIL_RRC_UPLINK_DELIVERY_FAILED_DUE_TO_HANDOVER = 2133;
+
+      PDP_FAIL_RRC_UPLINK_CONNECTION_RELEASE = 2134;
+
+      PDP_FAIL_RRC_UPLINK_RADIO_LINK_FAILURE = 2135;
+
+      PDP_FAIL_RRC_UPLINK_ERROR_REQUEST_FROM_NAS = 2136;
+
+      PDP_FAIL_RRC_CONNECTION_ACCESS_STRATUM_FAILURE = 2137;
+
+      PDP_FAIL_RRC_CONNECTION_ANOTHER_PROCEDURE_IN_PROGRESS = 2138;
+
+      PDP_FAIL_RRC_CONNECTION_ACCESS_BARRED = 2139;
+
+      PDP_FAIL_RRC_CONNECTION_CELL_RESELECTION = 2140;
+
+      PDP_FAIL_RRC_CONNECTION_CONFIG_FAILURE = 2141;
+
+      PDP_FAIL_RRC_CONNECTION_TIMER_EXPIRED = 2142;
+
+      PDP_FAIL_RRC_CONNECTION_LINK_FAILURE = 2143;
+
+      PDP_FAIL_RRC_CONNECTION_CELL_NOT_CAMPED = 2144;
+
+      PDP_FAIL_RRC_CONNECTION_SYSTEM_INTERVAL_FAILURE = 2145;
+
+      PDP_FAIL_RRC_CONNECTION_REJECT_BY_NETWORK = 2146;
+
+      PDP_FAIL_RRC_CONNECTION_NORMAL_RELEASE = 2147;
+
+      PDP_FAIL_RRC_CONNECTION_RADIO_LINK_FAILURE = 2148;
+
+      PDP_FAIL_RRC_CONNECTION_REESTABLISHMENT_FAILURE = 2149;
+
+      PDP_FAIL_RRC_CONNECTION_OUT_OF_SERVICE_DURING_CELL_REGISTER = 2150;
+
+      PDP_FAIL_RRC_CONNECTION_ABORT_REQUEST = 2151;
+
+      PDP_FAIL_RRC_CONNECTION_SYSTEM_INFORMATION_BLOCK_READ_ERROR = 2152;
+
+      PDP_FAIL_NETWORK_INITIATED_DETACH_WITH_AUTO_REATTACH = 2153;
+
+      PDP_FAIL_NETWORK_INITIATED_DETACH_NO_AUTO_REATTACH = 2154;
+
+      PDP_FAIL_ESM_PROCEDURE_TIME_OUT = 2155;
+
+      PDP_FAIL_INVALID_CONNECTION_ID = 2156;
+
+      PDP_FAIL_MAXIMIUM_NSAPIS_EXCEEDED = 2157;
+
+      PDP_FAIL_INVALID_PRIMARY_NSAPI = 2158;
+
+      PDP_FAIL_CANNOT_ENCODE_OTA_MESSAGE = 2159;
+
+      PDP_FAIL_RADIO_ACCESS_BEARER_SETUP_FAILURE = 2160;
+
+      PDP_FAIL_PDP_ESTABLISH_TIMEOUT_EXPIRED = 2161;
+
+      PDP_FAIL_PDP_MODIFY_TIMEOUT_EXPIRED = 2162;
+
+      PDP_FAIL_PDP_INACTIVE_TIMEOUT_EXPIRED = 2163;
+
+      PDP_FAIL_PDP_LOWERLAYER_ERROR = 2164;
+
+      PDP_FAIL_PDP_MODIFY_COLLISION = 2165;
+
+      PDP_FAIL_MAXINUM_SIZE_OF_L2_MESSAGE_EXCEEDED = 2166;
+
+      PDP_FAIL_NAS_REQUEST_REJECTED_BY_NETWORK = 2167;
+
+      PDP_FAIL_RRC_CONNECTION_INVALID_REQUEST = 2168;
+
+      PDP_FAIL_RRC_CONNECTION_TRACKING_AREA_ID_CHANGED = 2169;
+
+      PDP_FAIL_RRC_CONNECTION_RF_UNAVAILABLE = 2170;
+
+      PDP_FAIL_RRC_CONNECTION_ABORTED_DUE_TO_IRAT_CHANGE = 2171;
+
+      PDP_FAIL_RRC_CONNECTION_RELEASED_SECURITY_NOT_ACTIVE = 2172;
+
+      PDP_FAIL_RRC_CONNECTION_ABORTED_AFTER_HANDOVER = 2173;
+
+      PDP_FAIL_RRC_CONNECTION_ABORTED_AFTER_IRAT_CELL_CHANGE = 2174;
+
+      PDP_FAIL_RRC_CONNECTION_ABORTED_DURING_IRAT_CELL_CHANGE = 2175;
+
+      PDP_FAIL_IMSI_UNKNOWN_IN_HOME_SUBSCRIBER_SERVER = 2176;
+
+      PDP_FAIL_IMEI_NOT_ACCEPTED = 2177;
+
+      PDP_FAIL_EPS_SERVICES_AND_NON_EPS_SERVICES_NOT_ALLOWED = 2178;
+
+      PDP_FAIL_EPS_SERVICES_NOT_ALLOWED_IN_PLMN = 2179;
+
+      PDP_FAIL_MSC_TEMPORARILY_NOT_REACHABLE = 2180;
+
+      PDP_FAIL_CS_DOMAIN_NOT_AVAILABLE = 2181;
+
+      PDP_FAIL_ESM_FAILURE = 2182;
+
+      PDP_FAIL_MAC_FAILURE = 2183;
+
+      PDP_FAIL_SYNCHRONIZATION_FAILURE = 2184;
+
+      PDP_FAIL_UE_SECURITY_CAPABILITIES_MISMATCH = 2185;
+
+      PDP_FAIL_SECURITY_MODE_REJECTED = 2186;
+
+      PDP_FAIL_UNACCEPTABLE_NON_EPS_AUTHENTICATION = 2187;
+
+      PDP_FAIL_CS_FALLBACK_CALL_ESTABLISHMENT_NOT_ALLOWED = 2188;
+
+      PDP_FAIL_NO_EPS_BEARER_CONTEXT_ACTIVATED = 2189;
+
+      PDP_FAIL_INVALID_EMM_STATE = 2190;
+
+      PDP_FAIL_NAS_LAYER_FAILURE = 2191;
+
+      PDP_FAIL_MULTIPLE_PDP_CALL_NOT_ALLOWED = 2192;
+
+      PDP_FAIL_EMBMS_NOT_ENABLED = 2193;
+
+      PDP_FAIL_IRAT_HANDOVER_FAILED = 2194;
+
+      PDP_FAIL_EMBMS_REGULAR_DEACTIVATION = 2195;
+
+      PDP_FAIL_TEST_LOOPBACK_REGULAR_DEACTIVATION = 2196;
+
+      PDP_FAIL_LOWER_LAYER_REGISTRATION_FAILURE = 2197;
+
+      PDP_FAIL_DATA_PLAN_EXPIRED = 2198;
+
+      PDP_FAIL_UMTS_HANDOVER_TO_IWLAN = 2199;
+
+      PDP_FAIL_EVDO_CONNECTION_DENY_BY_GENERAL_OR_NETWORK_BUSY = 2200;
+
+      PDP_FAIL_EVDO_CONNECTION_DENY_BY_BILLING_OR_AUTHENTICATION_FAILURE = 2201;
+
+      PDP_FAIL_EVDO_HDR_CHANGED = 2202;
+
+      PDP_FAIL_EVDO_HDR_EXITED = 2203;
+
+      PDP_FAIL_EVDO_HDR_NO_SESSION = 2204;
+
+      PDP_FAIL_EVDO_USING_GPS_FIX_INSTEAD_OF_HDR_CALL = 2205;
+
+      PDP_FAIL_EVDO_HDR_CONNECTION_SETUP_TIMEOUT = 2206;
+
+      PDP_FAIL_FAILED_TO_ACQUIRE_COLOCATED_HDR = 2207;
+
+      PDP_FAIL_OTASP_COMMIT_IN_PROGRESS = 2208;
+
+      PDP_FAIL_NO_HYBRID_HDR_SERVICE = 2209;
+
+      PDP_FAIL_HDR_NO_LOCK_GRANTED = 2210;
+
+      PDP_FAIL_DBM_OR_SMS_IN_PROGRESS = 2211;
+
+      PDP_FAIL_HDR_FADE = 2212;
+
+      PDP_FAIL_HDR_ACCESS_FAILURE = 2213;
+
+      PDP_FAIL_UNSUPPORTED_1X_PREV = 2214;
+
+      PDP_FAIL_LOCAL_END = 2215;
+
+      PDP_FAIL_NO_SERVICE = 2216;
+
+      PDP_FAIL_FADE = 2217;
+
+      PDP_FAIL_NORMAL_RELEASE = 2218;
+
+      PDP_FAIL_ACCESS_ATTEMPT_ALREADY_IN_PROGRESS = 2219;
+
+      PDP_FAIL_REDIRECTION_OR_HANDOFF_IN_PROGRESS = 2220;
+
+      PDP_FAIL_EMERGENCY_MODE = 2221;
+
+      PDP_FAIL_PHONE_IN_USE = 2222;
+
+      PDP_FAIL_INVALID_MODE = 2223;
+
+      PDP_FAIL_INVALID_SIM_STATE = 2224;
+
+      PDP_FAIL_NO_COLLOCATED_HDR = 2225;
+
+      PDP_FAIL_UE_IS_ENTERING_POWERSAVE_MODE = 2226;
+
+      PDP_FAIL_DUAL_SWITCH = 2227;
+
+      PDP_FAIL_PPP_TIMEOUT = 2228;
+
+      PDP_FAIL_PPP_AUTH_FAILURE = 2229;
+
+      PDP_FAIL_PPP_OPTION_MISMATCH = 2230;
+
+      PDP_FAIL_PPP_PAP_FAILURE = 2231;
+
+      PDP_FAIL_PPP_CHAP_FAILURE = 2232;
+
+      PDP_FAIL_PPP_CLOSE_IN_PROGRESS = 2233;
+
+      PDP_FAIL_LIMITED_TO_IPV4 = 2234;
+
+      PDP_FAIL_LIMITED_TO_IPV6 = 2235;
+
+      PDP_FAIL_VSNCP_TIMEOUT = 2236;
+
+      PDP_FAIL_VSNCP_GEN_ERROR = 2237;
+
+      PDP_FAIL_VSNCP_APN_UNATHORIZED = 2238;
+
+      PDP_FAIL_VSNCP_PDN_LIMIT_EXCEEDED = 2239;
+
+      PDP_FAIL_VSNCP_NO_PDN_GATEWAY_ADDRESS = 2240;
+
+      PDP_FAIL_VSNCP_PDN_GATEWAY_UNREACHABLE = 2241;
+
+      PDP_FAIL_VSNCP_PDN_GATEWAY_REJECT = 2242;
+
+      PDP_FAIL_VSNCP_INSUFFICIENT_PARAMETERS = 2243;
+
+      PDP_FAIL_VSNCP_RESOURCE_UNAVAILABLE = 2244;
+
+      PDP_FAIL_VSNCP_ADMINISTRATIVELY_PROHIBITED = 2245;
+
+      PDP_FAIL_VSNCP_PDN_ID_IN_USE = 2246;
+
+      PDP_FAIL_VSNCP_SUBSCRIBER_LIMITATION = 2247;
+
+      PDP_FAIL_VSNCP_PDN_EXISTS_FOR_THIS_APN = 2248;
+
+      PDP_FAIL_VSNCP_RECONNECT_NOT_ALLOWED = 2249;
+
+      PDP_FAIL_IPV6_PREFIX_UNAVAILABLE = 2250;
+
+      PDP_FAIL_HANDOFF_PREFERENCE_CHANGED = 2251;
+
+      // Not mentioned in the specification
+      PDP_FAIL_VOICE_REGISTRATION_FAIL = -1;
+
+      PDP_FAIL_DATA_REGISTRATION_FAIL = -2;
+
+      // Reasons for data call drop - network/modem disconnect
+      PDP_FAIL_SIGNAL_LOST = -3;
+
+      // Preferred technology has changed, should retry with parameters
+      // appropriate for new technology
+      PDP_FAIL_PREF_RADIO_TECH_CHANGED = -4;
+
+      // Data call was disconnected because radio was resetting,
+      // powered off - no retry
+      PDP_FAIL_RADIO_POWER_OFF = -5;
+
+      // Data call was disconnected by modem because tethered mode was up
+      // on same APN/data profile - no retry until tethered call is off
+      PDP_FAIL_TETHERED_CALL_ACTIVE = -6;
+
+      // retry silently
+      PDP_FAIL_ERROR_UNSPECIFIED = 65535;
+    }
+
+    // A RIL_DataCallFailCause, 0 which is PDP_FAIL_NONE if no error
+    optional RilDataCallFailCause status = 1;
+
+    // If status != 0, this fields indicates the suggested retry back-off timer
+    // value RIL wants to override the one pre-configured in FW
+    optional int32 suggested_retry_time_millis = 2;
+
+    optional RilDataCall call = 3;
+  }
+
+  // Carrier Key Change Event.
+  message CarrierKeyChange {
+
+    enum KeyType {
+
+      // Key Type Unknown.
+      UNKNOWN = 0;
+      // Key Type for WLAN.
+      WLAN = 1;
+      // Key Type for EPDG.
+      EPDG = 2;
+    }
+
+    // Key type of the Encryption key.
+    optional KeyType key_type = 1;
+
+    // Whether the download was successful or not.
+    optional bool isDownloadSuccessful = 2;
+  }
+
+  // Deactivate packet data connection
+  message RilDeactivateDataCall {
+
+    // Context ID
+    optional int32 cid = 1;
+
+    // Reason for deactivating data call
+    optional DeactivateReason reason = 2;
+
+    // Deactivate data call reasons
+    enum DeactivateReason {
+
+      // Reason is unknown.
+      DEACTIVATE_REASON_UNKNOWN = 0;
+
+      DEACTIVATE_REASON_NONE = 1;
+
+      DEACTIVATE_REASON_RADIO_OFF = 2;
+
+      DEACTIVATE_REASON_PDP_RESET = 3;
+
+      DEACTIVATE_REASON_HANDOVER = 4;
+    }
+  }
+
+  message ModemRestart {
+     // The baseband_version is used to identify the particular software version
+     // where the modem restarts happened
+     optional string baseband_version = 1;
+
+     // Indicates the modem restart reason. The restart reason can be used to
+     // categorize any modem crashes and group similar crashes together. This
+     // information will be useful to identify the cause of modem crashes,
+     // reproduce the issue and confirm that the fix works.
+     optional string reason = 2;
+  }
+
+  message CarrierIdMatching {
+
+    // Carrier id table version number
+    optional int32 cid_table_version = 1;
+
+    // Carrier id matching result object
+    optional CarrierIdMatchingResult result = 2;
+  }
+
+  message CarrierIdMatchingResult {
+
+    // A unique carrier id
+    optional int32 carrier_id = 1;
+
+    // Group id level 1. Logged only if gid1 is configured from subscription
+    // but its matching rule is unknown
+    optional string unknown_gid1 = 2;
+
+    // MCC and MNC that map to this carrier. Logged only if mccmnc is configured
+    // from subscription but its matching rule is unknown
+    optional string unknown_mccmnc = 3;
+
+    // MCC and MNC from the subscription that map to this carrier.
+    optional string mccmnc = 4;
+
+    // Group id level 1 from the subscription that map to this carrier.
+    optional string gid1 = 5;
+
+    // Group id level 2 from the subscription that map to this carrier.
+    optional string gid2 = 6;
+
+    // spn from the subscription that map to this carrier.
+    optional string spn = 7;
+
+    // pnn from the subscription that map to this carrier.
+    optional string pnn = 8;
+
+    // iccid prefix from the subscription that map to this carrier.
+    // only log first 7 outof 20 bit of full iccid
+    optional string iccid_prefix = 9;
+
+    // imsi prefix from the subscription that map to this carrier.
+    // only log additional 2 bits other than MCC MNC.
+    optional string imsi_prefix = 10;
+
+    // Carrier Privilege Access Rule in hex string from the subscription.
+    // Sample values: 61ed377e85d386a8dfee6b864bd85b0bfaa5af88
+    repeated string privilege_access_rule = 11;
+
+    // The Access Point Name, corresponding to "apn" field returned by
+    // "content://telephony/carriers/preferapn" on device.
+    // Sample values: fast.t-mobile.com, internet. Note only log if this apn is not user edited.
+    optional string preferApn = 12;
+  }
+
+  // Time when event happened on device, in milliseconds since epoch
+  optional int64 timestamp_millis = 1;
+
+  // In Multi-SIM devices this indicates SIM slot
+  optional int32 phone_id = 2;
+
+  // Event type
+  optional Type type = 3;
+
+  // User settings
+  optional TelephonySettings settings = 4;
+
+  // RIL Service State
+  optional TelephonyServiceState service_state = 5;
+
+  // IMS state
+  optional ImsConnectionState ims_connection_state = 6;
+
+  // IMS capabilities
+  optional ImsCapabilities ims_capabilities = 7;
+
+  // List of data calls when changed
+  repeated RilDataCall data_calls = 8;
+
+  // RIL error code
+  optional RilErrno error = 9;
+
+  // Setup data call request
+  optional RilSetupDataCall setup_data_call = 10;
+
+  // Setup data call response
+  optional RilSetupDataCallResponse setup_data_call_response = 11;
+
+  // Deactivate data call request
+  optional RilDeactivateDataCall deactivate_data_call = 12;
+
+  // Data call stall recovery action
+  optional int32 data_stall_action = 13;
+
+  // Modem restart event
+  optional ModemRestart modem_restart = 14;
+
+  // NITZ time in milliseconds
+  optional int64 nitz_timestamp_millis = 15;
+
+  // Carrier id matching event
+  optional CarrierIdMatching carrier_id_matching = 16;
+
+  // Carrier key change
+  optional CarrierKeyChange carrier_key_change = 17;
+
+  // Data switch event
+  optional DataSwitch data_switch = 19;
+
+  // For network validate event
+  optional NetworkValidationState network_validation_state = 20;
+
+  // On demand data switch event
+  optional OnDemandDataSwitch on_demand_data_switch = 21;
+
+  // Sim state for each slot.
+  repeated SimState sim_state = 22;
+
+  // The active subscription info for a specific slot.
+  optional ActiveSubscriptionInfo active_subscription_info = 23;
+
+  // The modem state represent by a bitmap, the i-th bit(LSB) indicates the i-th modem
+  // state (0 - disabled, 1 - enabled).
+  optional int32 enabled_modem_bitmap = 24;
+
+  // Updated Emergency Call info.
+  optional EmergencyNumberInfo updated_emergency_number = 25;
+
+  // Signal strength
+  optional int32 signal_strength = 27;
+}
+
+message ActiveSubscriptionInfo {
+  /** The slot index which this subscription is associated with. */
+  optional int32 slot_index = 1;
+
+  /** The Carrier id of this subscription. -1 indicates unknown value. */
+  optional int32 carrier_id = 2;
+
+  /** whether subscription is opportunistic (0 - false, 1 - true, -1 - unknown). */
+  optional int32 is_opportunistic = 3;
+};
+
+enum SimState {
+  /**
+   * SIM card is inserted, but the state is unknown. Typically happened when the SIM is inserted
+   * but not loaded.
+   */
+  SIM_STATE_UNKNOWN = 0;
+
+  /** No SIM card is inserted in the slot. */
+  SIM_STATE_ABSENT = 1;
+
+  /** SIM card applications have been loaded. */
+  SIM_STATE_LOADED = 2;
+};
+
+enum TimeInterval {
+  TI_UNKNOWN = 0;
+  TI_10_MILLIS = 1;
+  TI_20_MILLIS = 2;
+  TI_50_MILLIS = 3;
+  TI_100_MILLIS = 4;
+  TI_200_MILLIS = 5;
+  TI_500_MILLIS = 6;
+  TI_1_SEC = 7;
+  TI_2_SEC = 8;
+  TI_5_SEC = 9;
+  TI_10_SEC = 10;
+  TI_30_SEC = 11;
+  TI_1_MINUTE = 12;
+  TI_3_MINUTES = 13;
+  TI_10_MINUTES = 14;
+  TI_30_MINUTES = 15;
+  TI_1_HOUR = 16;
+  TI_2_HOURS = 17;
+  TI_4_HOURS = 18;
+  TI_MANY_HOURS = 19;
+}
+
+// Information about CS and/or PS call session.
+// Session starts when call is placed or accepted and
+// ends when there are no more active calls.
+message TelephonyCallSession {
+
+  message Event {
+
+    enum Type {
+
+      // Unknown event
+      EVENT_UNKNOWN = 0;
+
+      // Telephony related user settings changed
+      SETTINGS_CHANGED = 1;
+
+      // Phone state changed
+      RIL_SERVICE_STATE_CHANGED = 2;
+
+      // IMS connected/disconnected
+      IMS_CONNECTION_STATE_CHANGED = 3;
+
+      // IMS Voice, Video and Ut capabilities changed
+      IMS_CAPABILITIES_CHANGED = 4;
+
+      // Notification that new data call has appeared in the list
+      // or old data call has removed.
+      DATA_CALL_LIST_CHANGED = 5;
+
+      // Send request to RIL
+      RIL_REQUEST = 6;
+
+      // Result of the RIL request
+      RIL_RESPONSE = 7;
+
+      // Ring indication for an incoming call
+      RIL_CALL_RING = 8;
+
+      // Notification that Single Radio Voice Call Continuity(SRVCC)
+      // progress state has changed.
+      RIL_CALL_SRVCC = 9;
+
+      // Notification that list of calls has changed.
+      RIL_CALL_LIST_CHANGED = 10;
+
+      // Command sent to IMS Service. See ImsCommand.
+      IMS_COMMAND = 11;
+
+      // Command sent to IMS Service. See ImsCommand.
+      IMS_COMMAND_RECEIVED = 12;
+
+      // Command sent to IMS Service. See ImsCommand.
+      IMS_COMMAND_FAILED = 13;
+
+      // Command sent to IMS Service. See ImsCommand.
+      IMS_COMMAND_COMPLETE = 14;
+
+      // Notification about incoming voice call
+      IMS_CALL_RECEIVE = 15;
+
+      // Notification that state of the call has changed
+      IMS_CALL_STATE_CHANGED = 16;
+
+      // Notification about IMS call termination
+      IMS_CALL_TERMINATED = 17;
+
+      // Notification that session access technology has changed
+      IMS_CALL_HANDOVER = 18;
+
+      // Notification that session access technology has changed
+      IMS_CALL_HANDOVER_FAILED = 19;
+
+      // Notification about phone state changed.
+      PHONE_STATE_CHANGED = 20;
+
+      // System time overwritten by NITZ (Network time)
+      NITZ_TIME = 21;
+
+      // Change of audio codec
+      AUDIO_CODEC = 22;
+
+      // Notification that the call quality has changed
+      CALL_QUALITY_CHANGED = 23;
+    }
+
+    enum RilRequest {
+
+      RIL_REQUEST_UNKNOWN = 0;
+
+      // Initiate voice call
+      RIL_REQUEST_DIAL = 1;
+
+      // Answer incoming call
+      RIL_REQUEST_ANSWER = 2;
+
+      // Hang up a specific line
+      RIL_REQUEST_HANGUP = 3;
+
+      // Configure current call waiting state
+      RIL_REQUEST_SET_CALL_WAITING = 4;
+
+      RIL_REQUEST_SWITCH_HOLDING_AND_ACTIVE = 5;
+
+      // Send FLASH
+      RIL_REQUEST_CDMA_FLASH = 6;
+
+      // Conference holding and active
+      RIL_REQUEST_CONFERENCE = 7;
+    }
+
+    enum ImsCommand {
+
+      // Command is unknown.
+      IMS_CMD_UNKNOWN = 0;
+
+      IMS_CMD_START = 1;
+
+      IMS_CMD_ACCEPT = 2;
+
+      IMS_CMD_REJECT = 3;
+
+      IMS_CMD_TERMINATE = 4;
+
+      IMS_CMD_HOLD = 5;
+
+      IMS_CMD_RESUME = 6;
+
+      IMS_CMD_MERGE = 7;
+
+      IMS_CMD_UPDATE = 8;
+
+      IMS_CMD_CONFERENCE_EXTEND = 9;
+
+      IMS_CMD_INVITE_PARTICIPANT = 10;
+
+      IMS_CMD_REMOVE_PARTICIPANT = 11;
+    }
+
+    enum PhoneState {
+
+      // State is unknown.
+      STATE_UNKNOWN = 0;
+
+      STATE_IDLE = 1;
+
+      STATE_RINGING = 2;
+
+      STATE_OFFHOOK = 3;
+    }
+
+    // Telephony call states
+    enum CallState {
+
+      // State is unknown.
+      CALL_UNKNOWN = 0;
+
+      CALL_IDLE = 1;
+
+      CALL_ACTIVE = 2;
+
+      CALL_HOLDING = 3;
+
+      CALL_DIALING = 4;
+
+      CALL_ALERTING = 5;
+
+      CALL_INCOMING = 6;
+
+      CALL_WAITING = 7;
+
+      CALL_DISCONNECTED = 8;
+
+      CALL_DISCONNECTING = 9;
+    }
+
+    // Audio codecs
+    enum AudioCodec {
+
+      // Unknown codec
+      AUDIO_CODEC_UNKNOWN = 0;
+
+      AUDIO_CODEC_AMR = 1;
+
+      AUDIO_CODEC_AMR_WB = 2;
+
+      AUDIO_CODEC_QCELP13K = 3;
+
+      AUDIO_CODEC_EVRC = 4;
+
+      AUDIO_CODEC_EVRC_B = 5;
+
+      AUDIO_CODEC_EVRC_WB = 6;
+
+      AUDIO_CODEC_EVRC_NW = 7;
+
+      AUDIO_CODEC_GSM_EFR = 8;
+
+      AUDIO_CODEC_GSM_FR = 9;
+
+      AUDIO_CODEC_GSM_HR = 10;
+
+      AUDIO_CODEC_G711U = 11;
+
+      AUDIO_CODEC_G723 = 12;
+
+      AUDIO_CODEC_G711A = 13;
+
+      AUDIO_CODEC_G722 = 14;
+
+      AUDIO_CODEC_G711AB = 15;
+
+      AUDIO_CODEC_G729 = 16;
+
+      AUDIO_CODEC_EVS_NB = 17;
+
+      AUDIO_CODEC_EVS_WB = 18;
+
+      AUDIO_CODEC_EVS_SWB = 19;
+
+      AUDIO_CODEC_EVS_FB = 20;
+    }
+
+    // The information about a voice call
+    message RilCall {
+
+      enum Type {
+
+        // Scan Type is unknown.
+        UNKNOWN = 0;
+
+        // Mobile originated
+        MO = 1;
+
+        // Mobile terminated
+        MT = 2;
+      }
+
+      // Connection Index
+      optional int32 index = 1;
+
+      optional CallState state = 2;
+
+      optional Type type = 3;
+
+      // For possible values for a call end reason check
+      // frameworks/base/telephony/java/android/telephony/DisconnectCause.java
+      optional int32 call_end_reason = 4;
+
+      // This field is true for Conference Calls
+      optional bool is_multiparty = 5;
+
+      // Detailed cause code for CS Call failures
+      // frameworks/base/telephony/java/android/telephony/PreciseDisconnectCause.java
+      optional int32 precise_disconnect_cause = 6;
+
+      // Indicate if the call is an emergency call
+      optional bool is_emergency_call = 7;
+
+      // Indicate the emergency call information dialed from the CS call
+      optional EmergencyNumberInfo emergency_number_info = 8;
+    }
+
+    // Single Radio Voice Call Continuity(SRVCC) progress state
+    enum RilSrvccState {
+
+      // State is unknown.
+      HANDOVER_UNKNOWN = 0;
+
+      HANDOVER_STARTED = 1;
+
+      HANDOVER_COMPLETED = 2;
+
+      HANDOVER_FAILED = 3;
+
+      HANDOVER_CANCELED = 4;
+    }
+
+    message SignalStrength {
+
+      // signal to noise ratio for LTE signal strength
+      optional int32 lte_snr = 1;
+
+      // in the future we may include more measures of signal strength, or
+      // measurements for other RATs
+    }
+
+    // CallQuality information. (This proto class corresponds to
+    // android.telephony.CallQuality)
+    message CallQuality {
+
+      enum CallQualityLevel {
+
+        // leaving the first value explicitly as unspecified avoids breaking
+        // clients if the desired default behavior changes
+        UNDEFINED = 0;
+
+        EXCELLENT = 1;
+
+        GOOD = 2;
+
+        FAIR = 3;
+
+        POOR = 4;
+
+        BAD = 5;
+
+        // this typically indicates a failure in the modem
+        NOT_AVAILABLE = 6;
+      }
+
+      // the downlink CallQualityLevel for a given ongoing call
+      optional CallQualityLevel downlink_level = 1;
+
+      // the uplink CallQualityLevel for a given ongoing call
+      optional CallQualityLevel uplink_level = 2;
+
+      // the duration of the call, in seconds
+      optional int32 duration_in_seconds = 3;
+
+      // the total number of RTP packets transmitted by this device for an
+      // ongoing call
+      optional int32 rtp_packets_transmitted = 4;
+
+      // the total number of RTP packets received by this device for an ongoing
+      // call
+      optional int32 rtp_packets_received = 5;
+
+      // the number of RTP packets which were sent by this device but were lost
+      // in the network before reaching the other party
+      optional int32 rtp_packets_transmitted_lost = 6;
+
+      // the number of RTP packets which were sent by the other party but were
+      // lost in the network before reaching this device
+      optional int32 rtp_packets_not_received = 7;
+
+      // the average relative jitter in milliseconds. Jitter represents the
+      // amount of variance in interarrival time of packets, for example, if two
+      // packets are sent 2 milliseconds apart but received 3 milliseconds
+      // apart, the relative jitter between those packets is 1 millisecond.
+      //
+      // See RFC 3550 for more information on jitter calculations
+      optional int32 average_relative_jitter_millis = 8;
+
+      // the maximum relative jitter for a given ongoing call. Jitter represents
+      // the amount of variance in interarrival time of packets, for example, if
+      // two packets are sent 2 milliseconds apart but received 3 milliseconds
+      // apart, the relative jitter between those packets is 1 millisecond.
+      //
+      // See RFC 3550 for more information on jitter calculations.
+      optional int32 max_relative_jitter_millis = 9;
+
+      // the average round trip time of RTP packets in an ongoing call, in milliseconds
+      optional int32 average_round_trip_time = 10;
+
+      // the codec type of an ongoing call
+      optional AudioCodec codec_type = 11;
+    }
+
+    message CallQualitySummary {
+
+      // Total duration of good call quality reported at the end of a call
+      optional int32 total_good_quality_duration_in_seconds = 1;
+
+      // Total duration of bad call quality reported at the end of a call
+      optional int32 total_bad_quality_duration_in_seconds = 2;
+
+      // Total duration of the call for which we have call quality
+      // information, reported at the end of a call. For example, if an IMS call
+      // is converted to a CS call, which doesn't report call quality information,
+      // this value is the duration of the IMS component.
+      optional int32 total_duration_with_quality_information_in_seconds = 3;
+
+      // Snapshot of the CallQuality when signal strength is worst within good
+      // quality section
+      optional CallQuality snapshot_of_worst_ss_with_good_quality = 4;
+
+      // Snapshot of the CallQuality when signal strength is best within good
+      // quality section
+      optional CallQuality snapshot_of_best_ss_with_good_quality = 5;
+
+      // Snapshot of the CallQuality when signal strength is worst within bad
+      // quality section
+      optional CallQuality snapshot_of_worst_ss_with_bad_quality = 6;
+
+      // Snapshot of the CallQuality when signal strength is best within bad
+      // quality section
+      optional CallQuality snapshot_of_best_ss_with_bad_quality = 7;
+
+      // The worst SignalStrength in any good quality section
+      optional SignalStrength worst_ss_with_good_quality = 8;
+
+      // The best SignalStrength in any good quality section
+      optional SignalStrength best_ss_with_good_quality = 9;
+
+      // The worst SignalStrength in any bad quality section
+      optional SignalStrength worst_ss_with_bad_quality = 10;
+
+      // The best SignalStrength in any bad quality section
+      optional SignalStrength best_ss_with_bad_quality = 11;
+
+      // Snapshot of the CallQuality at the end of a call. This includes
+      // cumulative statistics like total duration and total RTP packets.
+      optional CallQuality snapshot_of_end = 12;
+
+    }
+
+    // Event type
+    optional Type type = 1;
+
+    // Time since previous event
+    optional TimeInterval delay = 2;
+
+    // Settings at the beginning of the session or when changed
+    optional TelephonySettings settings = 3;
+
+    // State at the beginning of the session or when changed
+    optional TelephonyServiceState service_state = 4;
+
+    // State at the beginning of the session or when changed
+    optional ImsConnectionState ims_connection_state = 5;
+
+    // Capabilities at the beginning of the session or when changed
+    optional ImsCapabilities ims_capabilities = 6;
+
+    // List of data calls at the beginning of the session or when changed
+    repeated RilDataCall data_calls = 7;
+
+    // New state
+    optional PhoneState phone_state = 8;
+
+    // New state
+    optional CallState call_state = 9;
+
+    // CS or IMS Voice call index
+    optional int32 call_index = 10;
+
+    // New merged call
+    optional int32 merged_call_index = 11;
+
+    // Active CS Voice calls
+    repeated RilCall calls = 12;
+
+    // RIL error code
+    optional RilErrno error = 13;
+
+    // RIL request
+    optional RilRequest ril_request = 14;
+
+    // Numeric ID
+    optional int32 ril_request_id = 15;
+
+    // New SRVCC state
+    optional RilSrvccState srvcc_state = 16;
+
+    // IMS command
+    optional ImsCommand ims_command = 17;
+
+    // IMS Failure reason
+    optional ImsReasonInfo reason_info = 18;
+
+    // Original access technology
+    optional RadioAccessTechnology src_access_tech = 19 [default = UNKNOWN];
+
+    // New access technology
+    optional RadioAccessTechnology target_access_tech = 20 [default = UNKNOWN];
+
+    // NITZ time in milliseconds
+    optional int64 nitz_timestamp_millis = 21;
+
+    // Audio codec at the beginning of the session or when changed
+    optional AudioCodec audio_codec = 22;
+
+    // Call quality when changed
+    optional CallQuality call_quality = 23;
+
+    // Downlink call quality summary at the end of a call
+    optional CallQualitySummary call_quality_summary_dl = 24;
+
+    // Uplink call quality summary at the end of a call
+    optional CallQualitySummary call_quality_summary_ul = 25;
+
+    // Indicate if it is IMS emergency call
+    optional bool is_ims_emergency_call = 26;
+
+    // Emergency call info
+    optional EmergencyNumberInfo ims_emergency_number_info = 27;
+  }
+
+  // Time when call has started, in minutes since epoch,
+  // with 5 minutes precision
+  optional int32 start_time_minutes = 1;
+
+  // In Multi-SIM devices this indicates SIM slot
+  optional int32 phone_id = 2;
+
+  // List of events happened during the call
+  repeated Event events = 3;
+
+  // Indicating some call events are dropped
+  optional bool events_dropped = 4;
+}
+
+message SmsSession {
+
+  message Event {
+
+    enum Type {
+
+      // Unknown event
+      EVENT_UNKNOWN = 0;
+
+      // Telephony related user settings changed
+      SETTINGS_CHANGED = 1;
+
+      // Phone state changed
+      RIL_SERVICE_STATE_CHANGED = 2;
+
+      // IMS connected/disconnected
+      IMS_CONNECTION_STATE_CHANGED = 3;
+
+      // IMS Voice, Video and Ut capabilities changed
+      IMS_CAPABILITIES_CHANGED = 4;
+
+      // Notification that new data call has appeared in the list
+      // or old data call has removed.
+      DATA_CALL_LIST_CHANGED = 5;
+
+      // Send a SMS message over RIL
+      SMS_SEND = 6;
+
+      // Message has been sent to network using RIL
+      SMS_SEND_RESULT = 7;
+
+      // Notification about received SMS using RIL
+      SMS_RECEIVED = 8;
+
+      // CB message received
+      CB_SMS_RECEIVED = 9;
+
+      // Incomplete multipart message received
+      INCOMPLETE_SMS_RECEIVED = 10;
+    }
+
+    // Formats used to encode SMS messages
+    enum Format {
+
+      // State is unknown.
+      SMS_FORMAT_UNKNOWN = 0;
+
+      // GSM, WCDMA
+      SMS_FORMAT_3GPP = 1;
+
+      // CDMA
+      SMS_FORMAT_3GPP2 = 2;
+    }
+
+    enum Tech {
+      SMS_UNKNOWN = 0;
+
+      SMS_GSM = 1;
+
+      SMS_CDMA = 2;
+
+      SMS_IMS = 3;
+    }
+
+    message CBMessage {
+      // CB message format
+      optional Format msg_format = 1;
+
+      // CB message priority
+      optional CBPriority msg_priority = 2;
+
+      // Type of CB msg
+      optional CBMessageType msg_type = 3;
+
+      // Service category of CB message
+      optional int32 service_category = 4;
+
+      // Message's serial number
+      optional int32 serial_number = 5;
+
+      // The delivered time (UTC) of the message
+      optional int64 delivered_timestamp_millis = 6;
+    }
+
+    enum CBMessageType {
+      // Unknown type
+      TYPE_UNKNOWN = 0;
+
+      // ETWS CB msg
+      ETWS = 1;
+
+      // CMAS CB msg
+      CMAS = 2;
+
+      // CB msg other than ETWS and CMAS
+      OTHER = 3;
+    }
+
+    enum CBPriority {
+      // Unknown priority
+      PRIORITY_UNKNOWN = 0;
+
+      // NORMAL priority
+      NORMAL = 1;
+
+      // Interactive priority
+      INTERACTIVE = 2;
+
+      // Urgent priority
+      URGENT = 3;
+
+      // Emergency priority
+      EMERGENCY = 4;
+    }
+
+    // Types of SMS messages
+    enum SmsType {
+
+      // Normal type
+      SMS_TYPE_NORMAL = 0;
+
+      // SMS-PP.
+      SMS_TYPE_SMS_PP = 1;
+
+      // Voicemail indication
+      SMS_TYPE_VOICEMAIL_INDICATION = 2;
+
+      // Type 0 message (3GPP TS 23.040 9.2.3.9)
+      SMS_TYPE_ZERO = 3;
+
+      // WAP-PUSH message
+      SMS_TYPE_WAP_PUSH = 4;
+    }
+
+    message IncompleteSms {
+      // Number of received parts
+      optional int32 received_parts = 1;
+
+      // Number of expected parts
+      optional int32 total_parts = 2;
+    }
+
+    // Event type
+    optional Type type = 1;
+
+    // Time since previous event
+    optional TimeInterval delay = 2;
+
+    // Settings at the beginning of the session or when changed
+    optional TelephonySettings settings = 3;
+
+    // State at the beginning of the session or when changed
+    optional TelephonyServiceState service_state = 4;
+
+    // State at the beginning of the session or when changed
+    optional ImsConnectionState ims_connection_state = 5;
+
+    // Capabilities at the beginning of the session or when changed
+    optional ImsCapabilities ims_capabilities = 6;
+
+    // List of data calls at the beginning of the session or when changed
+    repeated RilDataCall data_calls = 7;
+
+    // Format of the message
+    optional Format format = 8;
+
+    // Technology used to send/receive SMS
+    optional Tech tech = 9;
+
+    // For outgoing SMS:
+    //  - See 3GPP 27.005, 3.2.5 for GSM/UMTS,
+    //  - 3GPP2 N.S0005 (IS-41C) Table 171 for CDMA,
+    // For incoming SMS of any type:
+    //  - it is mapped to a SmsManager.RESULT_* code
+    // SmsManager can be accessed from
+    // frameworks/base/telephony/java/android/telephony/SmsManager.java
+    optional int32 error_code = 10;
+
+    // RIL error code - Not used.
+    optional RilErrno error = 11;
+
+    // Numeric ID - Used only for outgoing SMS
+    optional int32 ril_request_id = 12;
+
+    // Cellbroadcast message content
+    optional CBMessage cell_broadcast_message = 13;
+
+    // ImsService error code. Used only for outgoing SMS
+    optional ImsServiceErrno ims_error = 14;
+
+    // Details of incoming incomplete multipart SMS
+    optional IncompleteSms incomplete_sms = 15;
+
+    // Indicate the type of incoming SMS
+    optional SmsType sms_type = 16;
+
+    // Indicates if the incoming SMS was blocked
+    optional bool blocked = 17;
+  }
+
+  // Time when session has started, in minutes since epoch,
+  // with 5 minutes precision
+  optional int32 start_time_minutes = 1;
+
+  // In Multi-SIM devices this indicates SIM slot
+  optional int32 phone_id = 2;
+
+  // List of events happened during the call
+  repeated Event events = 3;
+
+  // Indicating some sms session events are dropped
+  optional bool events_dropped = 4;
+}
+
+// Power stats for modem
+message ModemPowerStats {
+
+  // Duration of log (ms). This is the duration of time device is
+  // on battery and modem power stats are collected.
+  optional int64 logging_duration_ms = 1;
+
+  // Energy consumed by modem (mAh)
+  optional double energy_consumed_mah = 2;
+
+  // Number of packets sent (tx)
+  optional int64 num_packets_tx = 3;
+
+  // Amount of time kernel is active because of cellular data (ms)
+  optional int64 cellular_kernel_active_time_ms = 4;
+
+  // Amount of time spent in very poor rx signal level (ms)
+  optional int64 time_in_very_poor_rx_signal_level_ms = 5;
+
+  // Amount of time modem is in sleep (ms)
+  optional int64 sleep_time_ms = 6;
+
+  // Amount of time modem is in idle (ms)
+  optional int64 idle_time_ms = 7;
+
+  // Amount of time modem is in rx (ms)
+  optional int64 rx_time_ms = 8;
+
+  // Amount of time modem is in tx (ms)
+  repeated int64 tx_time_ms = 9;
+
+  // Number of bytes sent (tx)
+  optional int64 num_bytes_tx = 10;
+
+  // Number of packets received (rx)
+  optional int64 num_packets_rx = 11;
+
+  // Number of bytes received (rx)
+  optional int64 num_bytes_rx = 12;
+
+  // Amount of time phone spends in various Radio Access Technologies (ms)
+  repeated int64 time_in_rat_ms = 13;
+
+  // Amount of time phone spends in various cellular
+  // rx signal strength levels (ms)
+  repeated int64 time_in_rx_signal_strength_level_ms = 14;
+
+  // Actual monitored rail energy consumed by modem (mAh)
+  optional double monitored_rail_energy_consumed_mah = 15;
+}

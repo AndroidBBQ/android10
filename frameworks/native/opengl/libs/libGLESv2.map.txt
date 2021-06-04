@@ -1,0 +1,209 @@
+LIBGLESV2 {
+  global:
+    glActiveTexture;
+    glAttachShader;
+    glBeginPerfMonitorAMD;
+    glBindAttribLocation;
+    glBindBuffer;
+    glBindFramebuffer;
+    glBindRenderbuffer;
+    glBindTexture;
+    glBindVertexArrayOES; # introduced-mips=9 introduced-x86=9
+    glBlendColor;
+    glBlendEquation;
+    glBlendEquationSeparate;
+    glBlendFunc;
+    glBlendFuncSeparate;
+    glBufferData;
+    glBufferSubData;
+    glCheckFramebufferStatus;
+    glClear;
+    glClearColor;
+    glClearDepthf;
+    glClearStencil;
+    glColorMask;
+    glCompileShader;
+    glCompressedTexImage2D;
+    glCompressedTexImage3DOES;
+    glCompressedTexSubImage2D;
+    glCompressedTexSubImage3DOES;
+    glCopyTexImage2D;
+    glCopyTexSubImage2D;
+    glCopyTexSubImage3DOES;
+    glCoverageMaskNV; # introduced-mips=9 introduced-x86=9
+    glCoverageOperationNV; # introduced-mips=9 introduced-x86=9
+    glCreateProgram;
+    glCreateShader;
+    glCullFace;
+    glDeleteBuffers;
+    glDeleteFencesNV;
+    glDeleteFramebuffers;
+    glDeletePerfMonitorsAMD;
+    glDeleteProgram;
+    glDeleteRenderbuffers;
+    glDeleteShader;
+    glDeleteTextures;
+    glDeleteVertexArraysOES; # introduced-mips=9 introduced-x86=9
+    glDepthFunc;
+    glDepthMask;
+    glDepthRangef;
+    glDetachShader;
+    glDisable;
+    glDisableDriverControlQCOM;
+    glDisableVertexAttribArray;
+    glDiscardFramebufferEXT; # introduced-mips=9 introduced-x86=9
+    glDrawArrays;
+    glDrawElements;
+    glEGLImageTargetRenderbufferStorageOES;
+    glEGLImageTargetTexture2DOES;
+    glEnable;
+    glEnableDriverControlQCOM;
+    glEnableVertexAttribArray;
+    glEndPerfMonitorAMD;
+    glEndTilingQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetBufferPointervQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetBuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetFramebuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetProgramBinarySourceQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetProgramsQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetRenderbuffersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetShadersQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexLevelParameterivQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexSubImageQCOM; # introduced-mips=9 introduced-x86=9
+    glExtGetTexturesQCOM; # introduced-mips=9 introduced-x86=9
+    glExtIsProgramBinaryQCOM; # introduced-mips=9 introduced-x86=9
+    glExtTexObjectStateOverrideiQCOM; # introduced-mips=9 introduced-x86=9
+    glFinish;
+    glFinishFenceNV;
+    glFlush;
+    glFramebufferRenderbuffer;
+    glFramebufferTexture2D;
+    glFramebufferTexture2DMultisampleIMG; # introduced-mips=9 introduced-x86=9
+    glFramebufferTexture2DMultisampleEXT; # introduced=28
+    glFramebufferTexture3DOES;
+    glFrontFace;
+    glGenBuffers;
+    glGenFencesNV;
+    glGenFramebuffers;
+    glGenPerfMonitorsAMD;
+    glGenRenderbuffers;
+    glGenTextures;
+    glGenVertexArraysOES; # introduced-mips=9 introduced-x86=9
+    glGenerateMipmap;
+    glGetActiveAttrib;
+    glGetActiveUniform;
+    glGetAttachedShaders;
+    glGetAttribLocation;
+    glGetBooleanv;
+    glGetBufferParameteriv;
+    glGetBufferPointervOES;
+    glGetDriverControlStringQCOM;
+    glGetDriverControlsQCOM;
+    glGetError;
+    glGetFenceivNV;
+    glGetFloatv;
+    glGetFramebufferAttachmentParameteriv;
+    glGetIntegerv;
+    glGetPerfMonitorCounterDataAMD;
+    glGetPerfMonitorCounterInfoAMD;
+    glGetPerfMonitorCounterStringAMD;
+    glGetPerfMonitorCountersAMD;
+    glGetPerfMonitorGroupStringAMD;
+    glGetPerfMonitorGroupsAMD;
+    glGetProgramBinaryOES;
+    glGetProgramInfoLog;
+    glGetProgramiv;
+    glGetRenderbufferParameteriv;
+    glGetShaderInfoLog;
+    glGetShaderPrecisionFormat;
+    glGetShaderSource;
+    glGetShaderiv;
+    glGetString;
+    glGetTexParameterfv;
+    glGetTexParameteriv;
+    glGetUniformLocation;
+    glGetUniformfv;
+    glGetUniformiv;
+    glGetVertexAttribPointerv;
+    glGetVertexAttribfv;
+    glGetVertexAttribiv;
+    glHint;
+    glIsBuffer;
+    glIsEnabled;
+    glIsFenceNV;
+    glIsFramebuffer;
+    glIsProgram;
+    glIsRenderbuffer;
+    glIsShader;
+    glIsTexture;
+    glIsVertexArrayOES; # introduced-mips=9 introduced-x86=9
+    glLineWidth;
+    glLinkProgram;
+    glMapBufferOES;
+    glMultiDrawArraysEXT; # introduced-mips=9 introduced-x86=9
+    glMultiDrawElementsEXT; # introduced-mips=9 introduced-x86=9
+    glPixelStorei;
+    glPolygonOffset;
+    glProgramBinaryOES;
+    glReadPixels;
+    glReleaseShaderCompiler;
+    glRenderbufferStorage;
+    glRenderbufferStorageMultisampleEXT; # introduced=28
+    glRenderbufferStorageMultisampleIMG; # introduced-mips=9 introduced-x86=9
+    glSampleCoverage;
+    glScissor;
+    glSelectPerfMonitorCountersAMD;
+    glSetFenceNV;
+    glShaderBinary;
+    glShaderSource;
+    glStartTilingQCOM; # introduced-mips=9 introduced-x86=9
+    glStencilFunc;
+    glStencilFuncSeparate;
+    glStencilMask;
+    glStencilMaskSeparate;
+    glStencilOp;
+    glStencilOpSeparate;
+    glTestFenceNV;
+    glTexImage2D;
+    glTexImage3DOES;
+    glTexParameterf;
+    glTexParameterfv;
+    glTexParameteri;
+    glTexParameteriv;
+    glTexSubImage2D;
+    glTexSubImage3DOES;
+    glUniform1f;
+    glUniform1fv;
+    glUniform1i;
+    glUniform1iv;
+    glUniform2f;
+    glUniform2fv;
+    glUniform2i;
+    glUniform2iv;
+    glUniform3f;
+    glUniform3fv;
+    glUniform3i;
+    glUniform3iv;
+    glUniform4f;
+    glUniform4fv;
+    glUniform4i;
+    glUniform4iv;
+    glUniformMatrix2fv;
+    glUniformMatrix3fv;
+    glUniformMatrix4fv;
+    glUnmapBufferOES;
+    glUseProgram;
+    glValidateProgram;
+    glVertexAttrib1f;
+    glVertexAttrib1fv;
+    glVertexAttrib2f;
+    glVertexAttrib2fv;
+    glVertexAttrib3f;
+    glVertexAttrib3fv;
+    glVertexAttrib4f;
+    glVertexAttrib4fv;
+    glVertexAttribPointer;
+    glViewport;
+  local:
+    *;
+};

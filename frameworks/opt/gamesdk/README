@@ -1,0 +1,17 @@
+
+In order to build using prebuild NDK versions, this project must be initialized from a custom repo using:
+mkdir android-games-sdk
+cd android-games-sdk
+Corp -> repo init -u persistent-https://googleplex-android.git.corp.google.com/platform/manifest -b android-games-sdk
+AOSP -> repo init -u https://android.googlesource.com/platform/manifest -b android-games-sdk
+repo sync -c -j8
+
+Then:
+./gradlew gamesdkZip
+will build static and dynamic libraries for several NDK versions.
+
+By default, the gradle script builds target archiveZip, which will use a locally installed SDK/NDK pointed
+to by ANDROID_HOME (and ANDROID_NDK, if the ndk isn't in ANDROID_HOME/ndk-bundle).
+
+It is also possible to build from a direct AOSP checkout, but then you won't be able to build for multiple
+NDKs: archiveZip will still work but the gamesdkZip target will fail.

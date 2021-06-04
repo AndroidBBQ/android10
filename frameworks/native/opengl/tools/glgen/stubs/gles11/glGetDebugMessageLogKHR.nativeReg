@@ -1,0 +1,4 @@
+{"glGetDebugMessageLogKHR", "(II[II[II[II[II[II[BI)I", (void *) android_glGetDebugMessageLogKHR__II_3II_3II_3II_3II_3II_3BI },
+{"glGetDebugMessageLogKHR", "(ILjava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/ByteBuffer;)I", (void *) android_glGetDebugMessageLogKHR__ILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_ByteBuffer_2 },
+{"glGetDebugMessageLogKHR", "(I[II[II[II[II)[Ljava/lang/String;", (void *) android_glGetDebugMessageLogKHR__I_3II_3II_3II_3II },
+{"glGetDebugMessageLogKHR", "(ILjava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;)[Ljava/lang/String;", (void *) android_glGetDebugMessageLogKHR__ILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2 },

@@ -1,0 +1,10 @@
+*~
+*.bak
+*.class
+bin/
+local.properties
+*.project
+*.cproject
+*.settings
+*.pyc
+.gradle

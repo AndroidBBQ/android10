@@ -1,0 +1,411 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+package android.frameworks.cameraservice.device@2.0;
+
+import  android.frameworks.cameraservice.common@2.0::Status;
+
+/**
+ * Though this is an opaque blob of vec<uint8_t> and cast on both sides of the
+ * HAL to camera_metadata_t, camera_metadata_t is stable. Further
+ * through some static compile time checks we can be more confident about it not
+ * changing across multiple releases.
+ * Ref: system/media/camera/src/camera_metadata.c
+ */
+typedef vec<uint8_t> CameraMetadata;
+
+/**
+ * Error codes for onDeviceError
+ */
+enum ErrorCode : int32_t {
+    /**
+     * To indicate all invalid error codes.
+     */
+    CAMERA_INVALID_ERROR = -1,
+
+    /**
+     * Camera operation has failed because the camera device has been closed,
+     * possibly because a higher priority client has taken ownership of the
+     * device.
+     */
+    CAMERA_DISCONNECTED = 0,
+
+    /**
+     * The camera device has encountered a fatal error and needs to be
+     * re-opened to use it again.
+     */
+    CAMERA_DEVICE = 1,
+
+    /**
+     * The camera service has encountered a fatal error.
+     */
+    CAMERA_SERVICE = 2,
+
+    /**
+     * The camera device encountered an error while processing a request.
+     * No output will be produced for this request. Subsequent requests are
+     * unaffected.
+     */
+    CAMERA_REQUEST = 3,
+
+    /**
+     * The camera device encountered an error while producing an output result
+     * metadata buffer for a request. Output stream buffers for it must still
+     * be available.
+     */
+    CAMERA_RESULT = 4,
+
+    /**
+     * A camera device encountered an error occured due to which an output
+     * buffer was lost.
+     */
+    CAMERA_BUFFER = 5,
+
+    /**
+     * The camera device has been disabled and cannot be opened.
+     */
+    CAMERA_DISABLED = 6,
+
+    /**
+     * Camera operation has failed due to an unknown cause.
+     */
+    CAMERA_UNKNOWN_ERROR = 7,
+};
+
+/**
+ * StreamConfigurationMode:
+ *
+ * This defines the general operation mode for the HAL (for a given stream
+ * configuration) where modes besides NORMAL have different semantics, and
+ * usually limit the generality of the API in exchange for higher performance in
+ * some particular area.
+ */
+enum StreamConfigurationMode : uint32_t {
+    /**
+     * Normal stream configuration operation mode. This is the default camera
+     * operation mode, where all semantics of HAL APIs and metadata controls
+     * apply.
+     */
+    NORMAL_MODE = 0,
+
+    /**
+     * Special constrained high speed operation mode for devices that can not
+     * support high speed output in NORMAL mode.
+     */
+    CONSTRAINED_HIGH_SPEED_MODE = 1,
+
+    /**
+     * A set of vendor-defined operating modes, for custom default camera
+     * application features that can't be implemented in a fully flexible
+     * fashion required for NORMAL_MODE.
+     */
+    VENDOR_MODE_0 = 0x8000,
+    VENDOR_MODE_1,
+    VENDOR_MODE_2,
+    VENDOR_MODE_3,
+    VENDOR_MODE_4,
+    VENDOR_MODE_5,
+    VENDOR_MODE_6,
+    VENDOR_MODE_7
+};
+
+/**
+ * TemplateId to be used with createDefaultRequest
+ */
+enum TemplateId : int32_t {
+    /**
+     * Create a request suitable for a camera preview window. Specifically, this
+     * means that high frame rate is given priority over the highest-quality
+     * post-processing.
+     */
+    PREVIEW = 1,
+
+    /**
+     * Create a request suitable for still image capture. Specifically, this
+     * means prioritizing image quality over frame rate
+     */
+    STILL_CAPTURE = 2,
+
+    /**
+     * Create a request suitable for video recording. Specifically, this means
+     * that a stable frame rate is used, and post-processing is set for
+     * recording quality.
+     */
+    RECORD = 3,
+
+    /**
+     * Create a request suitable for still image capture while recording
+     * video. Specifically, this means maximizing image quality without
+     * disrupting the ongoing recording.
+     */
+    VIDEO_SNAPSHOT = 4,
+
+    /**
+     * Create a request suitable for zero shutter lag still capture. This means
+     * means maximizing image quality without compromising preview frame rate.
+     */
+    ZERO_SHUTTER_LAG = 5,
+
+    /**
+     * A basic template for direct application control of capture
+     * parameters. All automatic control is disabled (auto-exposure, auto-white
+     * balance, auto-focus), and post-processing parameters are set to preview
+     * quality. The manual capture parameters (exposure, sensitivity, and so on)
+     * are set to reasonable defaults, but should be overriden by the
+     * application depending on the intended use case.
+     */
+    MANUAL = 6,
+};
+
+/**
+ * Either size of the capture request / result metadata sent through FMQ or
+ * the request / result metadata itself.
+ * If the server of the metadata choses to use FMQ, it must set the
+ * fmqMetadataSize field to the size(> 0) of the metadata held by the FMQ.
+ * Otherwise, the metadata field must contain the metadata.
+ */
+safe_union FmqSizeOrMetadata {
+    uint64_t fmqMetadataSize;
+    CameraMetadata metadata;
+};
+
+/**
+ * Data structure tying camera id and settings metadata.
+ *
+ */
+struct PhysicalCameraSettings {
+    string id;
+    FmqSizeOrMetadata settings;
+};
+
+/**
+ * Data structure tying stream id and window id for a native window.
+ */
+struct StreamAndWindowId {
+    /**
+     * This must be the stream id corresponding to the native window (the streamId
+     * returned from the createStream() method, which took in the
+     * OutputConfiguration which contained this native window)
+     */
+    int32_t streamId;
+
+    /**
+     * This must be the array index of the of the window handle corresponding to
+     * the native window, which was packaged with the OutputConfiguration.
+     */
+    int32_t windowId;
+};
+
+/**
+ * CaptureRequest
+ * This must contain the information which needs to be submitted with a capture
+ * request, typically to be used with submitRequestList.
+ */
+struct CaptureRequest {
+    /**
+     * The physical camera settings associated with this CaptureRequest.
+     */
+    vec<PhysicalCameraSettings> physicalCameraSettings;
+
+    /**
+     * A list of (streamId, windowId) pairs which uniquely identifies the
+     * native windows associated with this CaptureRequest.
+     */
+    vec<StreamAndWindowId> streamAndWindowIds;
+};
+
+/**
+ * CaptureResultExtras
+ * Information about a capture, available to a device client on various
+ * conditions through ICameraDeviceUserCallback callbacks.
+ */
+struct CaptureResultExtras {
+    /**
+     * An integer to index the request sequence that this result belongs to.
+     */
+    int32_t requestId;
+
+    /**
+     * An integer to index this result inside a request sequence, starting from 0.
+     */
+    int32_t burstId;
+
+    /**
+     * A 64bit integer to index the frame number associated with this result.
+     */
+    int64_t frameNumber;
+
+    /**
+     * The partial result count (index) for this capture result.
+     */
+    int32_t partialResultCount;
+
+    /**
+     * For buffer drop errors, the stream ID for the stream that lost a buffer.
+     * Otherwise -1.
+     */
+    int32_t errorStreamId;
+
+    /**
+     * For capture result errors, the physical camera ID in case the respective request contains
+     * a reference to physical camera device.
+     * Empty otherwise.
+     */
+    string  errorPhysicalCameraId;
+};
+
+/**
+ * PhysicalCaptureResultInfo
+ * This ties physical camera metadata to a particular camera device for a
+ * particular capture result.
+ */
+struct PhysicalCaptureResultInfo {
+    string physicalCameraId;
+    FmqSizeOrMetadata physicalCameraMetadata;
+};
+
+/**
+ * SubmitInfo
+ * The status information returned for a successful capture request submission.
+ *
+ * This includes the request ID for the newly submitted capture request, and the
+ * last frame number of either the previous repeating request (for repeating
+ * requests), or of the request(s) just submitted (for single-shot capture).
+ */
+struct SubmitInfo {
+    int32_t requestId;
+    int64_t lastFrameNumber;
+};
+
+/**
+ * OutputConfiguration
+ * This describes camera output. It has configurations specific to a
+ * capture session.
+ */
+struct OutputConfiguration {
+    /**
+     * Rotation values for camera output
+     */
+    enum Rotation : uint32_t {
+        R0 = 0,
+        R90 = 1,
+        R180 = 2,
+        R270 = 3,
+    };
+
+    enum WindowGroupId : int32_t {
+        NONE = -1
+    };
+
+    /**
+     * These must be handles to ANativeWindows owned by AImageReader,
+     * obtained by using AImageReader_getWindowHandle. Ref:
+     * (frameworks/av/media/ndk/include/media/NdkImageReader.h).
+     * When this vector has more than one window handle, native window surface
+     * sharing is enabled. Clients may take advantage of this in advanced use
+     * cases when they would require create more streams than the limits the
+     * camera device imposes [1]. In this case, more than one window must be
+     * attached to an OutputConfiguration so that they map to one camera stream.
+     * The outputs will share memory buffers whenever possible. Due to buffer
+     * sharing, client should be careful while adding native window outputs that
+     * modify their input data. If such cases exist, client must have additional
+     * mechanisms to synchronize read and write accesses between consumers.
+     * [1]: Ref : frameworks/av/camera/ndk/include/camera/NdkCameraDevice.h
+     */
+    vec<handle> windowHandles;
+
+    /**
+     * The rotation value for the camera output for this configuration.
+     * Only Rotation::R0 is guaranteed to be supported.
+     */
+    Rotation rotation;
+
+    /**
+     * A windowGroupId is used to identify which window group this output window belongs to. A
+     * window group is a group of output windows that are not intended to receive camera output
+     * buffer streams simultaneously. The ICameraDevice may be able to share the buffers used
+     * by all the windows from the same window group, therefore may reduce the overall memory
+     * footprint. The client must only set the same set id for the streams that are not
+     * simultaneously streaming. For OutputConfigurations not belonging to any
+     * window group the client must set windowGroupId to WindowGroupId::NONE.
+     */
+    int32_t windowGroupId;
+
+    /**
+     * The id of the physical camera id, that this OutputConfiguration is meant
+     * for. If the no physical camera id is expected, this must be an empty
+     * string.
+     */
+    string physicalCameraId;
+
+    /**
+     * The width of the output stream.
+     *
+     * Note: this must only be used when using deferred streams. Otherwise, it
+     *       must be set to 0.
+     */
+    uint32_t width;
+
+    /**
+     * The height of the output stream.
+     *
+     * Note: this must only be used when using deferred streams. Otherwise, it
+     *       must be set to 0.
+     */
+    uint32_t height;
+
+    /**
+     * This must be set to true, if this OutputConfiguration contains handles to
+     * deferred native windows.
+     * Ref:frameworks/base/core/java/android/hardware/camera2/params/OutputConfiguration.java
+     */
+    bool isDeferred;
+};
+
+struct SessionConfiguration {
+    /**
+     * A vector containing all output configurations
+     */
+    vec<OutputConfiguration> outputStreams;
+
+    /**
+     * Input stream width
+     *
+     * Note: this must be <= 0 if there is no input stream.
+     */
+    int32_t inputWidth;
+
+    /**
+     * Input stream height
+     *
+     * Note: this must be <= 0 if there is no input stream.
+     */
+    int32_t inputHeight;
+
+    /**
+     * Input stream format
+     *
+     * Note: this must be one of the AIMAGE_FORMATS defined in
+     * frameworks/av/media/ndk/include/media/NdkImage.h.
+     */
+    int32_t inputFormat;
+
+    /**
+     * Operation mode of camera device
+     */
+    StreamConfigurationMode operationMode;
+};

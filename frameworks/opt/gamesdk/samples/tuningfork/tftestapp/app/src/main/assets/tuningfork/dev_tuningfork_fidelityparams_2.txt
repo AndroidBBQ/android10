@@ -1,0 +1,1 @@
+num_spheres: 2 tesselation_percent: 20

@@ -1,0 +1,107 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package android.drm_metrics;
+
+
+// This message contains the specific metrics captured by DrmMetrics. It is
+// used for serializing and logging metrics.
+// next id: 11.
+message DrmFrameworkMetrics {
+  // TODO: Consider using extensions.
+
+  // Attributes are associated with a recorded value. E.g. A counter may
+  // represent a count of an operation returning a specific error code. The
+  // error code will be an attribute.
+  message Attributes {
+    // Reserved for compatibility with logging proto.
+    reserved 2 to 13;
+
+    // A general purpose error code where 0 means OK.
+    optional int32 error_code = 1;
+
+    // Defined at ::android::hardware::drm::V1_0::KeyStatusType;
+    optional uint32 key_status_type = 14;
+
+    // Defined at ::android::hardware::drm::V1_0::EventType;
+    optional uint32 event_type = 15;
+  }
+
+  // The Counter message is used to store a count value with an associated
+  // Attribute.
+  message Counter {
+    optional uint64 count = 1;
+    // Represents the attributes associated with this counter instance.
+    optional Attributes attributes = 2;
+  }
+
+  // The DistributionMetric is meant to capture the moments of a normally
+  // distributed (or approximately normal) value.
+  message DistributionMetric {
+    optional float min = 1;
+    optional float max = 2;
+    optional float mean = 3;
+    optional double variance = 4;
+    optional uint64 operation_count = 5;
+
+    // Represents the attributes assocated with this distribution metric
+    // instance.
+    optional Attributes attributes = 6;
+  }
+
+  message SessionLifetime {
+    // Start time of the session in milliseconds since epoch.
+    optional uint64 start_time_ms = 1;
+    // End time of the session in milliseconds since epoch.
+    optional uint64 end_time_ms = 2;
+  }
+
+  // The count of open session operations. Each instance has a specific error
+  // code associated with it.
+  repeated Counter open_session_counter = 1;
+
+  // The count of close session operations. Each instance has a specific error
+  // code associated with it.
+  repeated Counter close_session_counter = 2;
+
+  // Count and execution time of getKeyRequest calls.
+  repeated DistributionMetric get_key_request_time_us = 3;
+
+  // Count and execution time of provideKeyResponse calls.
+  repeated DistributionMetric provide_key_response_time_us = 4;
+
+  // Count of getProvisionRequest calls.
+  repeated Counter get_provisioning_request_counter = 5;
+
+  // Count of provideProvisionResponse calls.
+  repeated Counter provide_provisioning_response_counter = 6;
+
+  // Count of key status events broken out by status type.
+  repeated Counter key_status_change_counter = 7;
+
+  // Count of events broken out by event type
+  repeated Counter event_callback_counter = 8;
+
+  // Count getPropertyByteArray calls to retrieve the device unique id.
+  repeated Counter get_device_unique_id_counter = 9;
+
+  // Session ids to lifetime (start and end time) map.
+  // Session ids are strings of hex-encoded byte arrays.
+  map<string, SessionLifetime> session_lifetimes = 10;
+}
+

@@ -1,0 +1,1 @@
+{"glGetObjectPtrLabelKHR", "(J)Ljava/lang/String;", (void *) android_glGetObjectPtrLabelKHR },

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2019 The Android Open Source Project
+
+         Licensed under the Apache License, Version 2.0 (the "License");
+         you may not use this file except in compliance with the License.
+         You may obtain a copy of the License at
+
+                    http://www.apache.org/licenses/LICENSE-2.0
+
+         Unless required by applicable law or agreed to in writing, software
+         distributed under the License is distributed on an "AS IS" BASIS,
+         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         See the License for the specific language governing permissions and
+         limitations under the License.
+-->
+<!-- TODO: define a targetNamespace. Note that it will break retrocompatibility -->
+<xs:schema version="2.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="MediaCodecs">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Include" type="Include" maxOccurs="unbounded"/>
+                <xs:element name="Settings" type="Settings"/>
+                <xs:element name="Decoders" type="Decoders"/>
+                <xs:element name="Encoders" type="Encoders"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Included">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Include" type="Include" maxOccurs="unbounded"/>
+                <xs:element name="Settings" type="Settings"/>
+                <xs:element name="Decoders" type="Decoders"/>
+                <xs:element name="Encoders" type="Encoders"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Decoders">
+        <xs:sequence>
+            <xs:element name="MediaCodec" type="MediaCodec" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Encoders">
+        <xs:sequence>
+            <xs:element name="MediaCodec" type="MediaCodec" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Settings">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Setting" type="Setting"/>
+            <xs:element name="Variant" type="Setting"/>
+            <xs:element name="Domain" type="Setting"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="MediaCodec">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Quirk" type="Quirk" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Attribute" type="Quirk" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Type" type="Type" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Alias" type="Alias" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Limit" type="Limit" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Feature" type="Feature" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Variant" type="Variant" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="update" type="xs:string"/>
+        <xs:attribute name="rank" type="xs:string"/>
+        <xs:attribute name="domain" type="xs:string"/>
+        <xs:attribute name="variant" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Quirk">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Type">
+        <xs:sequence>
+            <xs:element name="Alias" type="Alias" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Limit" type="Limit" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Feature" type="Feature" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="update" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Alias">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Limit">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="default" type="xs:string"/>
+        <xs:attribute name="in" type="xs:string"/>
+        <xs:attribute name="max" type="xs:string"/>
+        <xs:attribute name="min" type="xs:string"/>
+        <xs:attribute name="range" type="xs:string"/>
+        <xs:attribute name="ranges" type="xs:string"/>
+        <xs:attribute name="scale" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Feature">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="optional" type="xs:string"/>
+        <xs:attribute name="required" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Variant">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Quirk" type="Quirk"/>
+            <xs:element name="Attribute" type="Quirk"/>
+            <xs:element name="Alias" type="Alias"/>
+            <xs:element name="Limit" type="Limit"/>
+            <xs:element name="Feature" type="Feature"/>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Setting">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:string"/>
+        <xs:attribute name="update" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="Include">
+        <xs:attribute name="href" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>

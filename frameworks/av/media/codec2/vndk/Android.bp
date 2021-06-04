@@ -1,0 +1,105 @@
+cc_library_headers {
+    name: "libcodec2_internal",
+
+    export_include_dirs: [
+        "internal",
+    ],
+
+    // TODO: Remove this when this module is moved back to frameworks/av.
+    vendor_available: true,
+}
+
+// !!!DO NOT DEPEND ON THIS SHARED LIBRARY DIRECTLY!!!
+// use libcodec2-impl-defaults instead
+cc_library_shared {
+    name: "libcodec2_vndk",
+    vendor_available: true,
+
+    srcs: [
+        "C2AllocatorIon.cpp",
+        "C2AllocatorGralloc.cpp",
+        "C2Buffer.cpp",
+        "C2Config.cpp",
+        "C2PlatformStorePluginLoader.cpp",
+        "C2Store.cpp",
+        "platform/C2BqBuffer.cpp",
+        "types.cpp",
+        "util/C2Debug.cpp",
+        "util/C2InterfaceHelper.cpp",
+        "util/C2InterfaceUtils.cpp",
+        "util/C2ParamUtils.cpp",
+    ],
+
+    export_include_dirs: [
+        "include",
+    ],
+
+    export_shared_lib_headers: [
+        "libbase",
+        "android.hardware.media.bufferpool@2.0",
+    ],
+
+    local_include_dirs: [
+        "internal",
+    ],
+
+    header_libs: [
+        "media_plugin_headers",
+        "libcodec2_headers",
+    ],
+
+    shared_libs: [
+        "android.hardware.graphics.allocator@2.0",
+        "android.hardware.graphics.allocator@3.0",
+        "android.hardware.graphics.bufferqueue@2.0",
+        "android.hardware.graphics.mapper@2.0",
+        "android.hardware.graphics.mapper@3.0",
+        "android.hardware.media.bufferpool@2.0",
+        "libbase",
+        "libbinder",
+        "libcutils",
+        "libdl",
+        "libhardware",
+        "libhidlbase",
+        "libion",
+        "libfmq",
+        "liblog",
+        "libnativewindow",
+        "libstagefright_foundation",
+        "libstagefright_bufferpool@2.0.1",
+        "libui",
+        "libutils",
+    ],
+
+    cflags: [
+        "-Werror",
+        "-Wall",
+    ],
+}
+
+// public dependency for implementing Codec 2 components
+cc_defaults {
+    name: "libcodec2-impl-defaults",
+
+    shared_libs: [
+        "libbase", // for C2_LOG
+        "liblog", // for ALOG
+        "libcodec2",
+        "libcodec2_vndk",
+        "libutils",
+    ],
+}
+
+// public dependency for implementing Codec 2 framework utilities
+// THIS IS ONLY FOR FRAMEWORK USE ONLY
+cc_defaults {
+    name: "libcodec2-internal-defaults",
+    defaults: ["libcodec2-impl-defaults"],
+
+    shared_libs: [
+        "libcutils", // for properties
+    ],
+
+    // TODO: separate internal headers so they can be exposed here
+}
+

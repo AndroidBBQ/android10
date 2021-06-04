@@ -1,0 +1,10 @@
+{
+  "presubmit": [
+    {
+       "name": "ResourceManagerService_test"
+    },
+    {
+       "name": "ServiceLog_test"
+    }
+  ]
+}

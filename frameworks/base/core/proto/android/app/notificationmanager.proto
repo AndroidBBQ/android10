@@ -1,0 +1,95 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+option java_multiple_files = true;
+
+package android.app;
+
+import "frameworks/base/core/proto/android/privacy.proto";
+
+/**
+ * An android.app.NotificationManager.Policy object.
+ */
+message PolicyProto {
+    option (.android.msg_privacy).dest = DEST_AUTOMATIC;
+
+    enum Category {
+        CATEGORY_UNKNOWN = 0;
+        // Reminder notifications are prioritized.
+        REMINDERS = 1;
+        // Event notifications are prioritized.
+        EVENTS = 2;
+        // Message notifications are prioritized.
+        MESSAGES = 3;
+        // Calls are prioritized.
+        CALLS = 4;
+        // Calls from repeat callers are prioritized.
+        REPEAT_CALLERS = 5;
+        // Alarms are prioritized.
+        ALARMS = 6;
+        // Media, game, voice navigation are prioritized.
+        MEDIA = 7;
+        // System (catch-all for non-never suppressible sounds) are prioritized.
+        SYSTEM = 8;
+    }
+    repeated Category priority_categories = 1;
+
+    enum Sender {
+        // Any sender is prioritized.
+        ANY = 0;
+        // Saved contacts are prioritized.
+        CONTACTS = 1;
+        // Only starred contacts are prioritized.
+        STARRED = 2;
+    }
+    optional Sender priority_call_sender = 2;
+    optional Sender priority_message_sender = 3;
+
+    enum SuppressedVisualEffect {
+        SVE_UNKNOWN = 0;
+        // Whether notifications suppressed by DND should not interrupt visually
+        // (e.g. with notification lights or by turning the screen on) when the
+        // screen is off.
+        // FULL_SCREEN_INTENT, AMBIENT, and LIGHTS should be used instead.
+        SCREEN_OFF = 1 [deprecated = true];
+        // Whether notifications suppressed by DND should not interrupt visually
+        // when the screen is on (e.g. by peeking onto the screen).
+        // PEEK should be used instead of ON.
+        SCREEN_ON = 2 [deprecated = true];
+        // Whether full screen intents} from notifications intercepted by DND
+        // are blocked.
+        FULL_SCREEN_INTENT = 3;
+        // Whether lights from notifications intercepted by DND are blocked.
+        LIGHTS = 4;
+        // Whether notifications intercepted by DND are prevented from peeking.
+        PEEK = 5;
+        // Whether notifications intercepted by DND are prevented from
+        // appearing in the status bar, on devices that support status bars.
+        STATUS_BAR = 6;
+        // Whether badges from notifications intercepted by DND are blocked on
+        // devices that support badging.
+        BADGE = 7;
+        // Whether notification intercepted by DND are prevented from appearing
+        // on ambient displays on devices that support ambient display.
+        AMBIENT = 8;
+        // Whether notification intercepted by DND are prevented from appearing
+        // in notification list views like the notification shade or lockscreen
+        // on devices that support those views.
+        NOTIFICATION_LIST = 9;
+    }
+    repeated SuppressedVisualEffect suppressed_visual_effects = 4;
+}

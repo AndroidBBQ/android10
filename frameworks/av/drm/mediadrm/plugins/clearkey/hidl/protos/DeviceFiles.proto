@@ -1,0 +1,47 @@
+// ----------------------------------------------------------------------------
+// device_files.proto
+// ----------------------------------------------------------------------------
+// Copyright 2018 Google LLC. All Rights Reserved. This file and proprietary
+// source code may only be used and distributed under the Widevine Master
+// License Agreement.
+//
+// Description:
+//   Format of various files stored at the device.
+//
+syntax = "proto2";
+
+package android.hardware.drm.V1_2.clearkey;
+
+// need this if we are using libprotobuf-cpp-2.3.0-lite
+option optimize_for = LITE_RUNTIME;
+
+message License {
+  enum LicenseState {
+    ACTIVE = 1;
+    RELEASING = 2;
+  }
+
+  optional LicenseState state = 1;
+  optional bytes license = 2;
+}
+
+message OfflineFile {
+  enum FileType {
+    LICENSE = 1;
+  }
+
+  enum FileVersion {
+    VERSION_1 = 1;
+  }
+
+  optional FileType type = 1;
+  optional FileVersion version = 2 [default = VERSION_1];
+  optional License license = 3;
+
+}
+
+message HashedFile {
+  optional bytes file = 1;
+  // A raw (not hex-encoded) SHA256, taken over the bytes of 'file'.
+  optional bytes hash = 2;
+}

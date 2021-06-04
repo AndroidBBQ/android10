@@ -1,0 +1,62 @@
+/*
+ * Copyright 2017, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+
+package android.clearkeycas;
+
+option java_package = "com.google.video.clearkey.protos";
+
+// The Asset is the data describing licensing requirements and polciy for a
+// customer's video asset.
+//
+// The asset_id must not be set on creation.  It is only used for assets of
+// CasType: CLEARKEY_CAS.
+//
+message Asset {
+  // Indicates the type of digital rights management scheme used.
+  // CLEARKEY_CAS: Clearkey Media CAS.
+  enum CasType {
+    UNKNOWN = 0;
+    CLEARKEY_CAS = 1;
+  }
+
+  // Must be unset on creation.  Required for mutate operations on CLEARKEY_CAS assets.
+  optional uint64 id = 1;
+
+  // Organization-specified name of the asset. Required. Must not be empty.
+  // 'bytes' instead of 'string' due to UTF-8 validation in the latter.
+  optional bytes name = 2;
+
+  // The lowercase_organization_name is required.  It's a foreign key to the
+  // Organization table and part of the primary key for the Asset table.
+  optional string lowercase_organization_name = 3;
+
+  // The policy_name is required.  It's a foreign key to the policy table.
+  optional string policy_name = 4; // Name of the Policy to apply to this asset.
+
+  // Key information for decrypting content. Not used for CLEARKEY_CAS.
+  optional AssetKey asset_key = 5;
+
+  optional CasType cas_type = 6 [default = UNKNOWN];
+}
+
+// AssetKey defines a key that can be used to decrypt the license.
+// Note: In the previous implementation, the schema accommodated multiple
+// asset keys per asset.  This is not supported in this implementation.
+message AssetKey {
+  optional bytes encryption_key = 1;  // 256-byte key for the asset.
+}

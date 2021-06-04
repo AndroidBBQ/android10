@@ -1,0 +1,18 @@
+{
+  "presubmit": [
+    {
+      "name": "NeuralNetworksTest_static"
+    },
+    {
+      "name": "CtsNNAPITestCases"
+    }
+  ],
+  "imports": [
+    {
+      "path": "hardware/interfaces/neuralnetworks"
+    },
+    {
+      "path": "external/tensorflow/tensorflow/lite/delegates/nnapi"
+    }
+  ]
+}

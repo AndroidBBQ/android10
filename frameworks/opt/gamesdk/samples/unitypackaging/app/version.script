@@ -1,0 +1,6 @@
+ANDROIDGAMESDK {
+    global:
+        *Swappy*;
+    local:
+        *;
+};

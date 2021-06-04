@@ -1,0 +1,38 @@
+minijail_common_cflags = [
+    "-Wall",
+    "-Werror",
+]
+
+cc_defaults {
+    name: "libavservices_minijail_defaults",
+    srcs: ["minijail.cpp"],
+    cflags: minijail_common_cflags,
+    shared_libs: [
+        "libbase",
+        "libminijail",
+    ],
+}
+
+// Small library for media.extractor and media.codec sandboxing.
+cc_library_shared {
+    name: "libavservices_minijail",
+    defaults: ["libavservices_minijail_defaults"],
+    export_include_dirs: ["."],
+}
+
+// Small library for media.extractor and media.codec sandboxing.
+cc_library_shared {
+    name: "libavservices_minijail_vendor",
+    vendor: true,
+    defaults: ["libavservices_minijail_defaults"],
+    export_include_dirs: ["."],
+}
+
+// Unit tests.
+cc_test {
+    name: "libavservices_minijail_unittest",
+    defaults: ["libavservices_minijail_defaults"],
+    srcs: [
+        "av_services_minijail_unittest.cpp",
+    ],
+}

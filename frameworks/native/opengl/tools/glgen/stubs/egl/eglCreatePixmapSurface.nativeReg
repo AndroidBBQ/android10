@@ -1,0 +1,1 @@
+{"eglCreatePixmapSurface", "(Landroid/opengl/EGLDisplay;Landroid/opengl/EGLConfig;I[II)Landroid/opengl/EGLSurface;", (void *) android_eglCreatePixmapSurface },

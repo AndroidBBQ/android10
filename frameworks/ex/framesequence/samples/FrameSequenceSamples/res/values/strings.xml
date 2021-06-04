@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NOTE: all strings should be marked as translatable=false,
+         since this sample app is for testing, and won't be shipped -->
+
+    <string name="app_name" translatable="false">FrameSequence Samples</string>
+    <string name="action_settings" translatable="false">Settings</string>
+
+    <string name="start" translatable="false">start</string>
+    <string name="stop" translatable="false">stop</string>
+    <string name="vis" translatable="false">vis</string>
+    <string name="invis" translatable="false">invis</string>
+
+    <string name="circle_mask" translatable="false">Toggle Circle Mask</string>
+
+</resources>

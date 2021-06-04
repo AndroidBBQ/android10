@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2017 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<!-- Common style for support lib preference to look like Settings app UI -->
+<resources>
+
+    <dimen name="preference_no_icon_padding_start">72dp</dimen>
+
+    <!-- Footer Preferences -->
+    <style name="Preference.FooterPreference.SettingsBase" parent="@style/Preference.Material">
+        <item name="android:layout">@layout/preference_footer</item>
+        <item name="allowDividerAbove">true</item>
+    </style>
+
+    <style name="PreferenceThemeOverlay.SettingsBase" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="footerPreferenceStyle">@style/Preference.FooterPreference.SettingsBase</item>
+    </style>
+
+</resources>

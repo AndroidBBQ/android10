@@ -1,0 +1,72 @@
+
+cc_defaults {
+    name: "libnbaio_mono_defaults",
+    srcs: [
+        "MonoPipe.cpp",
+        "MonoPipeReader.cpp",
+        "NBAIO.cpp",
+    ],
+    header_libs: [
+        "libaudioclient_headers",
+        "libaudio_system_headers",
+        "libmedia_headers",
+    ],
+    export_header_lib_headers: [
+        "libaudioclient_headers",
+        "libmedia_headers",
+    ],
+
+    shared_libs: [
+        "libaudioutils",
+        "liblog",
+        "libutils",
+    ],
+
+    export_include_dirs: ["include_mono"],
+}
+
+// libnbaio_mono is the part of libnbaio that is available for vendors to use. Vendor modules can't
+// link against libnbaio and system modules can't link against libnbaio_mono. The rest of libnbaio
+// pulls in too many other dependencies.
+cc_library_shared {
+    name: "libnbaio_mono",
+    vendor: true,
+    defaults: ["libnbaio_mono_defaults"],
+}
+
+cc_library_shared {
+    name: "libnbaio",
+    defaults: ["libnbaio_mono_defaults"],
+    srcs: [
+        "AudioBufferProviderSource.cpp",
+        "AudioStreamInSource.cpp",
+        "AudioStreamOutSink.cpp",
+        "Pipe.cpp",
+        "PipeReader.cpp",
+        "SourceAudioBufferProvider.cpp",
+    ],
+
+    // libsndfile license is incompatible; uncomment to use for local debug only
+    // srcs: [
+    //     "LibsndfileSink.cpp",
+    //     "LibsndfileSource.cpp",
+    // ],
+    // static_libs: ["libsndfile"],
+
+    shared_libs: [
+        "libaudioutils",
+        "libbinder",
+        "libcutils",
+        "liblog",
+        "libutils",
+    ],
+
+    cflags: [
+        "-Werror",
+        "-Wall",
+    ],
+
+    include_dirs: ["system/media/audio_utils/include"],
+
+    export_include_dirs: ["include"],
+}

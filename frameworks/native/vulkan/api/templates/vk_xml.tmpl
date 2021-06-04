@@ -1,0 +1,435 @@
+{{Include "vulkan_common.tmpl"}}
+{{Macro "DefineGlobals" $}}
+{{$ | Macro "vk.xml" | Reflow 4 | Write "vk.xml"}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Entry point
+-------------------------------------------------------------------------------
+*/}}
+{{define "vk.xml"}}
+<?xml version="1.0" encoding="UTF-8"?>
+<registry>
+    »<comment>«
+Copyright (c) 2015 The Khronos Group Inc.
+¶
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and/or associated documentation files (the
+"Materials"), to deal in the Materials without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Materials, and to
+permit persons to whom the Materials are furnished to do so, subject to
+the following conditions:
+¶
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Materials.
+¶
+THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+¶
+------------------------------------------------------------------------
+¶
+This file, vk.xml, is the Vulkan API Registry.»
+    </comment>
+¶
+    <!-- SECTION: Vulkan type definitions -->
+    <types>»
+        <type name="vk_platform" category="include">#include "vk_platform.h"</type>
+¶
+        <type category="define">#define <name>VK_MAKE_VERSION</name>(major, minor, patch) \
+    «((major &lt;&lt; 22) | (minor &lt;&lt; 12) | patch)</type>»
+¶
+        <type category="define">// Vulkan API version supported by this file««
+#define <name>VK_API_VERSION</name> <type>VK_MAKE_VERSION</type>({{Global "VERSION_MAJOR"}}, {{Global "VERSION_MINOR"}}, {{Global "VERSION_PATCH"}})</type>
+¶
+        »»<type category="define">««
+#if (_MSC_VER &gt;= 1800 || __cplusplus &gt;= 201103L)
+#define <name>VK_NONDISP_HANDLE_OPERATOR_BOOL</name>() explicit operator bool() const { return handle != 0; }
+#else
+#define VK_NONDISP_HANDLE_OPERATOR_BOOL()
+«#endif
+      »»»</type>
+¶
+      <type category="define">«««
+#define <name>VK_DEFINE_HANDLE</name>(obj) typedef struct obj##_T* obj;</type>
+      »»»<type category="define">«««
+#if defined(__cplusplus)
+    »»#if (_MSC_VER &gt;= 1800 || __cplusplus &gt;= 201103L)
+        »// The bool operator only works if there are no implicit conversions from an obj to
+        // a bool-compatible type, which can then be used to unintentionally violate type safety.
+        // C++11 and above supports the "explicit" keyword on conversion operators to stop this
+        // from happening. Otherwise users of C++ below C++11 won't get direct access to evaluating
+        // the object handle as a bool in expressions like:
+        //     if (obj) vkDestroy(obj);
+        #define VK_NONDISP_HANDLE_OPERATOR_BOOL() explicit operator bool() const { return handle != 0; }
+        #define VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj) \
+            explicit obj(uint64_t x) : handle(x) { } \
+            obj(decltype(nullptr)) : handle(0) { }
+    «#else»
+        #define VK_NONDISP_HANDLE_OPERATOR_BOOL()
+        #define VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj) \
+            obj(uint64_t x) : handle(x) { }
+    «#endif
+    #define <name>VK_DEFINE_NONDISP_HANDLE</name>(obj) \»
+        struct obj { \
+            obj() { } \
+            VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj) \
+            obj&amp; operator =(uint64_t x) { handle = x; return *this; } \
+            bool operator==(const obj&amp; other) const { return handle == other.handle; } \
+            bool operator!=(const obj&amp; other) const { return handle != other.handle; } \
+            bool operator!() const { return !handle; } \
+            VK_NONDISP_HANDLE_OPERATOR_BOOL() \
+            uint64_t handle; \
+        };
+««#else
+    »#define VK_DEFINE_NONDISP_HANDLE(obj) typedef struct obj##_T { uint64_t handle; } obj;«
+#endif
+        »»</type>
+¶
+        <type category="define">
+#if defined(__cplusplus) &amp;&amp; ((defined(_MSC_VER) &amp;&amp; _MSC_VER &gt;= 1800) || __cplusplus &gt;= 201103L)
+    »#define <name>VK_NULL_HANDLE</name> nullptr
+«#else
+    »#define VK_NULL_HANDLE 0
+«#endif
+        »»</type>
+¶
+        <type requires="vk_platform" name="VkDeviceSize"/>
+        <type requires="vk_platform" name="VkSampleMask"/>
+        <type requires="vk_platform" name="VkFlags"/>
+        <!-- Basic C types, pulled in via vk_platform.h -->
+        <type requires="vk_platform" name="char"/>
+        <type requires="vk_platform" name="float"/>
+        <type requires="vk_platform" name="VkBool32"/>
+        <type requires="vk_platform" name="uint8_t"/>
+        <type requires="vk_platform" name="uint32_t"/>
+        <type requires="vk_platform" name="uint64_t"/>
+        <type requires="vk_platform" name="int32_t"/>
+        <type requires="vk_platform" name="size_t"/>
+        <!-- Bitfield types -->
+        {{range $e := $.Enums}}
+          {{if $e.IsBitfield}}
+            {{$bits := print (Macro "EnumName" $e | TrimRight "s") "Bits"}}
+            <type{{if $e.Entries}} requires="{{$bits}}"{{end}} category="bitmask">typedef <type>VkFlags</type> <name>{{$e.Name}}</name>;</type>§
+            {{if $e.Entries}}{{Macro "XML.Docs" $e.Docs}}
+            {{else}}{{Macro "XML.Docs" (Strings $e.Docs "(no bits yet)")}}
+            {{end}}
+          {{end}}
+        {{end}}
+¶
+        <!-- Types which can be void pointers or class pointers, selected at compile time -->
+        {{range $i, $p := $.Pseudonyms}}
+          {{     if (GetAnnotation $p "dispatchHandle")}}
+            {{if Global "VK_DEFINE_HANDLE_TYPE_DEFINED"}}
+              <type category="handle">VK_DEFINE_HANDLE(<name>{{$p.Name}}</name>)</type>
+            {{else}}
+              {{Global "VK_DEFINE_HANDLE_TYPE_DEFINED" "YES"}}
+              <type category="handle"><type>VK_DEFINE_HANDLE</type>(<name>{{$p.Name}}</name>)</type>
+            {{end}}
+          {{else if (GetAnnotation $p "nonDispatchHandle")}}
+            {{if Global "VK_DEFINE_NONDISP_HANDLE_TYPE_DEFINED"}}
+              <type category="handle">VK_DEFINE_NONDISP_HANDLE(<name>{{$p.Name}}</name>)</type>
+            {{else}}
+              {{Global "VK_DEFINE_NONDISP_HANDLE_TYPE_DEFINED" "YES"}}
+              <type category="handle"><type>VK_DEFINE_NONDISP_HANDLE</type>(<name>{{$p.Name}}</name>)</type>
+            {{end}}
+          {{end}}
+        {{end}}
+¶
+        <!-- Types generated from corresponding <enums> tags below -->
+        {{range $e := SortBy $.Enums "EnumName"}}
+          {{if and $e.Entries (not (GetAnnotation $e "internal"))}}
+            {{if $e.IsBitfield}}
+              <type name="{{Macro "EnumName" $e | TrimRight "s"}}Bits" category="enum"/>
+            {{else}}
+              <type name="{{$e.Name}}" category="enum"/>
+            {{end}}
+          {{end}}
+        {{end}}
+¶
+        <!-- The PFN_vk*Function types are used by VkAllocCallbacks below -->
+        <type>typedef void* (VKAPI *<name>PFN_vkAllocFunction</name>)(«
+          void*                           pUserData,
+          size_t                          size,
+          size_t                          alignment,
+          <type>VkSystemAllocType</type>               allocType);</type>»
+        <type>typedef void (VKAPI *<name>PFN_vkFreeFunction</name>)(«
+          void*                           pUserData,
+          void*                           pMem);</type>»
+¶
+        <!-- The PFN_vkVoidFunction type are used by VkGet*ProcAddr below -->
+        <type>typedef void (VKAPI *<name>PFN_vkVoidFunction</name>)(void);</type>
+¶
+        <!-- Struct types -->
+        {{range $c := $.Classes}}
+          {{if not (GetAnnotation $c "internal")}}
+            {{Macro "Struct" $c}}
+          {{end}}
+        {{end}}
+    «</types>
+¶
+    <!-- SECTION: Vulkan enumerant (token) definitions. -->
+¶
+    <enums namespace="VK" comment="Misc. hardcoded constants - not an enumerated type">»
+            <!-- This is part of the header boilerplate -->
+      {{range $d := $.Definitions}}
+        {{if HasPrefix $d.Name "VK_"}}
+        <enum value="{{$d.Expression}}"        name="{{$d.Name}}"/>{{Macro "XML.Docs" $d.Docs}}
+        {{end}}
+      {{end}}
+        <enum value="1000.0f"  name="VK_LOD_CLAMP_NONE"/>
+        <enum value="(-0U)" name="VK_REMAINING_MIP_LEVELS"/>
+        <enum value="(~0U)" name="VK_REMAINING_ARRAY_LAYERS"/>
+        <enum value="(_0ULL)" name="VK_WHOLE_SIZE"/>
+        <enum value="(~0U)" name="VK_ATTACHMENT_UNUSED"/>
+        <enum value="(~0U)" name="VK_QUEUE_FAMILY_IGNORED"/>
+        <enum value="(~0U)" name="VK_SUBPASS_EXTERNAL"/>
+    «</enums>
+¶
+    <!-- Unlike OpenGL, most tokens in Vulkan are actual typed enumerants in»
+         their own numeric namespaces. The "name" attribute is the C enum
+         type name, and is pulled in from a <type> definition above
+         (slightly clunky, but retains the type / enum distinction). "type"
+         attributes of "enum" or "bitmask" indicate that these values should
+         be generated inside an appropriate definition. -->«
+¶
+    {{range $e := $.Enums}}
+      {{if not (or $e.IsBitfield (GetAnnotation $e "internal"))}}
+        {{Macro "XML.Enum" $e}}
+      {{end}}
+    {{end}}
+¶
+    <!-- Flags -->
+    {{range $e := $.Enums}}
+      {{if $e.IsBitfield}}
+        {{Macro "XML.Bitfield" $e}}
+      {{end}}
+    {{end}}
+¶
+    <!-- SECTION: Vulkan command definitions -->
+    <commands namespace="vk">»
+    {{range $f := AllCommands $}}
+      {{if not (GetAnnotation $f "pfn")}}
+        {{Macro "XML.Function" $f}}
+      {{end}}
+    {{end}}
+    «</commands>
+¶
+    <!-- SECTION: Vulkan API interface definitions -->
+    <feature api="vulkan" name="VK_VERSION_1_0" number="1.0">»
+        <require comment="Header boilerplate">»
+            <type name="vk_platform"/>
+        «</require>
+        <require comment="API version">»
+            <type name="VK_API_VERSION"/>
+        «</require>
+        <require comment="API constants">»
+            <enum name="VK_LOD_CLAMP_NONE"/>
+            <enum name="VK_REMAINING_MIP_LEVELS"/>
+            <enum name="VK_REMAINING_ARRAY_LAYERS"/>
+            <enum name="VK_WHOLE_SIZE"/>
+            <enum name="VK_ATTACHMENT_UNUSED"/>
+            <enum name="VK_TRUE"/>
+            <enum name="VK_FALSE"/>
+        «</require>
+        <require comment="All functions (TODO: split by type)">»
+        {{range $f := AllCommands $}}
+          {{if not (GetAnnotation $f "pfn")}}
+          <command name="{{$f.Name}}"/>
+          {{end}}
+        {{end}}
+        </require>
+        «<require comment="Types not directly used by the API">»
+            <!-- Include <type name="typename"/> here for e.g. structs that»
+                 are not parameter types of commands, but still need to be
+                 defined in the API.
+             «-->
+            <type name="VkBufferMemoryBarrier"/>
+            <type name="VkDispatchIndirectCmd"/>
+            <type name="VkDrawIndexedIndirectCmd"/>
+            <type name="VkDrawIndirectCmd"/>
+            <type name="VkImageMemoryBarrier"/>
+            <type name="VkMemoryBarrier"/>
+        «</require>
+    «</feature>
+¶
+    <!-- SECTION: Vulkan extension interface definitions (none yet) -->
+«</registry>
+{{end}}
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified bitfield.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Bitfield"}}
+  {{AssertType $ "Enum"}}
+
+  {{if $.Entries}}
+  <enums namespace="VK" name="{{Macro "EnumName" $ | TrimRight "s"}}Bits" type="bitmask">»
+  {{range $e := $.Entries}}
+    {{$pos := Bitpos $e.Value}}
+    <enum §
+      {{if gt $pos -1}} bitpos="{{$pos}}"    §
+      {{else}}value="{{if $e.Value}}{{printf "0x%.8X" $e.Value}}{{else}}0{{end}}"    §
+      {{end}}name="{{Macro "BitfieldEntryName" $e}}" §
+      {{if $d := $e.Docs}} comment="{{$d | JoinWith "  "}}"{{end}}/>
+  {{end}}
+  «</enums>
+  {{end}}
+
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified enum.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Enum"}}
+  {{AssertType $ "Enum"}}
+
+  <enums namespace="VK" name="{{Macro "EnumName" $}}" type="enum" §
+         expand="{{Macro "EnumName" $ | SplitPascalCase | Upper | JoinWith "_"}}"{{if $.Docs}} comment="{{$.Docs | JoinWith "  "}}"{{end}}>»
+  {{range $i, $e := $.Entries}}
+    <enum value="{{AsSigned $e.Value}}"     name="{{Macro "BitfieldEntryName" $e}}"{{if $e.Docs}} comment="{{$e.Docs | JoinWith "  "}}"{{end}}/>
+  {{end}}
+  {{if $lu := GetAnnotation $ "lastUnused"}}
+    <unused start="{{index $lu.Arguments 0}}"/>
+  {{end}}
+  «</enums>
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified class.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Struct"}}
+  {{AssertType $ "Class"}}
+
+  <type category="{{Macro "StructType" $}}" name="{{Macro "StructName" $}}"{{if $.Docs}} comment="{{$.Docs | JoinWith "  "}}"{{end}}>»
+    {{range $f := $.Fields}}
+    <member>{{Node "XML.Type" $f}}        <name>{{$f.Name}}</name>{{Macro "XML.ArrayPostfix" $f}}</member>{{Macro "XML.Docs" $f.Docs}}
+    {{end}}
+  «</type>
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits either 'struct' or 'union' for the specified class.
+-------------------------------------------------------------------------------
+*/}}
+{{define "StructType"}}
+  {{AssertType $ "Class"}}
+
+  {{if GetAnnotation $ "union"}}union{{else}}struct{{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C function pointer typedef declaration for the specified command.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Function"}}
+  {{AssertType $ "Function"}}
+
+    {{$ts := GetAnnotation $ "threadSafety"}}
+    <command{{if $ts}} threadsafe="{{index $ts.Arguments 0}}"{{end}}>»
+        <proto>{{Node "XML.Type" $.Return}} <name>{{$.Name}}</name></proto>
+        {{range $p := $.CallParameters}}
+          <param>{{Node "XML.Type" $p}} <name>{{$p.Name}}{{Macro "ArrayPostfix" $p}}</name></param>
+        {{end}}
+    «</command>
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the XML translation for the specified documentation block (string array).
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Docs"}}
+  {{if $}} <!-- {{JoinWith "  " $ | Replace "<" "" | Replace ">" ""}} -->{{end}}
+{{end}}
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C translation for the specified type.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Type.Class"      }}<type>{{Macro "StructName" $.Type}}</type>{{end}}
+{{define "XML.Type.Pseudonym"  }}<type>{{$.Type.Name}}</type>{{end}}
+{{define "XML.Type.Enum"       }}<type>{{$.Type.Name}}</type>{{end}}
+{{define "XML.Type.StaticArray"}}{{Node "XML.Type" $.Type.ValueType}}{{end}}
+{{define "XML.Type.Pointer"    }}{{if $.Type.Const}}{{Node "XML.ConstType" $.Type.To}}{{else}}{{Node "XML.Type" $.Type.To}}{{end}}*{{end}}
+{{define "XML.Type.Slice"      }}<type>{{Node "XML.Type" $.Type.To}}</type>*{{end}}
+{{define "XML.Type#s8"         }}<type>int8_t</type>{{end}}
+{{define "XML.Type#u8"         }}<type>uint8_t</type>{{end}}
+{{define "XML.Type#s16"        }}<type>int16_t</type>{{end}}
+{{define "XML.Type#u16"        }}<type>uint16_t</type>{{end}}
+{{define "XML.Type#s32"        }}<type>int32_t</type>{{end}}
+{{define "XML.Type#u32"        }}<type>uint32_t</type>{{end}}
+{{define "XML.Type#f32"        }}<type>float</type>{{end}}
+{{define "XML.Type#s64"        }}<type>int64_t</type>{{end}}
+{{define "XML.Type#u64"        }}<type>uint64_t</type>{{end}}
+{{define "XML.Type#f64"        }}<type>double</type>{{end}}
+{{define "XML.Type#char"       }}<type>char</type>{{end}}
+{{define "XML.Type#void"       }}void{{end}}
+
+{{define "XML.ConstType_Default"}}const {{Node "XML.Type" $.Type}}{{end}}
+{{define "XML.ConstType.Pointer"}}{{Node "XML.Type" $.Type}} const{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a C type and name for the given parameter
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Parameter"}}
+  {{AssertType $ "Parameter"}}
+
+  <type>{{Macro "ParameterType" $}}</type> <name>{{$.Name}}{{Macro "ArrayPostfix" $}}</name>
+{{end}}
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a comma-separated list of C type-name paired parameters for the given
+  command.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.Parameters"}}
+  {{AssertType $ "Function"}}
+
+  {{ForEach $.CallParameters "XML.Parameter" | JoinWith ", "}}
+  {{if not $.CallParameters}}<type>void</type>{{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the fixed-size-array postfix for pseudonym types annotated with @array
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.ArrayPostfix"}}{{Node "XML.ArrayPostfix" $}}{{end}}
+{{define "XML.ArrayPostfix.StaticArray"}}[{{Node "XML.NamedValue" $.Type.SizeExpr}}]{{end}}
+{{define "XML.ArrayPostfix_Default"}}{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the value of the given constant, or the <enum> tagged name if existant.
+-------------------------------------------------------------------------------
+*/}}
+{{define "XML.NamedValue.Definition"}}<enum>{{$.Node.Name}}</enum>{{end}}
+{{define "XML.NamedValue.EnumEntry"}}<enum>{{$.Node.Name}}</enum>{{end}}
+{{define "XML.NamedValue_Default"}}{{$.Node}}{{end}}

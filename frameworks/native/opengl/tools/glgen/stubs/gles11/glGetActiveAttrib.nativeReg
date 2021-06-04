@@ -1,0 +1,4 @@
+{"glGetActiveAttrib", "(III[II[II[II[BI)V", (void *) android_glGetActiveAttrib__III_3II_3II_3II_3BI },
+{"glGetActiveAttrib", "(IIILjava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;B)V", (void *) android_glGetActiveAttrib__IIILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2Ljava_nio_IntBuffer_2B },
+{"glGetActiveAttrib", "(II[II[II)Ljava/lang/String;", (void *) android_glGetActiveAttrib1 },
+{"glGetActiveAttrib", "(IILjava/nio/IntBuffer;Ljava/nio/IntBuffer;)Ljava/lang/String;", (void *) android_glGetActiveAttrib2 },

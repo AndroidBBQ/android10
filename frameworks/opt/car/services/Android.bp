@@ -1,0 +1,25 @@
+java_library {
+    name: "car-frameworks-service",
+    installable: true,
+    libs: ["services"],
+    //LOCAL_PACKAGE_NAME := CarFrameworkService
+    required: ["libcar-framework-service-jni"],
+    srcs: [
+        "src/**/*.java",
+        "src/com/android/internal/car/ICarServiceHelper.aidl",
+    ],
+    static_libs: ["android.car.userlib"],
+}
+
+cc_library_shared {
+    name: "libcar-framework-service-jni",
+    shared_libs: [
+        "libandroid_runtime",
+        "libhidlbase",
+        "liblog",
+        "libnativehelper",
+        "libsuspend",
+        "libutils",
+    ],
+    srcs: ["src/jni/com_android_internal_car_CarServiceHelperService.cpp"],
+}

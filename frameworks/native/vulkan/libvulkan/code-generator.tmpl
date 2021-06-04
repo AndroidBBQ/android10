@@ -1,0 +1,1196 @@
+{{define "Copyright"}}
+/*
+•* Copyright 2016 The Android Open Source Project
+•*
+•* Licensed under the Apache License, Version 2.0 (the "License");
+•* you may not use this file except in compliance with the License.
+•* You may obtain a copy of the License at
+•*
+•*      http://www.apache.org/licenses/LICENSE-2.0
+•*
+•* Unless required by applicable law or agreed to in writing, software
+•* distributed under the License is distributed on an "AS IS" BASIS,
+•* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+•* See the License for the specific language governing permissions and
+•* limitations under the License.
+•*/
+¶{{end}}
+
+{{Include "../api/templates/vulkan_common.tmpl"}}
+{{Global "clang-format" (Strings "clang-format" "-style=file")}}
+{{Macro "DefineGlobals" $}}
+{{$ | Macro "api_gen.h"   | Format (Global "clang-format") | Write "api_gen.h"  }}
+{{$ | Macro "api_gen.cpp" | Format (Global "clang-format") | Write "api_gen.cpp"}}
+{{$ | Macro "driver_gen.h" | Format (Global "clang-format") | Write "driver_gen.h"}}
+{{$ | Macro "driver_gen.cpp" | Format (Global "clang-format") | Write "driver_gen.cpp"}}
+
+{{/*
+-------------------------------------------------------------------------------
+  api_gen.h
+-------------------------------------------------------------------------------
+*/}}
+{{define "api_gen.h"}}
+{{Macro "Copyright"}}
+¶
+// WARNING: This file is generated. See ../README.md for instructions.
+¶
+#ifndef LIBVULKAN_API_GEN_H
+#define LIBVULKAN_API_GEN_H
+¶
+#include <bitset>
+#include <vulkan/vulkan.h>
+#include "driver_gen.h"
+¶
+namespace vulkan {«
+namespace api {«
+¶
+struct InstanceDispatchTable {
+  // clang-format off
+  {{range $f := AllCommands $}}
+    {{if (Macro "api.IsInstanceDispatchTableEntry" $f)}}
+      {{Macro "C++.DeclareTableEntry" $f}};
+    {{end}}
+  {{end}}
+  // clang-format on
+};
+¶
+struct DeviceDispatchTable {
+  // clang-format off
+  {{range $f := AllCommands $}}
+    {{if (Macro "api.IsDeviceDispatchTableEntry" $f)}}
+      {{Macro "C++.DeclareTableEntry" $f}};
+    {{end}}
+  {{end}}
+  // clang-format on
+};
+¶
+bool InitDispatchTable(
+    VkInstance instance,
+    PFN_vkGetInstanceProcAddr get_proc,
+    const std::bitset<driver::ProcHook::EXTENSION_COUNT> &extensions);
+bool InitDispatchTable(
+    VkDevice dev,
+    PFN_vkGetDeviceProcAddr get_proc,
+    const std::bitset<driver::ProcHook::EXTENSION_COUNT> &extensions);
+¶
+»} // namespace api
+»} // namespace vulkan
+¶
+#endif // LIBVULKAN_API_GEN_H
+¶{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  api_gen.cpp
+-------------------------------------------------------------------------------
+*/}}
+{{define "api_gen.cpp"}}
+{{Macro "Copyright"}}
+¶
+// WARNING: This file is generated. See ../README.md for instructions.
+¶
+#include <string.h>
+¶
+#include <algorithm>
+¶
+#include <log/log.h>
+¶
+// to catch mismatches between vulkan.h and this file
+#undef VK_NO_PROTOTYPES
+#include "api.h"
+¶
+namespace vulkan {«
+namespace api {«
+¶
+{{Macro "C++.DefineInitProcMacro" "dispatch"}}
+¶
+{{Macro "api.C++.DefineInitProcExtMacro"}}
+¶
+namespace {«
+¶
+// clang-format off
+¶
+{{range $f := AllCommands $}}
+  {{Macro "api.C++.DefineExtensionStub" $f}}
+{{end}}
+// clang-format on
+¶
+»} // anonymous
+¶
+bool InitDispatchTable(
+    VkInstance instance,
+    PFN_vkGetInstanceProcAddr get_proc,
+    const std::bitset<driver::ProcHook::EXTENSION_COUNT> &extensions) {
+    auto& data = GetData(instance);
+    bool success = true;
+    ¶
+    // clang-format off
+    {{range $f := AllCommands $}}
+      {{if (Macro "api.IsInstanceDispatchTableEntry" $f)}}
+        {{Macro "C++.InitProc" $f}}
+      {{end}}
+    {{end}}
+    // clang-format on
+    ¶
+    return success;
+}
+¶
+bool InitDispatchTable(
+    VkDevice dev,
+    PFN_vkGetDeviceProcAddr get_proc,
+    const std::bitset<driver::ProcHook::EXTENSION_COUNT> &extensions) {
+    auto& data = GetData(dev);
+    bool success = true;
+    ¶
+    // clang-format off
+    {{range $f := AllCommands $}}
+      {{if (Macro "api.IsDeviceDispatchTableEntry" $f)}}
+        {{Macro "C++.InitProc" $f}}
+      {{end}}
+    {{end}}
+    // clang-format on
+    ¶
+    return success;
+}
+¶
+// clang-format off
+¶
+namespace {«
+¶
+// forward declarations needed by GetInstanceProcAddr and GetDeviceProcAddr
+{{range $f := AllCommands $}}
+  {{if and (Macro "IsFunctionExported" $f) (not (Macro "api.IsIntercepted" $f))}}
+    VKAPI_ATTR {{Node "Type" $f.Return}} {{Macro "BaseName" $f}}({{Macro "Parameters" $f}});
+  {{end}}
+{{end}}
+¶
+{{range $f := AllCommands $}}
+  {{if and (Macro "IsFunctionExported" $f) (not (Macro "api.IsIntercepted" $f))}}
+    VKAPI_ATTR {{Node "Type" $f.Return}} {{Macro "BaseName" $f}}({{Macro "Parameters" $f}}) {
+      {{     if eq $f.Name "vkGetInstanceProcAddr"}}
+        {{Macro "api.C++.InterceptInstanceProcAddr" $}}
+      {{else if eq $f.Name "vkGetDeviceProcAddr"}}
+        {{Macro "api.C++.InterceptDeviceProcAddr" $}}
+      {{end}}
+
+      {{Macro "api.C++.Dispatch" $f}}
+    }
+    ¶
+  {{end}}
+{{end}}
+¶
+»}  // anonymous namespace
+¶
+// clang-format on
+¶
+»} // namespace api
+»} // namespace vulkan
+¶
+// clang-format off
+¶
+{{range $f := AllCommands $}}
+  {{if (Macro "IsFunctionExported" $f)}}
+    __attribute__((visibility("default")))
+    VKAPI_ATTR {{Node "Type" $f.Return}} {{$f.Name}}({{Macro "Parameters" $f}}) {
+      {{if not (IsVoid $f.Return.Type)}}return §{{end}}
+      vulkan::api::{{Macro "BaseName" $f}}({{Macro "Arguments" $f}});
+    }
+    ¶
+  {{end}}
+{{end}}
+¶
+// clang-format on
+¶{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  driver_gen.h
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver_gen.h"}}
+{{Macro "Copyright"}}
+¶
+// WARNING: This file is generated. See ../README.md for instructions.
+¶
+#ifndef LIBVULKAN_DRIVER_GEN_H
+#define LIBVULKAN_DRIVER_GEN_H
+¶
+#include <bitset>
+#include <vulkan/vulkan.h>
+#include <vulkan/vk_android_native_buffer.h>
+¶
+namespace vulkan {«
+namespace driver {«
+¶
+{{Macro "driver.C++.DefineProcHookType"}}
+¶
+struct InstanceDriverTable {
+  // clang-format off
+  {{range $f := AllCommands $}}
+    {{if (Macro "driver.IsInstanceDriverTableEntry" $f)}}
+      {{Macro "C++.DeclareTableEntry" $f}};
+    {{end}}
+  {{end}}
+  // clang-format on
+};
+¶
+struct DeviceDriverTable {
+  // clang-format off
+  {{range $f := AllCommands $}}
+    {{if (Macro "driver.IsDeviceDriverTableEntry" $f)}}
+      {{Macro "C++.DeclareTableEntry" $f}};
+    {{end}}
+  {{end}}
+  // clang-format on
+};
+¶
+const ProcHook* GetProcHook(const char* name);
+ProcHook::Extension GetProcHookExtension(const char* name);
+¶
+bool InitDriverTable(VkInstance instance, PFN_vkGetInstanceProcAddr get_proc,
+                     const std::bitset<ProcHook::EXTENSION_COUNT> &extensions);
+bool InitDriverTable(VkDevice dev, PFN_vkGetDeviceProcAddr get_proc,
+                     const std::bitset<ProcHook::EXTENSION_COUNT> &extensions);
+¶
+»} // namespace driver
+»} // namespace vulkan
+¶
+#endif // LIBVULKAN_DRIVER_TABLE_H
+¶{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  driver_gen.cpp
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver_gen.cpp"}}
+{{Macro "Copyright"}}
+¶
+// WARNING: This file is generated. See ../README.md for instructions.
+¶
+#include <string.h>
+¶
+#include <algorithm>
+¶
+#include <log/log.h>
+¶
+#include "driver.h"
+¶
+namespace vulkan {«
+namespace driver {«
+¶
+namespace {«
+¶
+// clang-format off
+¶
+{{range $f := AllCommands $}}
+  {{Macro "driver.C++.DefineProcHookStub" $f}}
+{{end}}
+// clang-format on
+¶
+const ProcHook g_proc_hooks[] = {
+  // clang-format off
+  {{range $f := SortBy (AllCommands $) "FunctionName"}}
+    {{if (Macro "driver.IsIntercepted" $f)}}
+      {{     if (Macro "IsGloballyDispatched" $f)}}
+        {{Macro "driver.C++.DefineGlobalProcHook" $f}}
+      {{else if (Macro "IsInstanceDispatched" $f)}}
+        {{Macro "driver.C++.DefineInstanceProcHook" $f}}
+      {{else if (Macro "IsDeviceDispatched" $f)}}
+        {{Macro "driver.C++.DefineDeviceProcHook" $f}}
+      {{end}}
+    {{end}}
+  {{end}}
+  // clang-format on
+};
+¶
+»} // anonymous
+¶
+const ProcHook* GetProcHook(const char* name) {
+    const auto& begin = g_proc_hooks;
+    const auto& end = g_proc_hooks +
+      sizeof(g_proc_hooks) / sizeof(g_proc_hooks[0]);
+    const auto hook = std::lower_bound(begin, end, name,
+        [](const ProcHook& e, const char* n) { return strcmp(e.name, n) < 0; });
+    return (hook <  end && strcmp(hook->name, name) == 0) ? hook : nullptr;
+}
+¶
+ProcHook::Extension GetProcHookExtension(const char* name) {
+  {{$exts := Strings (Macro "driver.KnownExtensions") | SplitOn "\n"}}
+  // clang-format off
+  {{range $e := $exts}}
+    if (strcmp(name, "{{$e}}") == 0) return ProcHook::{{TrimPrefix "VK_" $e}};
+  {{end}}
+  // clang-format on
+  return ProcHook::EXTENSION_UNKNOWN;
+}
+¶
+{{Macro "C++.DefineInitProcMacro" "driver"}}
+¶
+{{Macro "driver.C++.DefineInitProcExtMacro"}}
+¶
+bool InitDriverTable(VkInstance instance, PFN_vkGetInstanceProcAddr get_proc,
+                     const std::bitset<ProcHook::EXTENSION_COUNT> &extensions)
+{
+    auto& data = GetData(instance);
+    bool success = true;
+    ¶
+    // clang-format off
+    {{range $f := AllCommands $}}
+      {{if (Macro "driver.IsInstanceDriverTableEntry" $f)}}
+        {{Macro "C++.InitProc" $f}}
+      {{end}}
+    {{end}}
+    // clang-format on
+    ¶
+    return success;
+}
+¶
+bool InitDriverTable(VkDevice dev, PFN_vkGetDeviceProcAddr get_proc,
+                     const std::bitset<ProcHook::EXTENSION_COUNT> &extensions)
+{
+    auto& data = GetData(dev);
+    bool success = true;
+    ¶
+    // clang-format off
+    {{range $f := AllCommands $}}
+      {{if (Macro "driver.IsDeviceDriverTableEntry" $f)}}
+        {{Macro "C++.InitProc" $f}}
+      {{end}}
+    {{end}}
+    // clang-format on
+    ¶
+    return success;
+}
+¶
+»} // namespace driver
+»} // namespace vulkan
+¶
+// clang-format on
+¶{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits a declaration of a dispatch/driver table entry.
+------------------------------------------------------------------------------
+*/}}
+{{define "C++.DeclareTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{Macro "FunctionPtrName" $}} {{Macro "BaseName" $}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits INIT_PROC macro.
+-------------------------------------------------------------------------------
+*/}}
+{{define "C++.DefineInitProcMacro"}}
+  #define UNLIKELY(expr) __builtin_expect((expr), 0)
+  ¶
+  #define INIT_PROC(required, obj, proc) do {                   \
+      data.{{$}}.proc = reinterpret_cast<PFN_vk ## proc>(       \
+              get_proc(obj, "vk" # proc));                      \
+      if (UNLIKELY(required && !data.{{$}}.proc)) {             \
+          ALOGE("missing " # obj " proc: vk" # proc);           \
+          success = false;                                      \
+      }                                                         \
+  } while(0)
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits code to invoke INIT_PROC or INIT_PROC_EXT.
+-------------------------------------------------------------------------------
+*/}}
+{{define "C++.InitProc"}}
+  {{AssertType $ "Function"}}
+
+  {{$ext := GetAnnotation $ "extension"}}
+  {{if $ext}}
+    INIT_PROC_EXT({{Macro "BaseName" $ext}}, §
+  {{else}}
+    INIT_PROC(§
+  {{end}}
+
+  {{if GetAnnotation $ "optional"}}false{{else if GetAnnotation $ "vulkan1_1"}}false{{else}}true{{end}}, §
+
+  {{if (Macro "IsInstanceDispatched" $)}}
+    instance, §
+  {{else}}
+    dev, §
+  {{end}}
+
+  {{Macro "BaseName" $}});
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a function is exported and instance-dispatched.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.IsInstanceDispatchTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{if and (Macro "IsFunctionExported" $) (Macro "IsInstanceDispatched" $)}}
+    {{/* deprecated and unused internally */}}
+    {{if not (eq $.Name "vkEnumerateDeviceLayerProperties")}}
+      true
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a function is exported and device-dispatched.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.IsDeviceDispatchTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{if and (Macro "IsFunctionExported" $) (Macro "IsDeviceDispatched" $)}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a function is intercepted by vulkan::api.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.IsIntercepted"}}
+  {{AssertType $ "Function"}}
+
+  {{if (Macro "IsFunctionSupported" $)}}
+    {{/* Global functions cannot be dispatched at all */}}
+    {{     if (Macro "IsGloballyDispatched" $)}}true
+
+    {{/* VkPhysicalDevice functions that manage device layers */}}
+    {{else if eq $.Name "vkCreateDevice"}}true
+    {{else if eq $.Name "vkEnumerateDeviceLayerProperties"}}true
+    {{else if eq $.Name "vkEnumerateDeviceExtensionProperties"}}true
+
+    {{/* Destroy functions of dispatchable objects */}}
+    {{else if eq $.Name "vkDestroyInstance"}}true
+    {{else if eq $.Name "vkDestroyDevice"}}true
+
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits INIT_PROC_EXT macro for vulkan::api.
+-------------------------------------------------------------------------------
+*/}}
+{{define "api.C++.DefineInitProcExtMacro"}}
+  // Exported extension functions may be invoked even when their extensions
+  // are disabled.  Dispatch to stubs when that happens.
+  #define INIT_PROC_EXT(ext, required, obj, proc) do {          \
+      if (extensions[driver::ProcHook::ext])                    \
+        INIT_PROC(required, obj, proc);                         \
+      else                                                      \
+        data.dispatch.proc = disabled ## proc;                  \
+  } while(0)
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a stub for an exported extension function.
+-------------------------------------------------------------------------------
+*/}}
+{{define "api.C++.DefineExtensionStub"}}
+  {{AssertType $ "Function"}}
+
+  {{$ext := GetAnnotation $ "extension"}}
+  {{if and $ext (Macro "IsFunctionExported" $)}}
+    {{$ext_name := index $ext.Arguments 0}}
+
+    {{$base := (Macro "BaseName" $)}}
+
+    {{$p0 := (index $.CallParameters 0)}}
+    {{$ptail := (Tail 1 $.CallParameters)}}
+
+    {{$first_type := (Macro "Parameter" $p0)}}
+    {{$tail_types := (ForEach $ptail "ParameterType" | JoinWith ", ")}}
+
+    VKAPI_ATTR {{Node "Type" $.Return}} disabled{{$base}}({{$first_type}}, {{$tail_types}}) {
+      driver::Logger({{$p0.Name}}).Err({{$p0.Name}}, §
+        "{{$ext_name}} not enabled. Exported {{$.Name}} not executed.");
+      {{if not (IsVoid $.Return.Type)}}return VK_SUCCESS;{{end}}
+    }
+    ¶
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits code for vkGetInstanceProcAddr for function interception.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.C++.InterceptInstanceProcAddr"}}
+  {{AssertType $ "API"}}
+
+  // global functions
+  if (instance == VK_NULL_HANDLE) {
+    {{range $f := AllCommands $}}
+      {{if (Macro "IsGloballyDispatched" $f)}}
+        if (strcmp(pName, "{{$f.Name}}") == 0) return §
+          reinterpret_cast<PFN_vkVoidFunction>({{Macro "BaseName" $f}});
+      {{end}}
+    {{end}}
+    ¶
+    ALOGE("invalid vkGetInstanceProcAddr(VK_NULL_HANDLE, \"%s\") call", pName);
+    return nullptr;
+  }
+  ¶
+  static const struct Hook {
+    const char* name;
+    PFN_vkVoidFunction proc;
+  } hooks[] = {
+    {{range $f := SortBy (AllCommands $) "FunctionName"}}
+      {{if (Macro "IsFunctionExported" $f)}}
+        {{/* hide global functions */}}
+        {{if (Macro "IsGloballyDispatched" $f)}}
+          { "{{$f.Name}}", nullptr },
+
+        {{/* redirect intercepted functions */}}
+        {{else if (Macro "api.IsIntercepted" $f)}}
+          { "{{$f.Name}}", reinterpret_cast<PFN_vkVoidFunction>(§
+            {{Macro "BaseName" $f}}) },
+
+        {{/* redirect vkGetInstanceProcAddr to itself */}}
+        {{else if eq $f.Name "vkGetInstanceProcAddr"}}
+          { "{{$f.Name}}", reinterpret_cast<PFN_vkVoidFunction>({{Macro "BaseName" $f}}) },
+
+        {{/* redirect device functions to themselves as a workaround for
+             layers that do not intercept in their vkGetInstanceProcAddr */}}
+        {{else if (Macro "IsDeviceDispatched" $f)}}
+          { "{{$f.Name}}", reinterpret_cast<PFN_vkVoidFunction>({{Macro "BaseName" $f}}) },
+
+        {{end}}
+      {{end}}
+    {{end}}
+  };
+  // clang-format on
+  constexpr size_t count = sizeof(hooks) / sizeof(hooks[0]);
+  auto hook = std::lower_bound(
+    hooks, hooks + count, pName,
+    [](const Hook& h, const char* n) { return strcmp(h.name, n) < 0; });
+  if (hook <  hooks + count && strcmp(hook->name, pName) == 0) {
+    if (!hook->proc) {
+      vulkan::driver::Logger(instance).Err(
+        instance, "invalid vkGetInstanceProcAddr(%p, \"%s\") call",
+        instance, pName);
+    }
+    return hook->proc;
+  }
+  // clang-format off
+  ¶
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits code for vkGetDeviceProcAddr for function interception.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.C++.InterceptDeviceProcAddr"}}
+  {{AssertType $ "API"}}
+
+  if (device == VK_NULL_HANDLE) {
+    ALOGE("invalid vkGetDeviceProcAddr(VK_NULL_HANDLE, ...) call");
+    return nullptr;
+  }
+  ¶
+  static const char* const known_non_device_names[] = {
+    {{range $f := SortBy (AllCommands $) "FunctionName"}}
+      {{if (Macro "IsFunctionSupported" $f)}}
+        {{if not (Macro "IsDeviceDispatched" $f)}}
+          "{{$f.Name}}",
+        {{end}}
+      {{end}}
+    {{end}}
+  };
+  // clang-format on
+  constexpr size_t count = sizeof(known_non_device_names) /
+    sizeof(known_non_device_names[0]);
+  if (!pName ||
+      std::binary_search(
+        known_non_device_names, known_non_device_names + count, pName,
+        [](const char* a, const char* b) { return (strcmp(a, b) < 0); })) {
+    vulkan::driver::Logger(device).Err(§
+      device, "invalid vkGetDeviceProcAddr(%p, \"%s\") call", device,§
+      (pName) ? pName : "(null)");
+    return nullptr;
+  }
+  // clang-format off
+  ¶
+  {{range $f := AllCommands $}}
+    {{if (Macro "IsDeviceDispatched" $f)}}
+      {{     if (Macro "api.IsIntercepted" $f)}}
+        if (strcmp(pName, "{{$f.Name}}") == 0) return §
+          reinterpret_cast<PFN_vkVoidFunction>(§
+            {{Macro "BaseName" $f}});
+      {{else if eq $f.Name "vkGetDeviceProcAddr"}}
+        if (strcmp(pName, "{{$f.Name}}") == 0) return §
+          reinterpret_cast<PFN_vkVoidFunction>(§
+            {{Macro "BaseName" $f}});
+      {{end}}
+    {{end}}
+  {{end}}
+  ¶
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits code to dispatch a function.
+------------------------------------------------------------------------------
+*/}}
+{{define "api.C++.Dispatch"}}
+  {{AssertType $ "Function"}}
+  {{if (Macro "api.IsIntercepted" $)}}
+    {{Error "$.Name should not be generated"}}
+  {{end}}
+
+  {{if not (IsVoid $.Return.Type)}}return §{{end}}
+
+  {{$p0 := index $.CallParameters 0}}
+  GetData({{$p0.Name}}).dispatch.§
+  {{Macro "BaseName" $}}({{Macro "Arguments" $}});
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits a list of extensions intercepted by vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.InterceptedExtensions"}}
+VK_ANDROID_native_buffer
+VK_EXT_debug_report
+VK_EXT_hdr_metadata
+VK_EXT_swapchain_colorspace
+VK_GOOGLE_display_timing
+VK_KHR_android_surface
+VK_KHR_incremental_present
+VK_KHR_shared_presentable_image
+VK_KHR_surface
+VK_KHR_swapchain
+VK_KHR_get_surface_capabilities2
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits a list of extensions known to vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.KnownExtensions"}}
+{{Macro "driver.InterceptedExtensions"}}
+VK_KHR_get_physical_device_properties2
+VK_ANDROID_external_memory_android_hardware_buffer
+VK_KHR_bind_memory2
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if an extension is intercepted by vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.IsExtensionIntercepted"}}
+  {{$ext_name := index $.Arguments 0}}
+  {{$filters := Strings (Macro "driver.InterceptedExtensions") | SplitOn "\n"}}
+
+  {{range $f := $filters}}
+    {{if eq $ext_name $f}}true{{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a function is intercepted by vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.IsIntercepted"}}
+  {{AssertType $ "Function"}}
+
+  {{if (Macro "IsFunctionSupported" $)}}
+    {{/* Create functions of dispatchable objects */}}
+    {{     if eq $.Name "vkCreateInstance"}}true
+    {{else if eq $.Name "vkCreateDevice"}}true
+    {{else if eq $.Name "vkEnumeratePhysicalDevices"}}true
+    {{else if eq $.Name "vkEnumeratePhysicalDeviceGroups"}}true
+    {{else if eq $.Name "vkGetDeviceQueue"}}true
+    {{else if eq $.Name "vkGetDeviceQueue2"}}true
+    {{else if eq $.Name "vkAllocateCommandBuffers"}}true
+
+    {{/* Destroy functions of dispatchable objects */}}
+    {{else if eq $.Name "vkDestroyInstance"}}true
+    {{else if eq $.Name "vkDestroyDevice"}}true
+
+    {{/* Enumeration of extensions */}}
+    {{else if eq $.Name "vkEnumerateInstanceExtensionProperties"}}true
+    {{else if eq $.Name "vkEnumerateDeviceExtensionProperties"}}true
+
+    {{else if eq $.Name "vkGetInstanceProcAddr"}}true
+    {{else if eq $.Name "vkGetDeviceProcAddr"}}true
+
+    {{/* VK_KHR_swapchain v69 requirement */}}
+    {{else if eq $.Name "vkBindImageMemory2"}}true
+    {{else if eq $.Name "vkBindImageMemory2KHR"}}true
+    {{end}}
+
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      {{Macro "driver.IsExtensionIntercepted" $ext}}
+    {{end}}
+
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a function needs a ProcHook stub.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.NeedProcHookStub"}}
+  {{AssertType $ "Function"}}
+
+  {{if and (Macro "driver.IsIntercepted" $) (Macro "IsDeviceDispatched" $)}}
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      {{if not (Macro "IsExtensionInternal" $ext)}}true{{end}}
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits definition of struct ProcHook.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineProcHookType"}}
+  struct ProcHook {
+      enum Type {
+        GLOBAL,
+        INSTANCE,
+        DEVICE,
+      };
+
+      enum Extension {
+        {{$exts := Strings (Macro "driver.KnownExtensions") | SplitOn "\n"}}
+        {{range $e := $exts}}
+          {{TrimPrefix "VK_" $e}},
+        {{end}}
+        ¶
+        EXTENSION_CORE, // valid bit
+        EXTENSION_COUNT,
+        EXTENSION_UNKNOWN,
+      };
+      ¶
+      const char* name;
+      Type type;
+      Extension extension;
+      ¶
+      PFN_vkVoidFunction proc;
+      PFN_vkVoidFunction checked_proc;  // always nullptr for non-device hooks
+  };
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits INIT_PROC_EXT macro for vulkan::driver.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineInitProcExtMacro"}}
+  #define INIT_PROC_EXT(ext, required, obj, proc) do {          \
+      if (extensions[ProcHook::ext])                            \
+        INIT_PROC(required, obj, proc);                         \
+  } while(0)
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a stub for ProcHook::checked_proc.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineProcHookStub"}}
+  {{AssertType $ "Function"}}
+
+  {{if (Macro "driver.NeedProcHookStub" $)}}
+    {{$ext := GetAnnotation $ "extension"}}
+    {{$ext_name := index $ext.Arguments 0}}
+
+    {{$base := (Macro "BaseName" $)}}
+
+    VKAPI_ATTR {{Node "Type" $.Return}} checked{{$base}}({{Macro "Parameters" $}}) {
+      {{$p0 := index $.CallParameters 0}}
+      {{$ext_hook := Strings ("ProcHook::") (Macro "BaseName" $ext)}}
+
+      if (GetData({{$p0.Name}}).hook_extensions[{{$ext_hook}}]) {
+        {{if not (IsVoid $.Return.Type)}}return §{{end}}
+        {{$base}}({{Macro "Arguments" $}});
+      } else {
+        Logger({{$p0.Name}}).Err({{$p0.Name}}, "{{$ext_name}} not enabled. {{$.Name}} not executed.");
+        {{if not (IsVoid $.Return.Type)}}return VK_SUCCESS;{{end}}
+      }
+    }
+    ¶
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits definition of a global ProcHook.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineGlobalProcHook"}}
+  {{AssertType $ "Function"}}
+
+  {{$base := (Macro "BaseName" $)}}
+
+  {{$ext := GetAnnotation $ "extension"}}
+  {{if $ext}}
+    {{Error "invalid global extension"}}
+  {{end}}
+
+  {
+    "{{$.Name}}",
+    ProcHook::GLOBAL,
+    ProcHook::EXTENSION_CORE,
+    reinterpret_cast<PFN_vkVoidFunction>({{$base}}),
+    nullptr,
+  },
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits definition of an instance ProcHook.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineInstanceProcHook"}}
+  {{AssertType $ "Function"}}
+
+  {{$base := (Macro "BaseName" $)}}
+
+  {
+    "{{$.Name}}",
+    ProcHook::INSTANCE,
+
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      ProcHook::{{Macro "BaseName" $ext}},
+
+      {{if (Macro "IsExtensionInternal" $ext)}}
+        nullptr,
+        nullptr,
+      {{else}}
+        reinterpret_cast<PFN_vkVoidFunction>({{$base}}),
+        nullptr,
+      {{end}}
+    {{else}}
+      ProcHook::EXTENSION_CORE,
+      reinterpret_cast<PFN_vkVoidFunction>({{$base}}),
+      nullptr,
+    {{end}}
+  },
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits definition of a device ProcHook.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.C++.DefineDeviceProcHook"}}
+  {{AssertType $ "Function"}}
+
+  {{$base := (Macro "BaseName" $)}}
+
+  {
+    "{{$.Name}}",
+    ProcHook::DEVICE,
+
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      ProcHook::{{Macro "BaseName" $ext}},
+
+      {{if (Macro "IsExtensionInternal" $ext)}}
+        nullptr,
+        nullptr,
+      {{else}}
+        reinterpret_cast<PFN_vkVoidFunction>({{$base}}),
+        reinterpret_cast<PFN_vkVoidFunction>(checked{{$base}}),
+      {{end}}
+    {{else}}
+      ProcHook::EXTENSION_CORE,
+      reinterpret_cast<PFN_vkVoidFunction>({{$base}}),
+      nullptr,
+    {{end}}
+  },
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits true if a function is needed by vulkan::driver.
+-------------------------------------------------------------------------------
+*/}}
+{{define "driver.IsDriverTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{if (Macro "IsFunctionSupported" $)}}
+    {{/* Create functions of dispatchable objects */}}
+    {{     if eq $.Name "vkCreateDevice"}}true
+    {{else if eq $.Name "vkGetDeviceQueue"}}true
+    {{else if eq $.Name "vkGetDeviceQueue2"}}true
+    {{else if eq $.Name "vkAllocateCommandBuffers"}}true
+
+    {{/* Destroy functions of dispatchable objects */}}
+    {{else if eq $.Name "vkDestroyInstance"}}true
+    {{else if eq $.Name "vkDestroyDevice"}}true
+
+    {{/* Enumeration of extensions */}}
+    {{else if eq $.Name "vkEnumerateDeviceExtensionProperties"}}true
+
+    {{/* We cache physical devices in loader.cpp */}}
+    {{else if eq $.Name "vkEnumeratePhysicalDevices"}}true
+    {{else if eq $.Name "vkEnumeratePhysicalDeviceGroups"}}true
+
+    {{else if eq $.Name "vkGetInstanceProcAddr"}}true
+    {{else if eq $.Name "vkGetDeviceProcAddr"}}true
+
+    {{/* VK_KHR_swapchain->VK_ANDROID_native_buffer translation */}}
+    {{else if eq $.Name "vkCreateImage"}}true
+    {{else if eq $.Name "vkDestroyImage"}}true
+
+    {{else if eq $.Name "vkGetPhysicalDeviceProperties"}}true
+    {{else if eq $.Name "vkGetPhysicalDeviceProperties2"}}true
+    {{else if eq $.Name "vkGetPhysicalDeviceProperties2KHR"}}true
+
+    {{/* VK_KHR_swapchain v69 requirement */}}
+    {{else if eq $.Name "vkBindImageMemory2"}}true
+    {{else if eq $.Name "vkBindImageMemory2KHR"}}true
+    {{end}}
+
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      {{$ext_name := index $ext.Arguments 0}}
+      {{     if eq $ext_name "VK_ANDROID_native_buffer"}}true
+      {{else if eq $ext_name "VK_EXT_debug_report"}}true
+      {{end}}
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if an instance-dispatched function is needed by vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.IsInstanceDriverTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{if and (Macro "driver.IsDriverTableEntry" $) (Macro "IsInstanceDispatched" $)}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emits true if a device-dispatched function is needed by vulkan::driver.
+------------------------------------------------------------------------------
+*/}}
+{{define "driver.IsDeviceDriverTableEntry"}}
+  {{AssertType $ "Function"}}
+
+  {{if and (Macro "driver.IsDriverTableEntry" $) (Macro "IsDeviceDispatched" $)}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a function/extension name without the "vk"/"VK_" prefix.
+-------------------------------------------------------------------------------
+*/}}
+{{define "BaseName"}}
+  {{     if IsFunction $}}{{TrimPrefix "vk" $.Name}}
+  {{else if eq $.Name "extension"}}{{TrimPrefix "VK_" (index $.Arguments 0)}}
+  {{else}}{{Error "invalid use of BaseName"}}
+  {{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits a comma-separated list of C parameter names for the given command.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Arguments"}}
+  {{AssertType $ "Function"}}
+
+  {{ForEach $.CallParameters "ParameterName" | JoinWith ", "}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+*/}}
+{{define "IsGloballyDispatched"}}
+  {{AssertType $ "Function"}}
+  {{if and (Macro "IsFunctionSupported" $) (eq (Macro "Vtbl" $) "Global")}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emit "true" for supported functions that undergo table dispatch. Only global
+  functions and functions handled in the loader top without calling into
+  lower layers are not dispatched.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsInstanceDispatched"}}
+  {{AssertType $ "Function"}}
+  {{if and (Macro "IsFunctionSupported" $) (eq (Macro "Vtbl" $) "Instance")}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emit "true" for supported functions that can have device-specific dispatch.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsDeviceDispatched"}}
+  {{AssertType $ "Function"}}
+  {{if and (Macro "IsFunctionSupported" $) (eq (Macro "Vtbl" $) "Device")}}
+    true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emit "true" if a function is core or from a supportable extension.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsFunctionSupported"}}
+  {{AssertType $ "Function"}}
+  {{if not (GetAnnotation $ "pfn")}}
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if not $ext}}true
+    {{else if not (Macro "IsExtensionBlacklisted" $ext)}}true
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Decides whether a function should be exported from the Android Vulkan
+  library. Functions in the core API and in loader extensions are exported.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsFunctionExported"}}
+  {{AssertType $ "Function"}}
+
+  {{if (Macro "IsFunctionSupported" $)}}
+    {{$ext := GetAnnotation $ "extension"}}
+    {{if $ext}}
+      {{Macro "IsExtensionExported" $ext}}
+    {{else}}
+      true
+    {{end}}
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Emit "true" if an extension is unsupportable on Android.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsExtensionBlacklisted"}}
+  {{$ext := index $.Arguments 0}}
+  {{     if eq $ext "VK_KHR_display"}}true
+  {{else if eq $ext "VK_KHR_display_swapchain"}}true
+  {{else if eq $ext "VK_KHR_mir_surface"}}true
+  {{else if eq $ext "VK_KHR_xcb_surface"}}true
+  {{else if eq $ext "VK_KHR_xlib_surface"}}true
+  {{else if eq $ext "VK_KHR_wayland_surface"}}true
+  {{else if eq $ext "VK_KHR_win32_surface"}}true
+  {{else if eq $ext "VK_KHR_external_memory_win32"}}true
+  {{else if eq $ext "VK_KHR_win32_keyed_mutex"}}true
+  {{else if eq $ext "VK_KHR_external_semaphore_win32"}}true
+  {{else if eq $ext "VK_KHR_external_fence_win32"}}true
+  {{else if eq $ext "VK_EXT_acquire_xlib_display"}}true
+  {{else if eq $ext "VK_EXT_direct_mode_display"}}true
+  {{else if eq $ext "VK_EXT_display_surface_counter"}}true
+  {{else if eq $ext "VK_EXT_display_control"}}true
+  {{else if eq $ext "VK_FUCHSIA_imagepipe_surface"}}true
+  {{else if eq $ext "VK_MVK_ios_surface"}}true
+  {{else if eq $ext "VK_MVK_macos_surface"}}true
+  {{else if eq $ext "VK_NN_vi_surface"}}true
+  {{else if eq $ext "VK_NV_external_memory_win32"}}true
+  {{else if eq $ext "VK_NV_win32_keyed_mutex"}}true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Reports whether an extension has functions exported by the loader.
+  E.g. applications can directly link to an extension function.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsExtensionExported"}}
+  {{$ext := index $.Arguments 0}}
+  {{     if eq $ext "VK_KHR_surface"}}true
+  {{else if eq $ext "VK_KHR_swapchain"}}true
+  {{else if eq $ext "VK_KHR_android_surface"}}true
+  {{else if eq $ext "VK_ANDROID_external_memory_android_hardware_buffer"}}true
+  {{end}}
+{{end}}
+
+
+{{/*
+------------------------------------------------------------------------------
+  Reports whether an extension is internal to the loader and drivers,
+  so the loader should not enumerate it.
+------------------------------------------------------------------------------
+*/}}
+{{define "IsExtensionInternal"}}
+  {{$ext := index $.Arguments 0}}
+  {{     if eq $ext "VK_ANDROID_native_buffer"}}true
+  {{end}}
+{{end}}

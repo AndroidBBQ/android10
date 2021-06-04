@@ -1,0 +1,295 @@
+{{Include "vulkan_common.tmpl"}}
+{{Macro "DefineGlobals" $}}
+{{$ | Macro "vulkan.h" | Format (Global "clang-format") | Write "../include/vulkan.h"}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Entry point
+-------------------------------------------------------------------------------
+*/}}
+{{define "vulkan.h"}}
+#ifndef __vulkan_h_
+#define __vulkan_h_ 1
+¶
+#ifdef __cplusplus
+extern "C" {
+#endif
+¶
+/*
+** Copyright (c) 2015-2016 The Khronos Group Inc.
+**
+** Permission is hereby granted, free of charge, to any person obtaining a
+** copy of this software and/or associated documentation files (the
+** "Materials"), to deal in the Materials without restriction, including
+** without limitation the rights to use, copy, modify, merge, publish,
+** distribute, sublicense, and/or sell copies of the Materials, and to
+** permit persons to whom the Materials are furnished to do so, subject to
+** the following conditions:
+**
+** The above copyright notice and this permission notice shall be included
+** in all copies or substantial portions of the Materials.
+**
+** THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+** CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+*/
+¶
+/*
+** This header is generated from the Khronos Vulkan API Registry.
+**
+*/
+¶
+#define VK_VERSION_1_0 1
+#include "vk_platform.h"
+¶
+#define VK_MAKE_VERSION(major, minor, patch) (((major) << 22) | ((minor) << 12) | (patch))
+¶
+// Vulkan API version supported by this file
+#define VK_API_VERSION \
+    VK_MAKE_VERSION({{Global "VERSION_MAJOR"}}, {{Global "VERSION_MINOR"}}, {{Global "VERSION_PATCH"}})
+¶
+#define VK_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
+#define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
+#define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
+¶
+#if defined(__cplusplus) && ((defined(_MSC_VER) && _MSC_VER >= 1800 || __cplusplus >= 201103L)
+    #define VK_NULL_HANDLE nullptr
+#else
+    #define VK_NULL_HANDLE 0
+#endif
+¶
+#define VK_DEFINE_HANDLE(obj) typedef struct obj##_T* obj;
+¶
+#if defined(__cplusplus)
+#if ((defined(_MSC_VER) && _MSC_VER >= 1800 || __cplusplus >= 201103L)
+// The bool operator only works if there are no implicit conversions from an obj to
+// a bool-compatible type, which can then be used to unintentionally violate type safety.
+// C++11 and above supports the "explicit" keyword on conversion operators to stop this
+// from happening. Otherwise users of C++ below C++11 won't get direct access to evaluating
+// the object handle as a bool in expressions like:
+//     if (obj) vkDestroy(obj);
+#define VK_NONDISP_HANDLE_OPERATOR_BOOL() \
+    explicit operator bool() const { return handle != 0; }
+#define VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj) \
+    explicit obj(uint64_t x) : handle(x) { } \
+    obj(decltype(nullptr)) : handle(0) { }
+#else
+#define VK_NONDISP_HANDLE_OPERATOR_BOOL()
+#define VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj) \
+    obj(uint64_t x) : handle(x) { }
+#endif
+#define VK_DEFINE_NONDISP_HANDLE(obj)                                              \
+    struct obj {                                                                   \
+        obj() : handle(0) { }                                                      \
+        VK_NONDISP_HANDLE_CONSTRUCTOR_FROM_UINT64(obj)                             \
+        obj& operator=(uint64_t x) {                                               \
+            handle = x;                                                            \
+            return *this;                                                          \
+        }                                                                          \
+        bool operator==(const obj& other) const { return handle == other.handle; } \
+        bool operator!=(const obj& other) const { return handle != other.handle; } \
+        bool operator!() const { return !handle; }                                 \
+        VK_NONDISP_HANDLE_OPERATOR_BOOL()                                          \
+        uint64_t handle;                                                           \
+    };
+#else
+#define VK_DEFINE_NONDISP_HANDLE(obj) \
+    typedef struct obj##_T { uint64_t handle; } obj;
+#endif
+¶
+#define VK_LOD_CLAMP_NONE         1000.0f
+#define VK_REMAINING_MIP_LEVELS   (~0U)
+#define VK_REMAINING_ARRAY_LAYERS (~0U)
+#define VK_WHOLE_SIZE             (~0ULL)
+#define VK_ATTACHMENT_UNUSED      (~0U)
+define VK_QUEUE_FAMILY_IGNORED    (~0U)
+define VK_SUBPASS_EXTERNAL        (~0U)
+{{range $d := $.Definitions}}
+  {{if HasPrefix $d.Name "VK_"}}#define {{$d.Name}}  {{$d.Expression}}{{end}}
+{{end}}
+¶
+{{range $i, $p := $.Pseudonyms}}
+  {{if GetAnnotation $p "dispatchHandle"}}VK_DEFINE_HANDLE({{$p.Name}})
+  {{else if GetAnnotation $p "nonDispatchHandle"}}VK_DEFINE_NONDISP_HANDLE({{$p.Name}})
+  {{end}}
+{{end}}
+¶
+// ------------------------------------------------------------------------------------------------
+// Enumerations
+¶
+  {{range $e := $.Enums}}
+    {{if not $e.IsBitfield}}
+      {{Macro "Enum" $e}}
+    {{end}}
+  {{end}}
+¶
+// ------------------------------------------------------------------------------------------------
+// Flags
+¶
+  {{range $e := $.Enums}}
+    {{if $e.IsBitfield}}
+      {{Macro "Bitfield" $e}}
+    {{end}}
+  {{end}}
+¶
+// ------------------------------------------------------------------------------------------------
+// Vulkan structures
+¶
+  {{/* Function pointers */}}
+  {{range $f := AllCommands $}}
+    {{if GetAnnotation $f "pfn"}}
+      {{Macro "FunctionTypedef" $f}}
+    {{end}}
+  {{end}}
+¶
+  {{range $c := $.Classes}}
+    {{if not (GetAnnotation $c "internal")}}
+      {{Macro "Struct" $c}}
+    {{end}}
+  {{end}}
+¶
+// ------------------------------------------------------------------------------------------------
+// API functions
+¶
+  {{range $f := AllCommands $}}
+    {{if not (GetAnnotation $f "pfn")}}
+      {{Macro "FunctionTypedef" $f}}
+    {{end}}
+  {{end}}
+¶
+#ifdef VK_NO_PROTOTYPES
+¶
+  {{range $f := AllCommands $}}
+    {{if not (GetAnnotation $f "pfn")}}
+      {{Macro "FunctionDecl" $f}}
+    {{end}}
+  {{end}}
+¶
+#endif
+¶
+#ifdef __cplusplus
+}
+#endif
+¶
+#endif
+{{end}}
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified bitfield.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Bitfield"}}
+  {{AssertType $ "Enum"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef VkFlags {{Macro "EnumName" $}};
+  {{if $.Entries}}
+  typedef enum {
+  {{range $b := $.Entries}}
+    {{Macro "BitfieldEntryName" $b}} = {{printf "0x%.8X" $b.Value}}, {{Macro "Docs" $b.Docs}}
+  {{end}}
+  } {{Macro "EnumName" $ | TrimRight "s"}}Bits;
+  {{end}}
+  ¶
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified enum.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Enum"}}
+  {{AssertType $ "Enum"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef enum {
+    {{range $i, $e := $.Entries}}
+      {{Macro "EnumEntry" $e}} = {{printf "0x%.8X" $e.Value}}, {{Macro "Docs" $e.Docs}}
+    {{end}}
+  ¶
+    {{$name  := Macro "EnumName" $ | TrimRight "ABCDEFGHIJKLMNOQRSTUVWXYZ" | SplitPascalCase | Upper | JoinWith "_"}}
+    {{if GetAnnotation $ "enumMaxOnly"}}
+      VK_MAX_ENUM({{$name | SplitOn "VK_"}})
+    {{else}}
+      {{$first := Macro "EnumFirstEntry" $ | SplitOn $name | TrimLeft "_"}}
+      {{$last  := Macro "EnumLastEntry" $  | SplitOn $name | TrimLeft "_"}}
+      VK_ENUM_RANGE({{$name | SplitOn "VK_"}}, {{$first}}, {{$last}})
+    {{end}}
+  } {{Macro "EnumName" $}};
+  ¶
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified class.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Struct"}}
+  {{AssertType $ "Class"}}
+
+  {{Macro "Docs" $.Docs}}
+  typedef {{Macro "StructType" $}} {
+    {{ForEach $.Fields "Field" | JoinWith "\n"}}
+  } {{Macro "StructName" $}};
+  ¶
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C declaration for the specified class field.
+-------------------------------------------------------------------------------
+*/}}
+{{define "Field"}}
+  {{AssertType $ "Field"}}
+
+  {{Node "Type" $}} {{$.Name}}§
+  {{Macro "ArrayPostfix" (TypeOf $)}}; {{Macro "Docs" $.Docs}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits either 'struct' or 'union' for the specified class.
+-------------------------------------------------------------------------------
+*/}}
+{{define "StructType"}}
+  {{AssertType $ "Class"}}
+
+  {{if GetAnnotation $ "union"}}union{{else}}struct{{end}}
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C function pointer typedef declaration for the specified command.
+-------------------------------------------------------------------------------
+*/}}
+{{define "FunctionTypedef"}}
+  {{AssertType $ "Function"}}
+
+  typedef {{Node "Type" $.Return}} (VKAPI* {{Macro "FunctionPtrName" $}})({{Macro "Parameters" $}});
+{{end}}
+
+
+{{/*
+-------------------------------------------------------------------------------
+  Emits the C function declaration for the specified command.
+-------------------------------------------------------------------------------
+*/}}
+{{define "FunctionDecl"}}
+  {{AssertType $ "Function"}}
+
+  {{if not (GetAnnotation $ "fptr")}}
+    {{Macro "Docs" $.Docs}}
+    {{Node "Type" $.Return}} VKAPI {{Macro "FunctionName" $}}({{Macro "Parameters" $}});
+  {{end}}
+{{end}}

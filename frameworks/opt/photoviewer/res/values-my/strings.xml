@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+     Copyright (C) 2012 Google Inc.
+     Licensed to The Android Open Source Project.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="photo_view_count" msgid="3972196711827497300">"<xliff:g id="CURRENT_POS">%d</xliff:g> ရဲ့ <xliff:g id="COUNT">%d</xliff:g>"</string>
+    <string name="retry" msgid="3791698559547529232">"ပြန်ကြိုးစားပါ"</string>
+    <string name="failed" msgid="8338915262229269954">"ပုံရိပ်ကို မပြသနိုင်ပါ"</string>
+    <string name="titles" msgid="3827868765772315200">"<xliff:g id="TITLE_0">%s</xliff:g>, <xliff:g id="SUBTITLE">%s</xliff:g>"</string>
+</resources>

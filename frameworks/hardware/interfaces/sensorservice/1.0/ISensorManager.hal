@@ -1,0 +1,122 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package android.frameworks.sensorservice@1.0;
+
+import IDirectReportChannel;
+import IEventQueue;
+import IEventQueueCallback;
+
+import android.hardware.sensors@1.0::SensorInfo;
+import android.hardware.sensors@1.0::SensorType;
+
+/**
+ * ISensorManager is an interface to manage sensors
+ *
+ * This file provides a set of functions that uses
+ * ISensorManager to access and list hardware sensors.
+ */
+interface ISensorManager {
+
+    /**
+     * Get the list of available sensors.
+     *
+     * @return list   the list of available sensors, or empty on failure
+     * @return result OK on success or UNKNOWN_ERROR on failure
+     */
+    getSensorList() generates (vec<SensorInfo> list, Result result);
+
+    /**
+     * Get the default sensor of the specified type.
+     *
+     * @return sensor the default sensor for the given type, or undetermined
+     *                value on failure.
+     * @return result OK on success or
+                      NOT_EXIST if no sensor of that type exists.
+     */
+    getDefaultSensor(SensorType type)
+          generates (SensorInfo sensor, Result result);
+
+    /**
+     * Create direct channel based on shared memory
+     *
+     * Create a direct channel of DIRECT_CHANNEL_ASHMEM type to be used
+     * for configuring sensor direct report.
+     *
+     * The memory layout looks as follows. These offsets can be found in
+     * android.hardware.sensors@1.0::SensorsEventFormatOffset.
+     *   offset   type        name
+     *  -----------------------------------
+     *   0x0000  int32_t     size (SensorsEventFormatOffset::TOTAL_LENGTH)
+     *   0x0004  int32_t     sensor report token
+     *   0x0008  int32_t     type (see android.hardware.sensors@1.0::SensorType)
+     *   0x000C  uint32_t    atomic counter
+     *   0x0010  int64_t     timestamp (see android.hardware.sensors@1.0::Event)
+     *   0x0018  float[16]/  data
+     *           int64_t[8]
+     *   0x0058  int32_t[4]  reserved (set to zero)
+     *
+     * @param mem     the shared memory to use, must be ashmem.
+     * @param size    the intended size to be used. The following must be true:
+     *                SensorsEventFormatOffset::TOTAL_LENGTH <= size <= mem.size
+     *
+     * @return chan   The created channel, or NULL if failure.
+     * @return result OK if successful;
+     *                BAD_VALUE if size > mem.size();
+     *                BAD_VALUE if size < TOTAL_LENGTH;
+     *                NO_MEMORY, NO_INIT, BAD_VALUE for underlying errors;
+     *                UNKNOWN_ERROR if the underlying error is not recognized;
+     *                UNKNOWN_ERROR if the underlying call returns channelId = 0
+     */
+    createAshmemDirectChannel(memory mem, uint64_t size)
+                   generates (IDirectReportChannel chan, Result result);
+
+    /**
+     * Create direct channel based on hardware buffer
+     *
+     * Create a direct channel of DIRECT_CHANNEL_GRALLOC type to be used
+     * for configuring sensor direct report.
+     *
+     * @param buffer  file descriptor describing the gralloc buffer.
+     * @param size    the intended size to be used, must be less than or equal
+     *                to the size of the buffer.
+     *
+     * @return chan   The created channel, or NULL if failure.
+     * @return result OK if successful;
+     *                NO_MEMORY, NO_INIT, BAD_VALUE for underlying errors;
+     *                UNKNOWN_ERROR if the underlying error is not recognized;
+     *                UNKNOWN_ERROR if the underlying call returns channelId = 0
+     */
+    createGrallocDirectChannel(handle buffer, uint64_t size)
+                    generates (IDirectReportChannel chan, Result result);
+
+    /**
+     * Create a sensor event queue.
+     *
+     * Create a sensor event queue with an IEventQueueCallback object.
+     * Subsequently, one can enable sensors on the event queue so that sensor
+     * events are passed via the specified callback.
+     *
+     * @param  callback the callback to call on events. Must not be null.
+     * @return queue    the event queue created. null on failure.
+     * @return result   OK if successful, BAD_VALUE if callback is null,
+     *                  or other Result values for any underlying errors.
+     */
+    createEventQueue(IEventQueueCallback callback)
+          generates (IEventQueue queue, Result result);
+};
+
+

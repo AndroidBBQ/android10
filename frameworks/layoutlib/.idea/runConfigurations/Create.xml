@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Create" type="Application" factoryName="Application" singleton="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../prebuilts/jdk/jdk9/linux-x86" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="com.android.tools.layoutlib.create.Main" />
+    <module name="create" />
+    <option name="PROGRAM_PARAMETERS" value="--create-stub out/host/common/obj/JAVA_LIBRARIES/temp_layoutlib_intermediates/classes.jar out/target/common/obj/JAVA_LIBRARIES/core-libart_intermediates/classes.jar out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/classes.jar out/target/common/obj/JAVA_LIBRARIES/ext_intermediates/classes.jar out/host/common/obj/JAVA_LIBRARIES/icu4j-icudata-jarjar_intermediates/classes.jar out/host/common/obj/JAVA_LIBRARIES/icu4j-icutzdata-jarjar_intermediates/classes.jar" />
+    <option name="VM_PARAMETERS" value="-ea" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../.." />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Debug" />
+    <ConfigurationWrapper RunnerId="Run" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

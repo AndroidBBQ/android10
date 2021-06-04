@@ -1,0 +1,59 @@
+LIBNATIVEWINDOW {
+  global:
+    AHardwareBuffer_acquire;
+    AHardwareBuffer_allocate;
+    AHardwareBuffer_createFromHandle; # vndk
+    AHardwareBuffer_describe;
+    AHardwareBuffer_getNativeHandle; # vndk
+    AHardwareBuffer_isSupported; # introduced=29
+    AHardwareBuffer_lock;
+    AHardwareBuffer_lockAndGetInfo; # introduced=29
+    AHardwareBuffer_lockPlanes; # introduced=29
+    AHardwareBuffer_recvHandleFromUnixSocket;
+    AHardwareBuffer_release;
+    AHardwareBuffer_sendHandleToUnixSocket;
+    AHardwareBuffer_unlock;
+    ANativeWindowBuffer_getHardwareBuffer; # vndk
+    ANativeWindow_OemStorageGet; # vndk
+    ANativeWindow_OemStorageSet; # vndk
+    ANativeWindow_acquire;
+    ANativeWindow_cancelBuffer; # vndk
+    ANativeWindow_dequeueBuffer; # vndk
+    ANativeWindow_getBuffersDataSpace; # introduced=28
+    ANativeWindow_getFormat;
+    ANativeWindow_getHeight;
+    ANativeWindow_getWidth;
+    ANativeWindow_lock;
+    ANativeWindow_query; # vndk
+    ANativeWindow_queryf; # vndk
+    ANativeWindow_queueBuffer; # vndk
+    ANativeWindow_release;
+    ANativeWindow_setAutoRefresh; # vndk
+    ANativeWindow_setBufferCount; # vndk
+    ANativeWindow_setBuffersDataSpace; # introduced=28
+    ANativeWindow_setBuffersDimensions; # vndk
+    ANativeWindow_setBuffersFormat; # vndk
+    ANativeWindow_setBuffersGeometry;
+    ANativeWindow_setBuffersTimestamp; # vndk
+    ANativeWindow_setBuffersTransform;
+    ANativeWindow_setSharedBufferMode; # vndk
+    ANativeWindow_setSwapInterval; # vndk
+    ANativeWindow_setUsage; # vndk
+    ANativeWindow_unlockAndPost;
+  local:
+    *;
+};
+
+LIBNATIVEWINDOW_PLATFORM {
+  global:
+    extern "C++" {
+      android::AHardwareBuffer_isValidPixelFormat*;
+      android::AHardwareBuffer_convertFromPixelFormat*;
+      android::AHardwareBuffer_convertToPixelFormat*;
+      android::AHardwareBuffer_convertFromGrallocUsageBits*;
+      android::AHardwareBuffer_convertToGrallocUsageBits*;
+      android::AHardwareBuffer_to_GraphicBuffer*;
+      android::AHardwareBuffer_to_ANativeWindowBuffer*;
+      android::AHardwareBuffer_from_GraphicBuffer*;
+    };
+} LIBNATIVEWINDOW;

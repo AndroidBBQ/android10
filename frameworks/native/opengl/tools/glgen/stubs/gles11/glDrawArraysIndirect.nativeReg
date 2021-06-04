@@ -1,0 +1,1 @@
+{"glDrawArraysIndirect", "(IJ)V", (void *) android_glDrawArraysIndirect },

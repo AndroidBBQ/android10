@@ -1,0 +1,2 @@
+{"glDrawElementsInstanced", "(IIILjava/nio/Buffer;I)V", (void *) android_glDrawElementsInstanced__IIILjava_nio_Buffer_2I },
+{"glDrawElementsInstanced", "(IIIII)V", (void *) android_glDrawElementsInstanced__IIIII },

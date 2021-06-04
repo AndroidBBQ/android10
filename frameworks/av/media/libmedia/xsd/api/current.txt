@@ -1,0 +1,147 @@
+// Signature format: 2.0
+package media.profiles {
+
+  public class Audio {
+    ctor public Audio();
+    method public int getBitRate();
+    method public int getChannels();
+    method public String getCodec();
+    method public int getSampleRate();
+    method public void setBitRate(int);
+    method public void setChannels(int);
+    method public void setCodec(String);
+    method public void setSampleRate(int);
+  }
+
+  public class AudioDecoderCap {
+    ctor public AudioDecoderCap();
+    method public boolean getEnabled();
+    method public String getName();
+    method public void setEnabled(boolean);
+    method public void setName(String);
+  }
+
+  public class AudioEncoderCap {
+    ctor public AudioEncoderCap();
+    method public boolean getEnabled();
+    method public int getMaxBitRate();
+    method public int getMaxChannels();
+    method public int getMaxSampleRate();
+    method public int getMinBitRate();
+    method public int getMinChannels();
+    method public int getMinSampleRate();
+    method public String getName();
+    method public void setEnabled(boolean);
+    method public void setMaxBitRate(int);
+    method public void setMaxChannels(int);
+    method public void setMaxSampleRate(int);
+    method public void setMinBitRate(int);
+    method public void setMinChannels(int);
+    method public void setMinSampleRate(int);
+    method public void setName(String);
+  }
+
+  public class CamcorderProfiles {
+    ctor public CamcorderProfiles();
+    method public int getCameraId();
+    method public java.util.List<media.profiles.EncoderProfile> getEncoderProfile_optional();
+    method public java.util.List<media.profiles.CamcorderProfiles.ImageDecodingOptional> getImageDecoding_optional();
+    method public java.util.List<media.profiles.CamcorderProfiles.ImageEncodingOptional> getImageEncoding_optional();
+    method public void setCameraId(int);
+  }
+
+  public static class CamcorderProfiles.ImageDecodingOptional {
+    ctor public CamcorderProfiles.ImageDecodingOptional();
+    method public int getMemCap();
+    method public void setMemCap(int);
+  }
+
+  public static class CamcorderProfiles.ImageEncodingOptional {
+    ctor public CamcorderProfiles.ImageEncodingOptional();
+    method public int getQuality();
+    method public void setQuality(int);
+  }
+
+  public class EncoderProfile {
+    ctor public EncoderProfile();
+    method public java.util.List<media.profiles.Audio> getAudio();
+    method public int getDuration();
+    method public String getFileFormat();
+    method public String getQuality();
+    method public java.util.List<media.profiles.Video> getVideo();
+    method public void setDuration(int);
+    method public void setFileFormat(String);
+    method public void setQuality(String);
+  }
+
+  public class MediaSettings {
+    ctor public MediaSettings();
+    method public java.util.List<media.profiles.AudioDecoderCap> getAudioDecoderCap();
+    method public java.util.List<media.profiles.AudioEncoderCap> getAudioEncoderCap();
+    method public java.util.List<media.profiles.CamcorderProfiles> getCamcorderProfiles();
+    method public java.util.List<media.profiles.MediaSettings.EncoderOutputFileFormat> getEncoderOutputFileFormat();
+    method public java.util.List<media.profiles.VideoDecoderCap> getVideoDecoderCap();
+    method public java.util.List<media.profiles.VideoEncoderCap> getVideoEncoderCap();
+  }
+
+  public static class MediaSettings.EncoderOutputFileFormat {
+    ctor public MediaSettings.EncoderOutputFileFormat();
+    method public String getName();
+    method public void setName(String);
+  }
+
+  public class Video {
+    ctor public Video();
+    method public int getBitRate();
+    method public String getCodec();
+    method public int getFrameRate();
+    method public int getHeight();
+    method public int getWidth();
+    method public void setBitRate(int);
+    method public void setCodec(String);
+    method public void setFrameRate(int);
+    method public void setHeight(int);
+    method public void setWidth(int);
+  }
+
+  public class VideoDecoderCap {
+    ctor public VideoDecoderCap();
+    method public boolean getEnabled();
+    method public String getName();
+    method public void setEnabled(boolean);
+    method public void setName(String);
+  }
+
+  public class VideoEncoderCap {
+    ctor public VideoEncoderCap();
+    method public boolean getEnabled();
+    method public int getMaxBitRate();
+    method public int getMaxFrameHeight();
+    method public int getMaxFrameRate();
+    method public int getMaxFrameWidth();
+    method public int getMinBitRate();
+    method public int getMinFrameHeight();
+    method public int getMinFrameRate();
+    method public int getMinFrameWidth();
+    method public String getName();
+    method public void setEnabled(boolean);
+    method public void setMaxBitRate(int);
+    method public void setMaxFrameHeight(int);
+    method public void setMaxFrameRate(int);
+    method public void setMaxFrameWidth(int);
+    method public void setMinBitRate(int);
+    method public void setMinFrameHeight(int);
+    method public void setMinFrameRate(int);
+    method public void setMinFrameWidth(int);
+    method public void setName(String);
+  }
+
+  public class XmlParser {
+    ctor public XmlParser();
+    method public static media.profiles.MediaSettings read(java.io.InputStream) throws javax.xml.datatype.DatatypeConfigurationException, java.io.IOException, org.xmlpull.v1.XmlPullParserException;
+    method public static String readText(org.xmlpull.v1.XmlPullParser) throws java.io.IOException, org.xmlpull.v1.XmlPullParserException;
+    method public static void skip(org.xmlpull.v1.XmlPullParser) throws java.io.IOException, org.xmlpull.v1.XmlPullParserException;
+  }
+
+}
+

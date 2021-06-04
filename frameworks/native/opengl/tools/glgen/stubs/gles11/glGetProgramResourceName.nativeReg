@@ -1,0 +1,1 @@
+{"glGetProgramResourceName", "(III)Ljava/lang/String;", (void *) android_glGetProgramResourceName },

@@ -1,0 +1,376 @@
+# Copyright (C) 2019 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the License);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an AS IS BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+module: "android.sysprop.SurfaceFlingerProperties"
+owner: Platform
+
+# The following two properties define (respectively):
+#
+# - The phase offset between hardware vsync and when apps are woken up by the
+#   Choreographer callback
+# - The phase offset between hardware vsync and when SurfaceFlinger wakes up
+#   to consume input
+# Their values may be tuned to trade off between display pipeline latency (both
+# overall latency and the lengths of the app --> SF and SF --> display phases)
+# and frame delivery jitter (which typically manifests as "jank" or "jerkiness"
+# while interacting with the device). The default values must produce a
+# relatively low amount of jitter at the expense of roughly two frames of
+# app --> display latency, and unless significant testing is performed to avoid
+# increased display jitter (both manual investigation using systrace [1] and
+# automated testing using dumpsys gfxinfo [2] are recommended), they should not
+# be modified.
+#
+# [1] https://developer.android.com/studio/profile/systrace.html
+# [2] https://developer.android.com/training/testing/performance.html
+prop {
+    api_name: "vsync_event_phase_offset_ns"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.vsync_event_phase_offset_ns"
+}
+
+prop {
+    api_name: "vsync_sf_event_phase_offset_ns"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.vsync_sf_event_phase_offset_ns"
+}
+
+# Instruct the Render Engine to use EGL_IMG_context_priority hint if available.
+prop {
+    api_name: "use_context_priority"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.use_context_priority"
+}
+
+# Controls the number of buffers SurfaceFlinger will allocate for use in FramebufferSurface.
+prop {
+    api_name: "max_frame_buffer_acquired_buffers"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.max_frame_buffer_acquired_buffers"
+}
+
+# hasWideColorDisplay indicates that the device has
+# or can support a wide-color display, e.g. color space
+# greater than sRGB. Typical display may have same
+# color primaries as DCI-P3.
+# Indicate support for this feature by setting
+# TARGET_HAS_WIDE_COLOR_DISPLAY to true in BoardConfig.mk
+# This also means that the device is color managed.
+# A color managed device will use the appropriate
+# display mode depending on the content on the screen.
+# Default is sRGB.
+prop {
+    api_name: "has_wide_color_display"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.has_wide_color_display"
+}
+
+# Indicates if Sync framework is available. Sync framework provides fence
+# mechanism which significantly reduces buffer processing latency.
+prop {
+    api_name: "running_without_sync_framework"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.running_without_sync_framework"
+}
+
+# hwHDRDisplay indicates that the device has an High Dynamic Range display.
+# A display is considered High Dynamic Range if it
+#
+#     1. is a wide color gamut display, typically DCI-P3 or lager
+#     2. has high luminance capability, typically 540 nits or higher at 10% OPR
+#
+# Indicate support for this feature by setting
+# ro.surface_flinger.has_HDR_display to true in device.mk
+# ro.surface_flinger.has_wide_color_display must be set to true when
+# ro.surface_flinger.has_HDR_display is true.
+prop {
+    api_name: "has_HDR_display"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.has_HDR_display"
+}
+
+# Specify the offset in nanoseconds to add to vsync time when timestamping present fences.
+prop {
+    api_name: "present_time_offset_from_vsync_ns"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.present_time_offset_from_vsync_ns"
+}
+
+# Some hardware can do RGB->YUV conversion more efficiently in hardware
+# controlled by HWC than in hardware controlled by the video encoder.
+# This instruct VirtualDisplaySurface to use HWC for such conversion on
+# GL composition.
+prop {
+    api_name: "force_hwc_copy_for_virtual_displays"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.force_hwc_copy_for_virtual_displays"
+}
+
+# Maximum dimension supported by HWC for virtual display.
+# Must be equals to min(max_width, max_height).
+prop {
+    api_name: "max_virtual_display_dimension"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.max_virtual_display_dimension"
+}
+
+# Return true if surface flinger should use vr flinger for compatible vr
+# apps, false otherwise. Devices that will never be running vr apps should
+# return false to avoid extra resource usage. Daydream ready devices must
+# return true for full vr support.
+prop {
+    api_name: "use_vr_flinger"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.use_vr_flinger"
+}
+
+# Returns true if surface flinger should start
+# hardware.graphics.allocator@2.0::IAllocator service.
+prop {
+    api_name: "start_graphics_allocator_service"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.start_graphics_allocator_service"
+}
+
+# Returns the orientation of the primary display device.
+prop {
+    api_name: "primary_display_orientation"
+    type: Enum
+    enum_values: "ORIENTATION_0|ORIENTATION_90|ORIENTATION_180|ORIENTATION_270"
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.primary_display_orientation"
+}
+
+# useColorManagement indicates whether SurfaceFlinger should manage color
+# by switching to appropriate color mode automatically depending on the
+# Dataspace of the surfaces on screen.
+prop {
+    api_name: "use_color_management"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.use_color_management"
+}
+
+# The following four propertiess define:
+# Returns the default data space and pixel format that SurfaceFlinger
+# expects to receive and output as well as the wide color gamut data space
+# and pixel format for wide color gamut surfaces.
+# To determine the data space and pixel format, there are a few things
+# we recommend to consider:
+#
+#   1. Hardware composer's capability to composite contents with the chosen
+#      data space and pixel format efficiently;
+#   2. Hardware composer's ability to composite contents when sRGB contents
+#      and the chosen wide color gamut data space contents coexist;
+#   3. For better blending, consider using pixel format where the alpha
+#      channel has as many bits as the RGB color channel.
+#   4. Memory consumption and efficient buffer compression when considering
+#      more bits in pixel format.
+
+# dataspace is the default data space that SurfaceFlinger expects.
+# The data space must not be Dataspace::UNKNOWN, if unspecified,
+# the default data space is Dataspace::V0_SRGB;
+prop {
+    api_name: "default_composition_dataspace"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.default_composition_dataspace"
+}
+
+# pixelFormat is the default pixel format that SurfaceFlinger
+# expects. If unspecified, the default pixel format is
+# PixelFormat::RGBA_8888.
+prop {
+    api_name: "default_composition_pixel_format"
+    type: Integer
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.default_composition_pixel_format"
+}
+
+# wcgDataspace is the data space that SurfaceFlinger expects for
+# wide color gamut surfaces.
+# When hasWideColorDisplay returns true, this API must return a
+# valid wide color gamut data space.
+# The data space must not be UNKNOWN, if unspecified, the data space
+# is V0_SRGB by default, which essentially indicates there's no wide
+# color gamut, meaning hasWideColorDisplay returns false.
+prop {
+    api_name: "wcg_composition_dataspace"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.wcg_composition_dataspace"
+}
+
+# wcgPixelFormat is the pixel format that SurfaceFlinger expects for
+# wide color gamut surfaces. If unspecified, the pixel format is
+# PixelFormat::RGBA_8888 by default.
+prop {
+    api_name: "wcg_composition_pixel_format"
+    type: Integer
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.wcg_composition_pixel_format"
+}
+
+# colorSpaceAgnosticDataspace specifies the data space that
+# SurfaceFlinger expects for surfaces which are color space agnostic.
+# The variable works only when useColorManagement is specified. If
+# unspecified, the data space follows what SurfaceFlinger expects for
+# surfaces when useColorManagement is specified.
+
+prop {
+    api_name: "color_space_agnostic_dataspace"
+    type: Long
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.color_space_agnostic_dataspace"
+}
+
+# Return the native panel primary data. The data includes red, green,
+# blue and white. The primary format is CIE 1931 XYZ color space.
+# If unspecified, the primaries is sRGB gamut by default.
+
+prop {
+    api_name: "display_primary_red"
+    type: DoubleList
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.display_primary_red"
+}
+
+prop {
+    api_name: "display_primary_green"
+    type: DoubleList
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.display_primary_green"
+}
+
+prop {
+    api_name: "display_primary_blue"
+    type: DoubleList
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.display_primary_blue"
+}
+
+prop {
+    api_name: "display_primary_white"
+    type: DoubleList
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.display_primary_white"
+}
+
+# refreshRateSwitching indicates whether SurfaceFlinger should use refresh rate
+# switching on the device, e.g. to switch between 60 and 90 Hz. The settings
+# below that are related to refresh rate switching will only have an effect if
+# refresh_rate_switching is enabled.
+prop {
+    api_name: "refresh_rate_switching"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.refresh_rate_switching"
+}
+
+# setIdleTimerMs indicates what is considered a timeout in milliseconds for Scheduler. This value is
+# used by the Scheduler to trigger inactivity callbacks that will switch the display to a lower
+# refresh rate. Setting this property to 0 means there is no timer.
+prop {
+    api_name: "set_idle_timer_ms"
+    type: Integer
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.set_idle_timer_ms"
+}
+
+# setTouchTimerMs indicates what is considered a timeout in milliseconds for Scheduler.
+# This value is used by the Scheduler to trigger touch inactivity callbacks that will switch the
+# display to a lower refresh rate. Setting this property to 0 means there is no timer.
+prop {
+    api_name: "set_touch_timer_ms"
+    type: Integer
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.set_touch_timer_ms"
+}
+
+# setDisplayPowerTimerMs indicates what is considered a timeout in milliseconds for Scheduler.
+# This value is used by the Scheduler to trigger display power inactivity callbacks that will
+# keep the display in peak refresh rate as long as display power is not in normal mode.
+# Setting this property to 0 means there is no timer.
+prop {
+    api_name: "set_display_power_timer_ms"
+    type: Integer
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.set_display_power_timer_ms"
+}
+
+# useSmart90ForVideo indicates whether Scheduler should detect content FPS, and try to adjust the
+# screen refresh rate based on that.
+prop {
+    api_name: "use_smart_90_for_video"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.use_smart_90_for_video"
+}
+
+prop {
+    api_name: "enable_protected_contents"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.protected_contents"
+}
+
+# Indicates whether Scheduler's idle timer should support a display driver timeout in the kernel.
+# The value of set_idle_timer_ms should be shorter in time than the timeout duration in the kernel.
+prop {
+    api_name: "support_kernel_idle_timer"
+    type: Boolean
+    scope: System
+    access: Readonly
+    prop_name: "ro.surface_flinger.support_kernel_idle_timer"
+}

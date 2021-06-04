@@ -1,0 +1,92 @@
+//
+// Copyright (C) 2017 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+package carrierIdentification;
+
+option java_package = "com.android.internal.telephony";
+option java_outer_classname = "CarrierIdProto";
+
+// A complete list of carriers
+message CarrierList {
+  // A collection of carriers. one entry for one carrier.
+  repeated CarrierId carrier_id = 1;
+  // Version number of current carrier list
+  optional int32 version = 2;
+};
+
+// CarrierId is the unique representation of a carrier in CID table.
+message CarrierId {
+  // [Optional] A unique canonical number designated to a carrier.
+  optional int32 canonical_id = 1;
+
+  // [Optional] A user-friendly carrier name (not localized).
+  optional string carrier_name = 2;
+
+  // [Optional] Carrier attributes to match a carrier. At least one value is required.
+  repeated CarrierAttribute carrier_attribute = 3;
+
+  // [Optional] A unique canonical number to represent its parent carrier. The parent-child
+  // relationship can be used to differentiate a single carrier by different networks,
+  // by prepaid v.s. postpaid  or even by 4G v.s. 3G plan.
+  optional int32 parent_canonical_id = 4;
+};
+
+// Attributes used to match a carrier.
+// For each field within this message:
+//   - if not set, the attribute is ignored;
+//   - if set, the device must have one of the specified values to match.
+// Match is based on AND between any field that is set and OR for values within a repeated field.
+message CarrierAttribute {
+  // [Optional] The MCC and MNC that map to this carrier. At least one value is required.
+  repeated string mccmnc_tuple = 1;
+
+  // [Optional] Prefix of IMSI (International Mobile Subscriber Identity) in
+  // decimal format. Some digits can be replaced with "x" symbols matching any digit.
+  // Sample values: 20404794, 21670xx2xxx.
+  repeated string imsi_prefix_xpattern = 2;
+
+  // [Optional] The Service Provider Name. Read from subscription EF_SPN.
+  // Sample values: C Spire, LeclercMobile
+  repeated string spn = 3;
+
+  // [Optional] PLMN network name. Read from subscription EF_PNN.
+  // Sample values:
+  repeated string plmn = 4;
+
+  // [Optional] Group Identifier Level1 for a GSM phone. Read from subscription EF_GID1.
+  // Sample values: 6D, BAE0000000000000
+  repeated string gid1 = 5;
+
+  // [Optional] Group Identifier Level2 for a GSM phone. Read from subscription EF_GID2.
+  // Sample values: 6D, BAE0000000000000
+  repeated string gid2 = 6;
+
+  // [Optional] The Access Point Name, corresponding to "apn" field returned by
+  // "content://telephony/carriers/preferapn" on device.
+  // Sample values: fast.t-mobile.com, internet
+  repeated string preferred_apn = 7;
+
+  // [Optional] Prefix of Integrated Circuit Card Identifier. Read from subscription EF_ICCID.
+  // Sample values: 894430, 894410
+  repeated string iccid_prefix = 8;
+
+  // [Optional] Carrier Privilege Access Rule in hex string.
+  // Sample values: 61ed377e85d386a8dfee6b864bd85b0bfaa5af88
+  repeated string privilege_access_rule = 9;
+};
+

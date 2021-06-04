@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2011 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Title of the activity when a full backup has been requested and must be confirmed -->
+    <string name="backup_confirm_title">Full backup</string>
+    <!-- Title of the activity when a full restore has been requested and must be confirmed -->
+    <string name="restore_confirm_title">Full restore</string>
+
+    <!-- Text for message to user that a full backup has been requested, and must be confirmed. -->
+    <string name="backup_confirm_text">A full backup of all data to a connected desktop computer has been requested.  Do you want to allow this to happen\?\n\nIf you did not request the backup yourself, do not allow the operation to proceed.</string>
+    <!-- Button to allow a requested full backup to occur -->
+    <string name="allow_backup_button_label">Back up my data</string>
+    <!-- Button to refuse to allow the requested full backup -->
+    <string name="deny_backup_button_label">Do not back up</string>
+
+    <!-- Text for message to user that a full restore has been requested, and must be confirmed. -->
+    <string name="restore_confirm_text">A full restore of all data from a connected desktop computer has been requested.  Do you want to allow this to happen\?\n\nIf you did not request the restore yourself, do not allow the operation to proceed.  This will replace any data currently on the device!</string>
+    <!-- Button to allow a requested full restore to occur -->
+    <string name="allow_restore_button_label">Restore my data</string>
+    <!-- Button to refuse to allow the requested full restore -->
+    <string name="deny_restore_button_label">Do not restore</string>
+
+    <!-- Text for message to user that they must enter their predefined backup password in order to perform this operation. -->
+    <string name="current_password_text">Please enter your current backup password below:</string>
+    <!-- Text for message to user that they must enter their device encryption password in order to perform this restore operation. -->
+    <string name="device_encryption_restore_text">Please enter your device encryption password below.</string>
+    <!-- Text for message to user that they must enter their device encryption password in order to perform this backup operation. -->
+    <string name="device_encryption_backup_text">Please enter your device encryption password below. This will also be used to encrypt the backup archive.</string>
+
+    <!-- Text for message to user that they must enter an encryption password to use for the full backup operation. -->
+    <string name="backup_enc_password_text">Please enter a password to use for encrypting the full backup data. If this is left blank, your current backup password will be used:</string>
+    <!-- Text for message to user that they may optionally supply an encryption password to use for a full backup operation. -->
+    <string name="backup_enc_password_optional">If you wish to encrypt the full backup data, enter a password below:</string>
+    <!-- Text for message to user that they must supply an encryption password to use for a full backup operation because their phone is locked. -->
+    <string name="backup_enc_password_required">Since your device is encrypted, you are required to encrypt your backup. Please enter a password below:</string>
+
+    <!-- Text for message to user when performing a full restore operation, explaining that they must enter the password originally used to encrypt the full backup data. -->
+    <string name="restore_enc_password_text">If the restore data is encrypted, please enter the password below:</string>
+
+    <!-- Text of a toast telling the user that a full backup operation has begun -->
+    <string name="toast_backup_started">Backup starting...</string>
+    <!-- Text of a toast telling the user that a full backup operation has ended -->
+    <string name="toast_backup_ended">Backup finished</string>
+    <!-- Text of a toast telling the user that a full restore operation has begun -->
+    <string name="toast_restore_started">Restore starting...</string>
+    <!-- Text of a toast telling the user that a full restore operation has ended -->
+    <string name="toast_restore_ended">Restore ended</string>
+    <!-- Text of a toast telling the user that the operation has timed out -->
+    <string name="toast_timeout">Operation timed out</string>
+</resources>

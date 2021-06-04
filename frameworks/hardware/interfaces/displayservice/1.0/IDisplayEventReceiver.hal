@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package android.frameworks.displayservice@1.0;
+
+import IEventCallback;
+
+interface IDisplayEventReceiver {
+    /**
+     * Attach callback to start receiving events. Hotplug events are enabled
+     * by default. Vsync events must be enabled with setVsyncRate.
+     *
+     * @return status Must be:
+     *     SUCCESS if callback is initialized correctly.
+     *     BAD_VALUE if callback is nullptr or if this has already been called.
+     *     UNKNOWN if callback cannot be initialized.
+     */
+    init(IEventCallback callback) generates (Status status);
+
+    /**
+     * Must start (or stop) sending callbacks immediately as requested.
+     *
+     * @param count Request to be sent a callback for every <count>th event.
+     *              If zero, then only send callbacks when requestNextVsync is
+     *              called. By default, this will be zero. Must be >= 0.
+     * @return status Must be:
+     *     SUCCESS if rate is set successfully.
+     *     BAD_VALUE if count < 0 or no init.
+     *     UNKNOWN for all other errors.
+     */
+    setVsyncRate(int32_t count) generates (Status status);
+
+    /**
+     * Must have no effect if vsync rate (set with setVsyncRate) is 0.
+     *
+     * @return status Must be:
+     *     SUCCESS if request successfully processed.
+     *     BAD_VALUE if no init.
+     *     UNKNOWN for all other errors.
+     */
+    requestNextVsync() generates (Status status);
+
+    /**
+     * Server must drop all references to callback and stop sending events.
+     * Client must call this method if init was called.
+     *
+     * @return status Must be:
+     *     SUCCESS if request successfully processed.
+     *     BAD_VALUE if init has not been called.
+     *     UNKNOWN for all other errors.
+     */
+    close() generates (Status status);
+};
+

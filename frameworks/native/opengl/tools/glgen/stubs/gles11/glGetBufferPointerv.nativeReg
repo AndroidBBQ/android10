@@ -1,0 +1,1 @@
+{"glGetBufferPointerv", "(II)Ljava/nio/Buffer;", (void *) android_glGetBufferPointerv__II },

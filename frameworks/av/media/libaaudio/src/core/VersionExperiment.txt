@@ -1,0 +1,55 @@
+
+// TODO Experiment with versioning. This may be removed or changed dramatically.
+// Please ignore for now. Do not review.
+#define OBOE_VERSION_EXPERIMENT  0
+#if OBOE_VERSION_EXPERIMENT
+
+#define OBOE_EARLIEST_SUPPORTED_VERSION  1
+#define OBOE_CURRENT_VERSION  2
+
+typedef struct OboeInterface_s {
+    int32_t size; // do not use size_t because its size can vary
+    int32_t version;
+    int32_t reserved1;
+    void *  reserved2;
+    oboe_result_t (*createStreamBuilder)(OboeStreamBuilder *);
+} OboeInterface_t;
+
+OboeInterface_t s_oboe_template = {
+        .size = sizeof(OboeInterface_t),
+        .version = OBOE_CURRENT_VERSION,
+        .reserved1 = 0,
+        .reserved2 = NULL,
+        .createStreamBuilder = Oboe_createStreamBuilder
+};
+
+oboe_result_t Oboe_Unimplemented(OboeInterface_t *oboe) {
+    (void) oboe;
+    return OBOE_ERROR_UNIMPLEMENTED;
+}
+
+typedef oboe_result_t (*OboeFunction_t)(OboeInterface_t *oboe);
+
+int32_t Oboe_Initialize(OboeInterface_t *oboe, uint32_t flags) {
+    if (oboe->version < OBOE_EARLIEST_SUPPORTED_VERSION) {
+        return OBOE_ERROR_INCOMPATIBLE;
+    }
+    // Fill in callers vector table.
+    uint8_t *start = (uint8_t*)&oboe->reserved1;
+    uint8_t *end;
+    if (oboe->size <= s_oboe_template.size) {
+        end = ((uint8_t *)oboe) + oboe->size;
+    } else {
+        end = ((uint8_t *)oboe) + s_oboe_template.size;
+        // Assume the rest of the structure is vectors.
+        // Point them all to OboeInternal_Unimplemented()
+        // Point to first vector past end of the known structure.
+        OboeFunction_t *next = (OboeFunction_t*)end;
+        while ((((uint8_t *)next) - ((uint8_t *)oboe)) < oboe->size) {
+            *next++ = Oboe_Unimplemented;
+        }
+    }
+    memcpy(&oboe->reserved1, &s_oboe_template.reserved1, end - start);
+    return OBOE_OK;
+}
+#endif /* OBOE_VERSION_EXPERIMENT -------------------------- */

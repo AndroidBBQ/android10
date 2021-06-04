@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2017 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<module name="stub" halVersion="2.0">
+  <attachedDevices>
+    <item>Default Out</item>
+    <item>Default In</item>
+  </attachedDevices>
+  <defaultOutputDevice>Default Out</defaultOutputDevice>
+  <mixPorts>
+    <mixPort name="stub output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+      <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+               samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+    </mixPort>
+
+    <mixPort name="stub input" role="sink">
+      <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+               samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_STEREO"/>
+    </mixPort>
+  </mixPorts>
+  <devicePorts>
+    <devicePort tagName="Default Out" type="AUDIO_DEVICE_OUT_STUB" role="sink">
+    </devicePort>
+
+    <devicePort tagName="Default In" type="AUDIO_DEVICE_IN_STUB" role="source">
+    </devicePort>
+  </devicePorts>
+  <routes>
+    <route type="mix" sink="Default Out" sources="stub output"/>
+
+    <route type="mix" sink="stub input" sources="Default In"/>
+  </routes>
+</module>

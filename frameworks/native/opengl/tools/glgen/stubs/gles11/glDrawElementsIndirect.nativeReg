@@ -1,0 +1,1 @@
+{"glDrawElementsIndirect", "(IIJ)V", (void *) android_glDrawElementsIndirect },

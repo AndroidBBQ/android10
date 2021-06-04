@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package com.google.tuningfork;
+
+enum InstrumentKey {
+  CPU = 0;
+  GPU = 1;
+  SWAPPY_WAIT = 2;
+  SWAPPY_SWAP = 3;
+  CHOREOGRAPHER = 4;
+}
+
+enum Level {
+  // 0 is not a valid value
+  LEVEL_INVALID = 0;
+  LEVEL_1 = 1;
+  LEVEL_2 = 2;
+  LEVEL_3 = 3;
+};
+
+message Annotation {
+  Level level = 1;
+  Level next_level = 2;
+}
+
+message FidelityParams {
+  int32 num_spheres = 1;
+  float tesselation_percent = 2;
+}

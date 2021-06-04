@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="framework.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../out/host/common/obj/JAVA_LIBRARIES/temp_layoutlib_intermediates/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../base/core/java" />
+      <root url="file://$PROJECT_DIR$/../base/graphics/java" />
+      <root url="file://$PROJECT_DIR$/../../libcore/luni/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

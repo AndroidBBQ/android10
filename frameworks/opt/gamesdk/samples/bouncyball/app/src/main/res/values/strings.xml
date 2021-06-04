@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Swappy</string>
+    <string name="fps">Rendering FPS:</string>
+    <string name="app_offset">App Offset:</string>
+    <string name="choreographer_consistency">Choreographer Consistency</string>
+    <string name="grid_1m_arr">1m Arr</string>
+    <string name="grid_1m_ts">1m TS</string>
+    <string name="grid_1s_arr">1s Arr</string>
+    <string name="grid_1s_ts">1s TS</string>
+    <string name="info_overlay">Info Overlay</string>
+    <string name="settings">Settings</string>
+    <string name="sf_offset">SF Offset:</string>
+    <string name="swappy_stats">Swappy Stats</string>
+    <string name="idle_frames">Idle</string>
+    <string name="late_frames">Late</string>
+    <string name="offset_frames">Offset</string>
+    <string name="latency_frames">Latency</string>
+
+    <!-- Preference strings -->
+
+    <string name="swap_interval_key">swap_interval</string>
+    <string name="swap_interval_title">Swap Interval</string>
+    <string name="swap_interval_summary_prologue">Present a newly-rendered frame every\u0020</string>
+    <string name="swap_interval_summary_epilogue">ms</string>
+
+    <string name="use_affinity_title">Use Affinity</string>
+    <string name="use_affinity_summary">Allow worker threads to specify their CPU affinity</string>
+
+    <string name="use_auto_swap_interval_title">Auto Swap Interval Mode</string>
+    <string name="use_auto_swap_interval_summary">Swappy calculates swap interval based on frame rendering time</string>
+
+    <string name="hot_pocket_title">Hot Pocket</string>
+    <string name="hot_pocket_summary">Create a spinning thread to encourage higher frequencies</string>
+
+    <string name="workload_title">Work load</string>
+    <string name="workload_summary">Work load for rendering bouncyball (based on number of vertices)</string>
+</resources>

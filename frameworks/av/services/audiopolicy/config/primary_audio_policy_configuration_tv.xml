@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Default Primary Audio HAL Module Audio Policy Configuration include file for TV -->
+<module name="primary" halVersion="2.0">
+    <attachedDevices>
+        <item>Speaker</item>
+    </attachedDevices>
+    <defaultOutputDevice>Speaker</defaultOutputDevice>
+    <mixPorts>
+        <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+            <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                     samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+        </mixPort>
+        <mixPort name="direct" role="source" flags="AUDIO_OUTPUT_FLAG_DIRECT" />
+        <mixPort name="tunnel" role="source"
+                 flags="AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_HW_AV_SYNC" />
+   </mixPorts>
+   <devicePorts>
+        <devicePort tagName="Speaker" type="AUDIO_DEVICE_OUT_SPEAKER" role="sink" />
+        <devicePort tagName="Out Aux Digital" type="AUDIO_DEVICE_OUT_AUX_DIGITAL" role="sink"
+                    encodedFormats="AUDIO_FORMAT_AC3 AUDIO_FORMAT_IEC61937" />
+    </devicePorts>
+    <routes>
+        <route type="mix" sink="Speaker" sources="primary output"/>
+        <route type="mix" sink="Out Aux Digital" sources="primary output,direct,tunnel"/>
+    </routes>
+</module>
